@@ -1,0 +1,151 @@
+/**
+ * <h1>Base style sheet.</h1>
+ * <p>
+ * This defines the basic HTML styles.
+ * </p>  
+ * <p>
+ * Do NOT define additional class or id styles here, those
+ * belong in site, category and page specific css files.
+ * </p>
+ * <p>
+ * Use the @import command in your css files to include
+ * these base HTML styles.
+ * </p>
+ * @author Mitch Coopet, Code 42 Software, Inc.
+ * Copyright 2008, Code 42 Software, Inc.  All rights reserved.
+ */
+
+body {
+	margin: 0px;
+	padding: 0px;
+	color: #5d5d5d;
+	font-family:Helvetica, Arial, sans-serif;
+	font-size: 13px;
+	text-align: center;
+	line-height: 18px;
+}
+
+hr {
+	margin-top: 14px;
+	margin-bottom: 14px;
+	height: 2px;
+	color: #eeeeee;
+	background-color: #eeeeee;	
+	border: 0;
+	width: 100%;
+	text-align: left;
+}
+
+a {
+	text-decoration: none;
+	color: #0293ca;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+h1, h1 a, h2, h2 a, h3, h3 a, h4, h4 a, strong {
+	font-weight: bold;
+	margin: 0;
+}
+h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover {
+	text-decoration: none;	
+}
+
+
+h1, h1 a { font-size: 20px; padding: 8px 0 12px 0; color: #3d3d3d; font-weight: normal;}
+
+h2, h2 a { font-size: 18px; padding: 14px 0 6px 0; line-height: 24px; font-weight: normal; }
+
+h3, h3 a { font-size: 14px; padding: 8px 0px 6px 0px; }
+
+h4, h4 a { font-size: 12px; padding: 4px 0; }
+
+
+
+p {
+	margin: 0;
+	padding: 8px 0px 8px 0px;
+}
+
+blockquote {
+	text-align: center;
+	padding: 12px 24px 12px 24px;
+	background-color: #f0f0f0;
+	margin: 0;
+	color: #3d3d3d;
+	border: 1px #dddddd solid;
+}
+
+ul {
+	padding: 4px 0 12px 0px;
+	margin: 0 0 0 18px;
+	list-style-type: disc;
+	list-style-position: outside;
+}
+
+ol {
+	margin:0px 0px 0px 18px;
+	padding:4px 0px 12px 0px;
+	list-style-position:outside;
+}
+
+img {
+	border: 0px;
+}
+
+/**
+ * Colors - these are the colors from the CP palette
+ * Add these as class styles for consistent use through site
+ */
+.color-dark-blue {
+	color: #12578b;
+}
+.color-dark-green {
+	color: #005a26;
+}
+
+.color-dark-gray {
+	color: #6d6d6d;
+}
+
+.color-light-gray {
+	color: #eeeeee;
+}
+
+.color-medium-blue {
+	color: #0293ca;
+}
+
+.color-medium-green {
+	color: #a7c574;
+}
+
+/** 
+ * Standard table style
+ */
+.standard {
+	border-collapse: collapse;
+	font-size:12px;
+	margin-bottom: 20px;
+	width: 100%;
+}
+
+.standard td, th {
+	border-bottom: 1px solid #eeeeee;		
+	text-align: center;
+	padding: 4px;
+	border-top-width: 1px;
+}
+
+.standard th {
+	border: 1px solid #c0c0c0;		
+	font-weight: bold;
+	background: #e0e0e0;
+}
+
+.standard td {
+	text-align: left;
+}
+

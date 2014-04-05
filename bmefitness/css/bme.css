@@ -1,0 +1,127 @@
+body {
+	background-color: #333334;
+	min-width: 1020px;
+}
+
+div.menu {
+	margin-top: -10px;
+	margin-right: auto;
+	margin-left: auto;
+	padding: 10px;
+	background-color: #489d1e;
+	position: relative;
+	width: 100%;
+	min-height: 100px;
+	-moz-border-radius: 10px;
+}
+
+div.menu_button {
+	top: 0px;
+	float: left;
+	margin-top: 20px;
+	margin-left: 20px;
+	padding: 30px;
+	position: relative;
+	right: 0px;
+	left: 200px;
+	float: left;
+	
+	
+	background-color: white;
+
+	border-color: black;
+	border-style: solid;
+	border-width: 2px;
+
+	color: black;
+	font-size: 26pt;
+}
+
+div.menu_button_kijelolt {
+	background-color: #333334;
+	border-color: red;
+	color: white;
+}
+
+div#content {
+	margin-top: 20px;
+	margin-right: auto;
+	margin-left: auto;
+	padding: 0px;
+	background-color: #ededed;
+	position: relative;
+	width: 90%;
+	right: -10px;
+	left: 100px;
+	min-height: 600px;
+	
+	border-color: black;
+	border-style: solid;
+	border-width: 0px;
+	
+	box-shadow: 0px 0px 20px #000000;
+	-webkit-box-shadow: 0px 0px 20px #000000;
+	-webkit-border-radius: 10px;
+	-moz-box-shadow: 0px 0px 20px #000000;
+	-moz-border-radius: 10px;
+}
+
+div#settings {
+	margin-top: 20px;
+	margin-right: auto;
+	margin-left: auto;
+	padding: 10px;
+	position: relative;
+	width: 100px;
+	right: 0px;
+	left: 0px;
+	float: left;
+	min-height: 600px;
+	color: white;
+}
+
+
+
+
+
+
+
+
+div#titlediv {
+	text-shadow: 0px 0px 20px white;
+	color: white;
+	padding-left: 20px;
+	font-family: "Times New Roman";
+	
+	margin-top: 0px;
+	margin-right: auto;
+	margin-left: auto;
+	position: relative;
+	width: 1200px;
+}
+
+div#lastmessagediv {
+	text-shadow: 0px 0px 20px white;
+	color: gray;
+	padding-left: 20px;
+	font-family: "Times New Roman";
+	
+	margin-top: 0px;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+table#eszkozok {
+	font-size: 13px;
+	font-family: "Times New Roman";
+	border-color: black;
+	border-style: solid;
+	border-width: 2px;
+	
+	box-shadow: 3px 3px 10px #700;
+	-webkit-box-shadow: 3px 3px 10px #888;
+	-moz-box-shadow: 3px 3px 10px #334455;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+}
+
