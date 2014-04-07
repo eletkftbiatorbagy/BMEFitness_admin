@@ -3,7 +3,7 @@ BME Fitness.xcodeproj
 
 build.sh
 
-webcheck
+webcheck*
 
 
 permissionchange.sh
