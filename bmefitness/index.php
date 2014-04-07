@@ -139,6 +139,16 @@
 		</div>
 
 		<div id="content">
+faksza, okes, akkor, akkor meg
+			<?php
+				$link = pg_Connect("dbname=bmefitness user=bme password=");
+				$result = pg_exec($link, "SELECT * FROM termek");
+				$numrows = pg_numrows($result);
+				print "<p>link = $link<br>
+					result = $result<br>
+					numrows = $numrows</p>
+				";
+			?>
 		</div>
 	</body>
 </html>

@@ -52,7 +52,8 @@ div#content {
 	position: relative;
 	width: 90%;
 	right: -10px;
-	left: 100px;
+	left: 10px;
+	float: left;
 	min-height: 600px;
 	
 	border-color: black;
