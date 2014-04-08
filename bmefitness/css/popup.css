@@ -69,102 +69,12 @@ br.both {
 	z-index: 1;
 }
 
-#popupEditEszkoz {
-	display: none;
-	position: fixed;
-	_position: absolute; /* hack for internet explorer 6*/
-	min-height: 330px;
-	width: 288px;
-	background: #FFFFFF;
-	border: 2px solid #cecece;
-	z-index: 2;
-	padding: 12px;
-	font-size: 13px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-}
-
-#popupInfo {
-	display: none;
-	position: fixed;
-	_position: absolute; /* hack for internet explorer 6*/
-	min-height: 330px;
-	width: 310px;
-	background: #FFFFFF;
-	border: 2px solid #cecece;
-	z-index: 2;
-	padding: 12px;
-	font-size: 13px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-}
-
-#popupCommands {
-	display: none;
-	position: fixed;
-	_position: absolute; /* hack for internet explorer 6*/
-	min-height: 200px;
-	width: 350px;
-	background: #FFFFFF;
-	border: 2px solid #cecece;
-	z-index: 2;
-	padding: 12px;
-	font-size: 13px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-}
-
-#popupSendRiport {
-	display: none;
-	position: fixed;
-	_position: absolute; /* hack for internet explorer 6*/
-	height: 280px;
-	width: 288px;
-	background: #FFFFFF;
-	border: 2px solid #cecece;
-	z-index: 2;
-	padding: 12px;
-	font-size: 13px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-}
-
 #popupNewOrEdit {
 	display: none;
 	position: fixed;
 	_position: absolute; /* hack for internet explorer 6*/
-	height: 250px;
+	min-height: 330px;
 	width: 288px;
-	background: #FFFFFF;
-	border: 2px solid #cecece;
-	z-index: 2;
-	padding: 12px;
-	font-size: 13px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-}
-
-#popupDeleteEszkoz {
-	display: none;
-	position: fixed;
-	_position: absolute; /* hack for internet explorer 6*/
-	height: 150px;
-	width: 320px;
-	background: #FFFFFF;
-	border: 2px solid #cecece;
-	z-index: 2;
-	padding: 12px;
-	font-size: 13px;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-}
-
-#popupLogView {
-	display: none;
-	position: fixed;
-	_position: absolute; /* hack for internet explorer 6*/
-	height: 650px;
-	width: 840px;
 	background: #FFFFFF;
 	border: 2px solid #cecece;
 	z-index: 2;

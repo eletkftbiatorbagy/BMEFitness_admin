@@ -63,17 +63,18 @@ div.leftcontent {
 	margin-bottom: 10px;
 
 	position: relative;
-	width: 150px;
+	width: 200px;
 	left: 10px;
+
+	float: left;
 }
 
 div.scrollcontent {
-	background-color: #ededed;w
+	background-color: #ededed;
 
-	float: left;
 	overflow: hidden;
 	overflow-y: scroll;
-	max-height: 600px;
+	max-height: 500px;
 }
 
 div.edit_data_available {

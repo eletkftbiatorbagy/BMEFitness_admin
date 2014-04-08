@@ -113,19 +113,21 @@
 
 		</script>
 
-		<div id="popupEditEszkoz" class="popupContact">
+
+	<!-- felugro szerkeszto ablakok -->
+		<!-- hatter miatt kell -->
+		<div id="backgroundPopup"></div>
+		<div id="popupNewOrEdit" class="popupContact">
 			<a class="popupContactClose">bezár</a>
 			<h1 class="editTitle"></h1>
-			<p class="contactArea" id="editdiv"></p>
+			<p class="contactArea" id="newOrEditArea"></p>
 		</div>
 
-		<div class="menu" id="menu">
-		</div>
 
-		<div id="settings">
-		</div>
+	<!-- oldal teruletei -->
+		<div class="menu" id="menu"></div>
+		<div id="settings"></div>
+		<div id="content"></div>
 
-		<div id="content">
-		</div>
 	</body>
 </html>

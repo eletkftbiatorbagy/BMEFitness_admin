@@ -10,7 +10,7 @@
 			print "Korábban létrehozott adatok:<br>";
 			print "<div class=\"scrollcontent\">";
 				if (count($terem_result) == 0) {
-					print "<div style=\"border-color: black; border-width: 1px; border-style: solid;\">Nincs adat hozzáadva</div><br>";
+					print "<div style=\"color: red;\">Nincs adat hozzáadva</div><br>";
 				}
 				else {
 					for ($j = 0; $j < 100; $j++) {
@@ -20,7 +20,7 @@
 					}
 				}
 			print "</div>";
-			print "<div style=\"margin: 10px; padding: 5px; border-color: black; border-width: 1px; border-style: solid;\">Új adat hozzáadása";
+			print "<div onclick=\"new_data('termek'); neworeditClick();\" style=\"cursor: pointer; margin: 10px; padding: 5px; border-color: black; border-width: 1px; border-style: solid;\">Új adat hozzáadása</div>";
 		}
 	print "</div>";
 
