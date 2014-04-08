@@ -1,4 +1,7 @@
-<?php session_start(); ?>
+<?php
+	session_start();
+	require_once("functions/database.php");
+?>
 
 <!DOCTYPE HTML>
 <html>
@@ -13,6 +16,7 @@
 		<script src="js/popup.js" type="text/javascript"></script>
 		<link rel="stylesheet" href="css/base.css" />
 		<link rel="stylesheet" href="css/bme.css" />
+		<script src="js/bme.js" type="text/javascript"></script>
 <?php
 	/*
 
@@ -24,15 +28,13 @@
 <link rel="stylesheet" href="css/slider.css" />
 <script src="js/slider.js" type="text/javascript"></script>
 
-
-<? require_once("functions/funkciok.php"); ?>
 */
 
 ?>
 
 
 	</head>
-	<body onload="hideddrivetip();">
+	<body onload="hideddrivetip(); change_main_site('edit_data');">
 		<div id="dhtmltooltip" class="tooltipandinfodivstyle"></div>
 
 		<script type="text/javascript">
@@ -98,7 +100,7 @@
 		}
 
 		function hideddrivetip() {
-			if (ns6 || ie){
+			if (ns6 || ie) {
 				enabletip = false;
 				tipobj.style.visibility = "hidden";
 				tipobj.style.left = "-1000px";
@@ -117,38 +119,13 @@
 			<p class="contactArea" id="editdiv"></p>
 		</div>
 
-		<div class="menu">
-			<div id="menu1button" class="menu_button menu_button_kijelolt">Adatok</div>
-			<div id="menu2button" class="menu_button">Órarend</div>
-			<div id="menu3button" class="menu_button">Foglalások</div>
-			<div style="float: right; color: white; font-size: 28pt; margin-right: 30px; margin-top: 80px;">BME Fitness Mobile Admin</div>
+		<div class="menu" id="menu">
 		</div>
 
 		<div id="settings">
-			<ol>
-				<li>Coffee</li>
-				<li>Tea</li>
-				<li>Milk</li>
-			</ol>
-
-			<ul>
-				<li>Coffee</li>
-				<li>Tea</li>
-				<li>Milk</li>
-			</ul>
 		</div>
 
 		<div id="content">
-faksza, okes, akkor, akkor meg
-			<?php
-				$link = pg_Connect("dbname=bmefitness user=bme password=");
-				$result = pg_exec($link, "SELECT * FROM termek");
-				$numrows = pg_numrows($result);
-				print "<p>link = $link<br>
-					result = $result<br>
-					numrows = $numrows</p>
-				";
-			?>
 		</div>
 	</body>
 </html>

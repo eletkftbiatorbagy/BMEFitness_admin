@@ -26,7 +26,6 @@ div.menu_button {
 	left: 200px;
 	float: left;
 	
-	
 	background-color: white;
 
 	border-color: black;
@@ -35,12 +34,14 @@ div.menu_button {
 
 	color: black;
 	font-size: 26pt;
+	cursor: pointer;
 }
 
 div.menu_button_kijelolt {
 	background-color: #333334;
 	border-color: red;
 	color: white;
+	cursor: default;
 }
 
 div#content {
@@ -50,21 +51,38 @@ div#content {
 	padding: 0px;
 	background-color: #ededed;
 	position: relative;
-	width: 90%;
 	right: -10px;
 	left: 10px;
 	float: left;
 	min-height: 600px;
-	
-	border-color: black;
-	border-style: solid;
-	border-width: 0px;
-	
-	box-shadow: 0px 0px 20px #000000;
-	-webkit-box-shadow: 0px 0px 20px #000000;
-	-webkit-border-radius: 10px;
-	-moz-box-shadow: 0px 0px 20px #000000;
-	-moz-border-radius: 10px;
+	min-width: 600px;
+}
+
+div.leftcontent {
+	margin-top: 10px;
+	margin-bottom: 10px;
+
+	position: relative;
+	width: 150px;
+	left: 10px;
+}
+
+div.scrollcontent {
+	background-color: #ededed;w
+
+	float: left;
+	overflow: hidden;
+	overflow-y: scroll;
+	max-height: 600px;
+}
+
+div.edit_data_available {
+	margin: 0px;
+	padding: 10px;
+	background-color: #333334;
+	color: white;
+	position: relative;
+	border-bottom: 1px solid #409915;
 }
 
 div#settings {
@@ -81,6 +99,20 @@ div#settings {
 	color: white;
 }
 
+div#settings ul {
+	text-align: left;
+	list-style-type: none;
+}
+
+
+div#settings a:link, a:visited {
+	color: #489d1e;
+}
+
+div#settings a:hover {/*, a:activated {*/
+	font-weight: bold;
+	text-decoration: underline;
+}
 
 
 
