@@ -121,6 +121,7 @@
 			<a class="popupContactClose">bezár</a>
 			<h1 class="editTitle"></h1>
 			<p class="contactArea" id="newOrEditArea"></p>
+			<a id="neworeditlink">Létrehozás</a>
 		</div>
 
 

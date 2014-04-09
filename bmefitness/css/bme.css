@@ -86,6 +86,10 @@ div.edit_data_available {
 	border-bottom: 1px solid #409915;
 }
 
+table.edit_data_table td.td_right {
+	text-align: right;
+}
+
 div#settings {
 	margin-top: 20px;
 	margin-right: auto;

@@ -70,11 +70,14 @@ br.both {
 }
 
 #popupNewOrEdit {
+	text-align: left;
 	display: none;
 	position: fixed;
 	_position: absolute; /* hack for internet explorer 6*/
-	min-height: 330px;
-	width: 288px;
+	left: auto;
+	right: auto;
+	min-height: 100px;
+	min-width: 200px;
 	background: #FFFFFF;
 	border: 2px solid #cecece;
 	z-index: 2;
@@ -94,6 +97,11 @@ br.both {
 	margin-bottom: 20px;
 }
 
+p.contactArea {
+	top: 0px;
+	padding-bottom: 16px;
+}
+
 .popupContactClose, .popupContactClose a:visited {
 	background-color: white;
 	font-size: 14px;
@@ -104,6 +112,19 @@ br.both {
 	color: black;
 	font-weight: 700;
 	display: block;
+}
+
+a#neworeditlink {
+	text-align: center;
+	color: #409915;
+	font-size: 16px;
+	width: 100%;
+	bottom: 8px;
+	position: absolute;
+}
+
+.redcolor {
+	color: red;
 }
 
 #button {
