@@ -23,6 +23,19 @@
 				</table>
 			";
 		}
+		else if ($edit == "orak") { // pontosabban egy uj edzo letrehozasa
+			print "
+				<table class=\"edit_data_table\">
+					<tr><td id=\"edit_ora_name\" class=\"td_right redcolor\">Név:</td><td class=\"td_left\"><input maxlength=\"30\" size=\"31\" type=\"text\" id=\"oraname\" onchange=\"editedField('edit_ora_name', 'oraname', false, 25);\"></input></td></tr>\n
+					<tr><td id=\"edit_ora_rname\" class=\"td_right redcolor\">Rövid név:</td><td class=\"td_left\"><input maxlength=\"10\" size=\"31\" type=\"text\" id=\"orarname\" onchange=\"editedField('edit_ora_rname', 'orarname', false, 10);\"></input></td></tr>\n
+					<tr><td id=\"edit_ora_altitle\" class=\"td_right redcolor\">Alcím:</td><td class=\"td_left\"><input maxlength=\"30\" size=\"31\" type=\"text\" id=\"oraaltitle\" onchange=\"editedField('edit_ora_altitle', 'oraaltitle', false, 30);\"></input></td></tr>\n
+					<tr><td id=\"edit_ora_perc\" class=\"td_right redcolor\">Perc:</td><td class=\"td_left\"><input maxlength=\"30\" size=\"31\" type=\"text\" id=\"oraperc\" onchange=\"editedField('edit_ora_perc', 'oraperc', false, 0);\"></input></td></tr>\n
+					<tr><td id=\"edit_ora_maxletszam\" class=\"td_right redcolor\">Max létszám:</td><td class=\"td_left\"><input maxlength=\"30\" size=\"31\" type=\"text\" id=\"oramaxletszam\" onchange=\"editedField('edit_ora_maxletszam', 'oramaxletszam', false, 0);\"></input></td></tr>\n
+					<tr><td id=\"edit_ora_description\" class=\"td_right redcolor\">Leírás:</td><td class=\"td_left\"><textarea rows=\"5\" cols=\"29\" type=\"text\" id=\"oradescription\" onchange=\"editedField('edit_ora_description', 'oradescription', false, 0);\"></textarea></td></tr>\n
+					<tr><td class=\"td_right\">Belépődíj:</td><td class=\"td_left\"><input checked=\"true\" type=\"checkbox\" size=\"23\" type=\"text\" id=\"orabelepodij\"></input></td></tr>\n
+				</table>
+			";
+		}
 		else if ($edit == "termek") { // pontosabban egy uj terem letrehozasa
 			print "
 				<table class=\"edit_data_table\">

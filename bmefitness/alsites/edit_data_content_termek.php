@@ -3,18 +3,18 @@
 	require_once("../functions/database.php");
 
 	print "<div class=\"leftcontent\">";
-		$terem_query = "SELECT * FROM fitness.termek;";
-		$terem_result = db_query_object_array($terem_query);
+		$query = "SELECT * FROM fitness.termek;";
+		$result = db_query_object_array($query);
 
-		if (!is_null($terem_result)) {
+		if (!is_null($result)) {
 			print "Korábban létrehozott adatok:<br>";
 			print "<div class=\"scrollcontent\">";
-				if (count($terem_result) == 0) {
+				if (count($result) == 0) {
 					print "<div style=\"color: red;\">Nincs adat hozzáadva</div><br>";
 				}
 				else {
-					for ($i = 0; $i < count($terem_result); $i++) {
-						print "<div class=\"edit_data_available\">terem id: ".$terem_result[$i]->id.", nev: ".$terem_result[$i]->nev."</div>";
+					for ($i = 0; $i < count($result); $i++) {
+						print "<div class=\"edit_data_available\">terem id: ".$result[$i]->id.", nev: ".$result[$i]->nev."</div>";
 					}
 				}
 			print "</div>";

@@ -166,6 +166,31 @@ function end_new_data(data_type) {
 		avalueIDs = "vnev,knev,rovid_nev,alcim,leiras,sorszam";
 		avalues = "'" + $('#edzovname').val() + "','" + $('#edzokname').val() + "','" + $('#edzorname').val() + "','" + $('#edzoaltitle').val() + "','" + $('#edzodescription').val() + "',fitness.zero_if_null((SELECT max(sorszam) FROM fitness.edzok)) + 1";
 	}
+	else if (data_type == "orak") {
+		if (!$('#oraname').val())
+			error_message += "Az óra nevét meg kell adni!";
+		if (!$('#orarname').val())
+			error_message += (error_message ? "\nAz óra rövid nevét meg kell adni!" : "Az óra rövid nevét meg kell adni!");
+		if (!$('#oraaltitle').val())
+			error_message += (error_message ? "\nAz óra alcímét meg kell adni!" : "Az óra alcímét meg kell adni!");
+		if (!$('#oraperc').val())
+			error_message += (error_message ? "\nA percet meg kell adni!" : "A percet meg kell adni!");
+		if (!$('#oramaxletszam').val())
+			error_message += (error_message ? "\nA maximum létszámot meg kell adni!" : "A maximum létszámot meg kell adni!");
+		if (!$('#oradescription').val())
+			error_message += (error_message ? "\nAz óra leírását meg kell adni!" : "Az óra leírását meg kell adni!");
+
+		if ($('#oraname').val() && $('#oraname').val().length > 25)
+			error_message += (error_message ? "\nAz óra neve maximum 25 karakter lehet!" : "Az óra neve maximum 25 karakter lehet!");
+		if ($('#orarname').val() && $('#orarname').val().length > 10)
+			error_message += (error_message ? "\nAz óra rövid maximum 10 karakter lehet!" : "Az óra rövid neve maximum 10 karakter lehet!");
+		if ($('#oraaltitle').val() && $('#oraaltitle').val().length > 30)
+			error_message += (error_message ? "\nAz óra alcíme maximum 30 karakter lehet!" : "Az óra alcíme maximum 30 karakter lehet!");
+
+		atableNameWithSchema = "fitness.orak"
+		avalueIDs = "nev,rovid_nev,alcim,leiras,max_letszam,perc,belepodij,sorszam";
+		avalues = "'" + $('#oraname').val() + "','" + $('#orarname').val() + "','" + $('#oraaltitle').val() + "','" + $('#oradescription').val() + "'," + $('#oramaxletszam').val() + "," + $('#oraperc').val() + ",'" + ($('#orabelepodij').prop("checked") ? "t" : "f") + "',fitness.zero_if_null((SELECT max(sorszam) FROM fitness.orak)) + 1";
+	}
 	else if (data_type == "termek") {
 		if (!$('#teremname').val())
 			error_message += "A terem nevét meg kell adni!";
