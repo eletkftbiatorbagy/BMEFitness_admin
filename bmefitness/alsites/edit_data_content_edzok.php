@@ -4,7 +4,7 @@
 
 	print "<div class=\"leftcontent\">";
 	$query = "SELECT * FROM fitness.edzok;";
-	$result = db_select_object_array($query);
+	$result = db_query_object_array($query);
 
 	if (!is_null($result)) {
 		print "Korábban létrehozott adatok:<br>";

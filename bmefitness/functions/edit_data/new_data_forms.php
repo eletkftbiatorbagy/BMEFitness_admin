@@ -3,24 +3,33 @@
 		$edit = $_POST["type"];
 
 		$file = "";
-		if ($edit == "edzok") { // pontosabban egy uj edzo letrehozasa
+		if ($edit == "info") { // pontosabban egy uj edzo letrehozasa
 			print "
-			<table class=\"edit_data_table\">
-			<tr><td id=\"edit_edzo_vname\" class=\"td_right redcolor\">vezetéknév:</td><td class=\"td_left\"><input maxlength=\"30\" size=\"31\" type=\"text\" id=\"edzovname\" onchange=\"editedField('edit_edzo_vname', 'edzovname', false, 30);\"></input></td></tr>\n
-			<tr><td id=\"edit_edzo_kname\" class=\"td_right redcolor\">keresztnév:</td><td class=\"td_left\"><input maxlength=\"30\" size=\"31\" type=\"text\" id=\"edzokname\" onchange=\"editedField('edit_edzo_kname', 'edzokname', false, 30);\"></input></td></tr>\n
-			<tr><td id=\"edit_edzo_rname\" class=\"td_right redcolor\">rövid név:</td><td class=\"td_left\"><input maxlength=\"10\" size=\"31\" type=\"text\" id=\"edzorname\" onchange=\"editedField('edit_edzo_rname', 'edzorname', false, 10);\"></input></td></tr>\n
-			<tr><td id=\"edit_edzo_altitle\" class=\"td_right redcolor\">alcím:</td><td class=\"td_left\"><input maxlength=\"30\" size=\"31\" type=\"text\" id=\"edzoaltitle\" onchange=\"editedField('edit_edzo_altitle', 'edzoaltitle', false, 30);\"></input></td></tr>\n
-			<tr><td id=\"edit_edzo_description\" class=\"td_right redcolor\">leírás:</td><td class=\"td_left\"><input size=\"31\" type=\"text\" id=\"edzodescription\" onchange=\"editedField('edit_edzo_description', 'edzodescription', false, 0);\"></input></td></tr>\n
-			</table>
+				<table class=\"edit_data_table\">
+					<tr><td id=\"edit_info_debut\" class=\"td_right redcolor\">Bemutatkozás:</td><td class=\"td_left\"><textarea rows=\"5\" cols=\"29\" type=\"text\" id=\"infodebut\" onchange=\"editedField('edit_info_debut', 'infodebut', false, 0);\"></textarea></td></tr>\n
+					<tr><td id=\"edit_info_policy\" class=\"td_right redcolor\">Házirend:</td><td class=\"td_left\"><textarea rows=\"5\" cols=\"29\" type=\"text\" id=\"infopolicy\" onchange=\"editedField('edit_info_policy', 'infopolicy', false, 0);\"></textarea></td></tr>\n
+					<tr><td id=\"edit_info_openinghours\" class=\"td_right redcolor\">Nyitvatartás:</td><td class=\"td_left\"><textarea rows=\"5\" cols=\"29\" type=\"text\" id=\"infoopeninghours\" onchange=\"editedField('edit_info_openinghours', 'infoopeninghours', false, 0);\"></textarea></td></tr>\n
+				</table>
+			";
+		}
+		else if ($edit == "edzok") { // pontosabban egy uj edzo letrehozasa
+			print "
+				<table class=\"edit_data_table\">
+					<tr><td id=\"edit_edzo_vname\" class=\"td_right redcolor\">Vezetéknév:</td><td class=\"td_left\"><input maxlength=\"30\" size=\"31\" type=\"text\" id=\"edzovname\" onchange=\"editedField('edit_edzo_vname', 'edzovname', false, 30);\"></input></td></tr>\n
+					<tr><td id=\"edit_edzo_kname\" class=\"td_right redcolor\">Keresztnév:</td><td class=\"td_left\"><input maxlength=\"30\" size=\"31\" type=\"text\" id=\"edzokname\" onchange=\"editedField('edit_edzo_kname', 'edzokname', false, 30);\"></input></td></tr>\n
+					<tr><td id=\"edit_edzo_rname\" class=\"td_right redcolor\">Rövid név:</td><td class=\"td_left\"><input maxlength=\"10\" size=\"31\" type=\"text\" id=\"edzorname\" onchange=\"editedField('edit_edzo_rname', 'edzorname', false, 10);\"></input></td></tr>\n
+					<tr><td id=\"edit_edzo_altitle\" class=\"td_right redcolor\">Alcím:</td><td class=\"td_left\"><input maxlength=\"30\" size=\"31\" type=\"text\" id=\"edzoaltitle\" onchange=\"editedField('edit_edzo_altitle', 'edzoaltitle', false, 30);\"></input></td></tr>\n
+					<tr><td id=\"edit_edzo_description\" class=\"td_right redcolor\">Leírás:</td><td class=\"td_left\"><textarea rows=\"5\" cols=\"29\" type=\"text\" id=\"edzodescription\" onchange=\"editedField('edit_edzo_description', 'edzodescription', false, 0);\"></textarea></td></tr>\n
+				</table>
 			";
 		}
 		else if ($edit == "termek") { // pontosabban egy uj terem letrehozasa
 			print "
-			<table class=\"edit_data_table\">
-				<tr><td id=\"edit_terem_name\" class=\"td_right redcolor\">név:</td><td class=\"td_left\"><input maxlength=\"20\" size=\"23\" type=\"text\" id=\"teremname\" onchange=\"editedField('edit_terem_name', 'teremname', false, 20);\"></input></td></tr>\n
-				<tr><td id=\"edit_terem_altitle\" class=\"td_right\">alcím:</td><td class=\"td_left\"><input maxlength=\"20\" size=\"23\" type=\"text\" id=\"teremaltitle\" onchange=\"editedField('edit_terem_altitle', 'teremaltitle', false, 20);\"></input></td></tr>\n
-				<tr><td class=\"td_right\">foglalható:</td><td class=\"td_left\"><input checked=\"true\" type=\"checkbox\" size=\"23\" type=\"text\" id=\"teremavailable\"></input></td></tr>\n
-			</table>
+				<table class=\"edit_data_table\">
+					<tr><td id=\"edit_terem_name\" class=\"td_right redcolor\">Név:</td><td class=\"td_left\"><input maxlength=\"20\" size=\"23\" type=\"text\" id=\"teremname\" onchange=\"editedField('edit_terem_name', 'teremname', false, 20);\"></input></td></tr>\n
+					<tr><td id=\"edit_terem_altitle\" class=\"td_right redcolor\">Alcím:</td><td class=\"td_left\"><input maxlength=\"20\" size=\"23\" type=\"text\" id=\"teremaltitle\" onchange=\"editedField('edit_terem_altitle', 'teremaltitle', false, 20);\"></input></td></tr>\n
+					<tr><td class=\"td_right\">Foglalható:</td><td class=\"td_left\"><input checked=\"true\" type=\"checkbox\" size=\"23\" type=\"text\" id=\"teremavailable\"></input></td></tr>\n
+				</table>
 			";
 		}
 	}

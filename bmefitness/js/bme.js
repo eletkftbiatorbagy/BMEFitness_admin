@@ -104,7 +104,10 @@ function begin_new_data(data_type) {
 	});
 
 	var title = null;
-	if (data_type == "edzok") {
+	if (data_type == "info") {
+		title = "Infó adatok szerkesztése";
+	}
+	else if (data_type == "edzok") {
 		title = "Új edző adatai";
 	}
 	else if (data_type == "termek") {
@@ -123,24 +126,38 @@ function end_new_data(data_type) {
 	var atableNameWithSchema = "";
 	var avalueIDs = "";
 	var avalues = "";
+	var aid = "-1";
 
-	if (data_type == "edzok") {
+	if (data_type == "info") {
+		if (!$('#infodebut').val())
+			error_message += "A bemutatkozást meg kell adni!";
+		if (!$('#infopolicy').val())
+			error_message += (error_message ? "\nA házirendet meg kell adni!" : "A házirendet meg kell adni!");
+		if (!$('#infoopeninghours').val())
+			error_message += (error_message ? "\nA nyitvatartást meg kell adni!" : "A nyitvatartást meg kell adni!");
+
+		aid = "all";
+		atableNameWithSchema = "fitness.info"
+		avalueIDs = "bemutatkozas,hazirend,nyitvatartas";
+		avalues = "'" + $('#infodebut').val() + "','" + $('#infopolicy').val() + "','" + $('#infoopeninghours').val() + "'";
+	}
+	else if (data_type == "edzok") {
 		if (!$('#edzovname').val())
 			error_message += "Az edző vezetéknevét meg kell adni!";
 		if (!$('#edzokname').val())
-			error_message += "Az edző keresztnevét meg kell adni!";
+			error_message += (error_message ? "\nAz edző keresztnevét meg kell adni!" : "Az edző keresztnevét meg kell adni!");
 		if (!$('#edzorname').val())
-			error_message += "Az edző rövid nevét meg kell adni!";
+			error_message += (error_message ? "\nAz edző rövid nevét meg kell adni!" : "Az edző rövid nevét meg kell adni!");
 		if (!$('#edzoaltitle').val())
-			error_message += "Az edző alcímét meg kell adni!";
+			error_message += (error_message ? "\nAz edző alcímét meg kell adni!" : "Az edző alcímét meg kell adni!");
 		if (!$('#edzodescription').val())
-			error_message += "Az edző leírását meg kell adni!";
+			error_message += (error_message ? "\nAz edző leírását meg kell adni!" : "Az edző leírását meg kell adni!");
 
 		if ($('#edzovname').val() && $('#edzovname').val().length > 30)
 			error_message += (error_message ? "\nAz edző vezetékneve maximum 30 karakter lehet!" : "Az edző vezetékneve maximum 30 karakter lehet!");
 		if ($('#edzokname').val() && $('#edzokname').val().length > 30)
 			error_message += (error_message ? "\nAz edző keresztneve maximum 30 karakter lehet!" : "Az edző keresztneve maximum 30 karakter lehet!");
-		if ($('#edzorname').val() && $('#edzorname').val().length > 30)
+		if ($('#edzorname').val() && $('#edzorname').val().length > 10)
 			error_message += (error_message ? "\nAz edző rövid neve maximum 10 karakter lehet!" : "Az edző rövid neve maximum 10 karakter lehet!");
 		if ($('#edzoaltitle').val() && $('#edzoaltitle').val().length > 30)
 			error_message += (error_message ? "\nAz edző alcíme maximum 30 karakter lehet!" : "Az edző alcíme maximum 30 karakter lehet!");
@@ -152,8 +169,8 @@ function end_new_data(data_type) {
 	else if (data_type == "termek") {
 		if (!$('#teremname').val())
 			error_message += "A terem nevét meg kell adni!";
-		if ($('#teremaltitle').val())
-			error_message += "A terem alcímét meg kell adni!";
+		if (!$('#teremaltitle').val())
+			error_message += (error_message ? "\nA terem alcímét meg kell adni!" : "A terem alcímét meg kell adni!");
 		if ($('#teremname').val() && $('#teremname').val().length > 20)
 			error_message += (error_message ? "\nA terem neve maximum 20 karakter lehet!" : "A terem neve maximum 20 karakter lehet!");
 		if ($('#teremaltitle').val() && $('#teremaltitle').val().length > 20)
@@ -170,7 +187,7 @@ function end_new_data(data_type) {
 	}
 
 	if (atableNameWithSchema && avalueIDs && avalues) {
-		$.post("functions/edit_data/insert_new_data.php", {table_name_with_schema: atableNameWithSchema, value_ids: avalueIDs, values: avalues}, function(result) {
+		$.post("functions/edit_data/insert_or_update_data.php", {data_id: aid, table_name_with_schema: atableNameWithSchema, value_ids: avalueIDs, values: avalues}, function(result) {
 //			window.alert("elvileg kesz, eredmeny: " + (result ? "OK" : "XAR") + " (result: " + result + ")");
 			if (result) {
 			   change_main_site("edit_data");
