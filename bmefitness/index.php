@@ -32,7 +32,6 @@
 
 ?>
 
-
 	</head>
 	<body onload="hideddrivetip(); change_main_site('edit_data');">
 		<div id="dhtmltooltip" class="tooltipandinfodivstyle"></div>

@@ -1,8 +1,8 @@
 <ul>
-	<li><a href="http://www.google.com">infó</a></li>
-	<li><a href="http://www.google.com">edzők</a></li>
-	<li><a href="http://www.google.com">felhasználók</a></li>
-	<li><a href="http://www.google.com">termek</a></li>
-	<li><a href="http://www.google.com">órák</a></li>
-	<li><a href="http://www.google.com">beállítások</a></li>
+	<li><a onclick="change_edit_data_site('info')">infó</a></li>
+	<li><a onclick="change_edit_data_site('edzok')">edzők</a></li>
+	<li><a onclick="change_edit_data_site('felhasznalok')">felhasználók</a></li>
+	<li><a onclick="change_edit_data_site('termek')">termek</a></li>
+	<li><a onclick="change_edit_data_site('orak')">órák</a></li>
+	<li><a onclick="change_edit_data_site('beallitasok')">beállítások</a></li>
 </ul>

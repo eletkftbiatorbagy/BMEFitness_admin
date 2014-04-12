@@ -1,3 +1,4 @@
+var edit_data_content = null;
 
 function change_main_site(site) {
 	if (!site) // check: "", null, undefined, 0, false, NaN
@@ -7,7 +8,28 @@ function change_main_site(site) {
 	var settingsSite = null;
 
 	if (site == "edit_data") {
-		contentSite = "alsites/edit_data_content.php";
+		if (!edit_data_content)
+			edit_data_content = "info";
+
+		if (edit_data_content == "info") {
+			contentSite = "alsites/edit_data_content_info.php";
+		}
+		else if (edit_data_content == "edzok") {
+			contentSite = "alsites/edit_data_content_edzok.php";
+		}
+		if (edit_data_content == "felhasznalok") {
+			contentSite = "alsites/edit_data_content_felhasznalok.php";
+		}
+		if (edit_data_content == "termek") {
+			contentSite = "alsites/edit_data_content_termek.php";
+		}
+		if (edit_data_content == "orak") {
+			contentSite = "alsites/edit_data_content_orak.php";
+		}
+		if (edit_data_content == "beallitasok") {
+			contentSite = "alsites/edit_data_content_beallitasok.php";
+		}
+
 		settingsSite = "alsites/edit_data_settings.php";
 	}
 	else if (site == "timetable") {
@@ -38,6 +60,14 @@ function change_main_site(site) {
 		var egyeb = "";// = "<div style=\"float: right; color: white; font-size: 28pt; margin-right: 30px; margin-top: 80px;\">BME Fitness Mobile Admin</div>";
 		$('#menu').html(menu1 + menu2 + menu3 + egyeb);
 	}
+}
+
+function change_edit_data_site(site) {
+	if (!site) // check: "", null, undefined, 0, false, NaN
+		return;
+
+	edit_data_content = site;
+	change_main_site("edit_data");
 }
 
 /*!
