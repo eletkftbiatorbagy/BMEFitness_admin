@@ -6,9 +6,9 @@
 		if ($edit == "info") { // pontosabban egy uj edzo letrehozasa
 			print "
 				<table class=\"edit_data_table\">
-					<tr><td id=\"edit_info_debut\" class=\"td_right redcolor\">Bemutatkozás:</td><td class=\"td_left\"><textarea rows=\"5\" cols=\"29\" type=\"text\" id=\"infodebut\" onchange=\"editedField('edit_info_debut', 'infodebut', false, 0);\"></textarea></td></tr>\n
-					<tr><td id=\"edit_info_policy\" class=\"td_right redcolor\">Házirend:</td><td class=\"td_left\"><textarea rows=\"5\" cols=\"29\" type=\"text\" id=\"infopolicy\" onchange=\"editedField('edit_info_policy', 'infopolicy', false, 0);\"></textarea></td></tr>\n
-					<tr><td id=\"edit_info_openinghours\" class=\"td_right redcolor\">Nyitvatartás:</td><td class=\"td_left\"><textarea rows=\"5\" cols=\"29\" type=\"text\" id=\"infoopeninghours\" onchange=\"editedField('edit_info_openinghours', 'infoopeninghours', false, 0);\"></textarea></td></tr>\n
+					<tr><td id=\"edit_info_debut\" class=\"td_right redcolor\">Bemutatkozás:</td><td class=\"td_left\"><textarea rows=\"10\" cols=\"69\" type=\"text\" id=\"infodebut\" onchange=\"editedField('edit_info_debut', 'infodebut', false, 0);\"></textarea></td></tr>\n
+					<tr><td id=\"edit_info_policy\" class=\"td_right redcolor\">Házirend:</td><td class=\"td_left\"><textarea rows=\"10\" cols=\"69\" type=\"text\" id=\"infopolicy\" onchange=\"editedField('edit_info_policy', 'infopolicy', false, 0);\"></textarea></td></tr>\n
+					<tr><td id=\"edit_info_openinghours\" class=\"td_right redcolor\">Nyitvatartás:</td><td class=\"td_left\"><textarea rows=\"10\" cols=\"69\" type=\"text\" id=\"infoopeninghours\" onchange=\"editedField('edit_info_openinghours', 'infoopeninghours', false, 0);\"></textarea></td></tr>\n
 				</table>
 			";
 		}

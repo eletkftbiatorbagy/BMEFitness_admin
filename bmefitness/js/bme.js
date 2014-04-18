@@ -110,6 +110,9 @@ function begin_new_data(data_type) {
 	else if (data_type == "edzok") {
 		title = "Új edző adatai";
 	}
+	else if (data_type == "orak") {
+		title = "Új óra adatai";
+	}
 	else if (data_type == "termek") {
 		title = "Új terem adatai";
 	}
