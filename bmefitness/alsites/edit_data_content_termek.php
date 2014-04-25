@@ -25,7 +25,7 @@
 				}
 			}
 		print "</div>";
-		print "<div onclick=\"begin_new_or_edit_data('termek'); neworeditClick();\" style=\"cursor: pointer; margin: 10px; padding: 5px; border-color: black; border-width: 1px; border-style: solid;\">Új adat hozzáadása</div>";
+		print "<div onclick=\"begin_new_or_edit_data('termek'); neworeditClick();\"class=\"action_button\">Új adat hozzáadása</div>";
 	}
 	print "</div>";
 
@@ -40,7 +40,7 @@
 
 		// megjelenes kovetkezik...
 		print "<div id=\"rightcontent\">";
-			print "<div onclick='begin_new_or_edit_data(\"termek\", ".$ojson."); neworeditClick();' style=\"cursor: pointer; margin: 10px; padding: 5px; border-color: black; border-width: 1px; border-style: solid;\">Szerkesztés</div>";
+			print "<div onclick='begin_new_or_edit_data(\"termek\", ".$ojson."); neworeditClick();'class=\"action_button\">Szerkesztés</div>";
 			print "<p>";
 				print "<table>";
 					print "<tr><td><b>Név:</b></td><td>".$object->nev."</td></tr>";
@@ -48,7 +48,7 @@
 					print "<tr><td><b>Foglalható:</b></td><td>".($object->foglalhato == "t" ? "Igen" : "Nem")."</td></tr>";
 				print "</table>";
 			print "</p>";
-			print "<div onclick='begin_new_or_edit_data(\"termek\", ".$ojson."); neworeditClick();' style=\"cursor: pointer; margin: 10px; padding: 5px; border-color: black; border-width: 1px; border-style: solid;\">Szerkesztés</div>";
+			print "<div onclick='begin_new_or_edit_data(\"termek\", ".$ojson."); neworeditClick();'class=\"action_button\">Szerkesztés</div>";
 		print "</div>";
 	}
 	else {
