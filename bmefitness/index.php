@@ -126,8 +126,10 @@
 
 	<!-- oldal teruletei -->
 		<div class="menu" id="menu"></div>
-		<div id="settings"></div>
-		<div id="content"></div>
+		<div id="acontent">
+			<div id="settings"></div>
+			<div id="content"></div>
+		</div>
 
 	</body>
 </html>

@@ -2,38 +2,30 @@
 <?php
 	require_once("../functions/database.php");
 
-	print "<div class=\"leftcontent\">";
+	print "<div style=\"border-width: 2px; border-color: #333334; border-style: solid;\"><h1 style=\"color: #489d1e;\">Infó</h1></div>";
+	print "<div class=\"rightcontent\" style=\"margin-left: 0px;\">";
 	$query = "SELECT * FROM fitness.info;";
 	$result = db_query_object_array($query);
 
-	if (!is_null($result) == count($result) > 0) {
-		print "<div onclick=\"begin_new_data('info'); neworeditClick();\" style=\"cursor: pointer; margin: 10px; padding: 5px; border-color: black; border-width: 1px; border-style: solid;\">Szerkesztés</div>";
+	print "<div onclick=\"begin_new_data('info'); neworeditClick();\" style=\"cursor: pointer; margin: 10px; padding: 5px; border-color: black; border-width: 1px; border-style: solid;\">Szerkesztés</div>";
 
-		print "<p>Bemutatkozás:<br>";
+	if (!is_null($result) == count($result) > 0) {
+		print "<b>Bemutatkozás</b><br><p>";
 		print $result[0]->bemutatkozas."</p>";
 
-		print "<p>Házirend:<br>";
+		print "<b>Házirend</b><br><p>";
 		print $result[0]->hazirend."</p>";
 
-		print "<p>Nyitvatartás:<br>";
+		print "<b>Nyitvatartás</b><br><p>";
 		print $result[0]->nyitvatartas."</p>";
-
-		print "<div onclick=\"begin_new_data('info'); neworeditClick();\" style=\"cursor: pointer; margin: 10px; padding: 5px; border-color: black; border-width: 1px; border-style: solid;\">Szerkesztés</div>";
 	}
 	else {
-		print "<div onclick=\"begin_new_data('info'); neworeditClick();\" style=\"cursor: pointer; margin: 10px; padding: 5px; border-color: black; border-width: 1px; border-style: solid;\">Szerkesztés</div>";
-
-		print "<p>Bemutatkozás:<br><div style=\"color: red;\">Nincs adat hozzáadva</div></p>";
-
-		print "<p>Házirend:<br><div style=\"color: red;\">Nincs adat hozzáadva</div></p>";
-
-		print "<p>Nyitvatartás:<br><div style=\"color: red;\">Nincs adat hozzáadva</div></p>";
-
-		print "<div onclick=\"begin_new_data('info'); neworeditClick();\" style=\"cursor: pointer; margin: 10px; padding: 5px; border-color: black; border-width: 1px; border-style: solid;\">Szerkesztés</div>";
+		print "<b>Bemutatkozás</b><br><p><div style=\"color: red;\">Nincs adat hozzáadva</div></p>";
+		print "<b>Házirend</b><br><p><div style=\"color: red;\">Nincs adat hozzáadva</div></p>";
+		print "<b>Nyitvatartás</b><br><p><div style=\"color: red;\">Nincs adat hozzáadva</div></p>";
 	}
+
+	print "<div onclick=\"begin_new_data('info'); neworeditClick();\" style=\"cursor: pointer; margin: 10px; padding: 5px; border-color: black; border-width: 1px; border-style: solid;\">Szerkesztés</div>";
+
 	print "</div>";
-
-
-	print "<div class=\"rightcontent\"></div>";
-
 ?>

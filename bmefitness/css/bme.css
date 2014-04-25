@@ -1,29 +1,27 @@
 body {
 	background-color: #333334;
-	min-width: 1020px;
+	min-width: 800px;
 }
 
 div.menu {
-	margin-top: -10px;
 	margin-right: auto;
 	margin-left: auto;
-	padding: 10px;
 	background-color: #489d1e;
 	position: relative;
 	width: 100%;
-	min-height: 100px;
-	-moz-border-radius: 10px;
+	min-height: 120px;
 }
 
 div.menu_button {
 	top: 0px;
 	float: left;
 	margin-top: 20px;
-	margin-left: 20px;
+	margin-left: 10px;
+	margin-right: 10px;
 	padding: 30px;
 	position: relative;
 	right: 0px;
-	left: 200px;
+	left: 110px;
 	float: left;
 	
 	background-color: white;
@@ -44,29 +42,60 @@ div.menu_button_kijelolt {
 	cursor: default;
 }
 
-div#content {
+div#acontent {
 	margin-top: 20px;
-	margin-right: auto;
-	margin-left: auto;
 	padding: 0px;
-	background-color: #ededed;
-	position: relative;
-	right: -10px;
-	left: 10px;
-	float: left;
+}
+
+div#settings {
 	min-height: 600px;
-	min-width: 600px;
+	width: 100px;
+	text-align: left;
+	float: left;
+}
+
+div#settings ul {
+	text-align: left;
+	list-style-type: none;
+	font-size: 16px;
+}
+
+div#settings li {
+	padding: 5px;
+}
+
+
+div#settings a:link, a:visited {
+	color: #489d1e;
+}
+
+div#settings a:hover {/*, a:activated {*/
+	font-weight: bold;
+	text-decoration: underline;
+}
+
+div#content {
+	margin-left: 110px;
+	margin-right: 20px;
+	background-color: #ededed;
+	padding: 10px;
+	overflow: hidden;
 }
 
 div.leftcontent {
-	margin-top: 10px;
-	margin-bottom: 10px;
-
+	padding: 10px;
 	position: relative;
 	width: 200px;
-	left: 10px;
-
 	float: left;
+}
+
+div.rightcontent {
+	padding: 10px;
+	margin-left: 220px;
+}
+
+div.rightcontent p {
+	text-align: justify;
 }
 
 div.scrollcontent {
@@ -88,35 +117,6 @@ div.edit_data_available {
 
 table.edit_data_table td.td_right {
 	text-align: right;
-}
-
-div#settings {
-	margin-top: 20px;
-	margin-right: auto;
-	margin-left: auto;
-	padding: 10px;
-	position: relative;
-	width: 100px;
-	right: 0px;
-	left: 0px;
-	float: left;
-	min-height: 600px;
-	color: white;
-}
-
-div#settings ul {
-	text-align: left;
-	list-style-type: none;
-}
-
-
-div#settings a:link, a:visited {
-	color: #489d1e;
-}
-
-div#settings a:hover {/*, a:activated {*/
-	font-weight: bold;
-	text-decoration: underline;
 }
 
 
