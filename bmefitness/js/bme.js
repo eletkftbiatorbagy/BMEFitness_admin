@@ -82,10 +82,10 @@ function change_edit_data_site(site, object) {
 }
 
 /*!
- \param field				Ez a mezo lesz piros, ha nem jo az eredmeny
- \param checkfield		Ennel a mezonel ellenorizzuk, hogy lehet-e ures illetve a karakterszamot
- \param isAvailableEmpty	Ha ez igaz, akkor csak a karakter szamat ellenorzi
- \param charCount			Ha nagyobb, mint 0, akkor azt is ellenorzi...
+ * \param field				Ez a mezo lesz piros, ha nem jo az eredmeny
+ * \param checkfield		Ennel a mezonel ellenorizzuk, hogy lehet-e ures illetve a karakterszamot
+ * \param isAvailableEmpty	Ha ez igaz, akkor csak a karakter szamat ellenorzi
+ * \param charCount			Ha nagyobb, mint 0, akkor azt is ellenorzi...
  */
 function editedField(field, checkfield, isAvailableEmpty, maxCharCount) {
 	if (!field || !checkfield)
@@ -104,35 +104,64 @@ function editedField(field, checkfield, isAvailableEmpty, maxCharCount) {
 		afield.removeClass("redcolor");
 }
 
-function begin_new_data(data_type) {
+/*!
+ * \param data_type			kötelező paraméter, hogy tudjuk mit szerkesztünk.
+ * \param edit_data_object		opcionális paraméter, csak akkor kell, ha valtoztatni akarom az adatatot es nem ujat letrehozni...
+ */
+function begin_new_or_edit_data(data_type, edit_data_object) {
 	if (!data_type)
 		return;
 
-	$.post("functions/edit_data/new_data_forms.php", {type: data_type}, function(result) {
+	// megprobaljuk atkonvertalni json-ra, ha nem sikerul, akkor ujat viszunk fel, nem a legjobb, de nem rossz...
+	var jsondata = null;
+	if (edit_data_object)
+		jsondata = JSON.stringify(edit_data_object);
+
+	if (jsondata) {
+		$('#neworeditlink').html("Módosítás");
+		$.post("functions/edit_data/new_data_forms.php", {type: data_type, selectedObject: jsondata}, function(result) {
 		   $('#newOrEditArea').html(result);
 		   // elore beallitjuk a linket az ujnak, mert ugyebar egybol ujat lehet hozzaadni, es nem szerkeszteni a regit...
-		   $('#neworeditlink').attr("onclick", "end_new_data('" + data_type + "');");
-	});
+		   $('#neworeditlink').attr("onclick", "end_new_or_edit_data('" + data_type + "');");
+		});
+	}
+	else {
+		$('#neworeditlink').html("Létrehozás");
+		$.post("functions/edit_data/new_data_forms.php", {type: data_type}, function(result) {
+		   $('#newOrEditArea').html(result);
+		   // elore beallitjuk a linket az ujnak, mert ugyebar egybol ujat lehet hozzaadni, es nem szerkeszteni a regit...
+		   $('#neworeditlink').attr("onclick", "end_new_or_edit_data('" + data_type + "');");
+		});
+	}
 
 	var title = null;
 	if (data_type == "info") {
 		title = "Infó adatok szerkesztése";
 	}
 	else if (data_type == "edzok") {
-		title = "Új edző adatai";
+		if (jsondata)
+			title = "Edző szerkesztése";
+		else
+			title = "Új edző adatai";
 	}
 	else if (data_type == "orak") {
-		title = "Új óra adatai";
+		if (jsondata)
+			title = "Óra szerkesztése";
+		else
+			title = "Új óra adatai";
 	}
 	else if (data_type == "termek") {
-		title = "Új terem adatai";
+		if (jsondata)
+			title = "Terem szerkesztése";
+		else
+			title = "Új terem adatai";
 	}
 
 	if (title)
 		$('.editTitle').html(title);
 }
 
-function end_new_data(data_type) {
+function end_new_or_edit_data(data_type) {
 	if (!data_type)
 		return;
 

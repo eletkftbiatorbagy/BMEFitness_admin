@@ -23,7 +23,7 @@
 			}
 		}
 		print "</div>";
-		print "<div onclick=\"begin_new_data('edzok'); neworeditClick();\" style=\"cursor: pointer; margin: 10px; padding: 5px; border-color: black; border-width: 1px; border-style: solid;\">Új adat hozzáadása</div>";
+		print "<div onclick=\"begin_new_or_edit_data('edzok'); neworeditClick();\" style=\"cursor: pointer; margin: 10px; padding: 5px; border-color: black; border-width: 1px; border-style: solid;\">Új adat hozzáadása</div>";
 	}
 	print "</div>";
 
@@ -32,20 +32,23 @@
 		$jsonobject = $_GET["selectedObject"];
 		$object = object_from_array($jsonobject);
 
+		// megint at kell alakitani, hogy jo legyen a new_or_edit_data_forms.php-ban...
+		$ojson = json_from_object($object);
+
 		// megjelenes kovetkezik...
 		print "<div id=\"rightcontent\">";
-			print "<div onclick=\"begin_new_data('info'); neworeditClick();\" style=\"cursor: pointer; margin: 10px; padding: 5px; border-color: black; border-width: 1px; border-style: solid;\">Szerkesztés</div>";
+			print "<div onclick='begin_new_or_edit_data(\"edzok\", ".$ojson."); neworeditClick();' style=\"cursor: pointer; margin: 10px; padding: 5px; border-color: black; border-width: 1px; border-style: solid;\">Szerkesztés</div>";
 			print "<p>";
 				print "<table>";
 					print "<tr><td><b>Vezetéknév:</b></td><td>".$object->vnev."</td></tr>";
-					print "<tr><td><b>Keresztnévknév:</b></td><td>".$object->knev."</td></tr>";
+					print "<tr><td><b>Keresztnév:</b></td><td>".$object->knev."</td></tr>";
 					print "<tr><td><b>Rövid név:</b></td><td>".$object->rovid_nev."</td></tr>";
 					print "<tr><td><b>Alcím:</b></td><td>".$object->alcim."</td></tr>";
 					print "<tr><td><b>Leírás:</b></td><td>".$object->leiras."</td></tr>";
 					print "<tr><td><b>Értékelés:</b></td><td>".$object->ertekeles."</td></tr>";
 				print "</table>";
 			print "</p>";
-			print "<div onclick=\"begin_new_data('info'); neworeditClick();\" style=\"cursor: pointer; margin: 10px; padding: 5px; border-color: black; border-width: 1px; border-style: solid;\">Szerkesztés</div>";
+			print "<div onclick='begin_new_or_edit_data(\"edzok\", ".$ojson."); neworeditClick();' style=\"cursor: pointer; margin: 10px; padding: 5px; border-color: black; border-width: 1px; border-style: solid;\">Szerkesztés</div>";
 		print "</div>";
 	}
 	else {

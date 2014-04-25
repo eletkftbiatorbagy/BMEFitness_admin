@@ -8,7 +8,7 @@
 	$query = "SELECT * FROM fitness.info;";
 	$result = db_query_object_array($query);
 
-	print "<div onclick=\"begin_new_data('info'); neworeditClick();\" style=\"cursor: pointer; margin: 10px; padding: 5px; border-color: black; border-width: 1px; border-style: solid;\">Szerkesztés</div>";
+	print "<div onclick=\"begin_new_or_edit_data('info'); neworeditClick();\" style=\"cursor: pointer; margin: 10px; padding: 5px; border-color: black; border-width: 1px; border-style: solid;\">Szerkesztés</div>";
 
 	if (!is_null($result) == count($result) > 0) {
 		print "<b>Bemutatkozás</b><br><p>";
@@ -26,7 +26,7 @@
 		print "<b>Nyitvatartás</b><br><p><div style=\"color: red;\">Nincs adat hozzáadva</div></p>";
 	}
 
-	print "<div onclick=\"begin_new_data('info'); neworeditClick();\" style=\"cursor: pointer; margin: 10px; padding: 5px; border-color: black; border-width: 1px; border-style: solid;\">Szerkesztés</div>";
+	print "<div onclick=\"begin_new_or_edit_data('info'); neworeditClick();\" style=\"cursor: pointer; margin: 10px; padding: 5px; border-color: black; border-width: 1px; border-style: solid;\">Szerkesztés</div>";
 
 	print "</div>";
 ?>
