@@ -54,8 +54,9 @@
 			$ids == "" || $tableNameWithSchema == "" || $vauleIDs == "" || $values == "")
 			return NULL;
 
-		$avalueids = explode(",", $vauleIDs);
-		$avalues = explode(",", $values);
+		$elvalaszto = "<!±!>";
+		$avalueids = explode($elvalaszto, $vauleIDs);
+		$avalues = explode($elvalaszto, $values);
 
 		if (count($avalueids) == 0 || (count($avalueids) != count($avalues)))
 			return NULL;
@@ -80,7 +81,11 @@
 //		return $query;
 
 		$result = db_query_object_array($query);
-		if (!$result && $ids == "all") { // ha mindenkeppen updatelni akarunk es meg nincs a tablankban semmi sor, akkor hozzafuzi...
+		if (!$result && $ids == "all") {
+			// ha mindenkeppen updatelni akarunk es meg nincs a tablankban semmi sor, akkor hozzafuzi...
+			// at kell alakitani ,-re az elvalaszto karaktereket
+			$vauleIDs = str_replace($elvalaszto, ",", $vauleIDs);
+			$values = str_replace($elvalaszto, ",", $values);
 			return db_insert_into_table($tableNameWithSchema, $vauleIDs, $values, $returnID);
 		}
 		else {

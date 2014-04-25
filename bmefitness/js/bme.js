@@ -131,6 +131,16 @@ function end_new_data(data_type) {
 	var avalues = "";
 	var aid = "-1";
 
+	var elvalaszto = ",";
+	var allelvalaszto = "<!±!>";
+
+	/*
+	 
+	 Figyelem, ha all, vagy updatelni szeretnénk, akkor az allelvalszot kell hasznalni a sima miatt.
+	 Mert az UPDATE az szétbontja részekre és csak utána saját maga teszi össze vesszővel elválasztva
+	 
+	*/
+
 	if (data_type == "info") {
 		if (!$('#infodebut').val())
 			error_message += "A bemutatkozást meg kell adni!";
@@ -141,8 +151,8 @@ function end_new_data(data_type) {
 
 		aid = "all";
 		atableNameWithSchema = "fitness.info"
-		avalueIDs = "bemutatkozas,hazirend,nyitvatartas";
-		avalues = "'" + $('#infodebut').val() + "','" + $('#infopolicy').val() + "','" + $('#infoopeninghours').val() + "'";
+		avalueIDs = "bemutatkozas" + allelvalaszto + "hazirend" + allelvalaszto + "nyitvatartas";
+		avalues = "'" + $('#infodebut').val() + "'" + allelvalaszto + "'" + $('#infopolicy').val() + "'" + allelvalaszto + "'" + $('#infoopeninghours').val() + "'";
 	}
 	else if (data_type == "edzok") {
 		if (!$('#edzovname').val())
@@ -166,8 +176,8 @@ function end_new_data(data_type) {
 			error_message += (error_message ? "\nAz edző alcíme maximum 30 karakter lehet!" : "Az edző alcíme maximum 30 karakter lehet!");
 
 		atableNameWithSchema = "fitness.edzok"
-		avalueIDs = "vnev,knev,rovid_nev,alcim,leiras,sorszam";
-		avalues = "'" + $('#edzovname').val() + "','" + $('#edzokname').val() + "','" + $('#edzorname').val() + "','" + $('#edzoaltitle').val() + "','" + $('#edzodescription').val() + "',fitness.zero_if_null((SELECT max(sorszam) FROM fitness.edzok)) + 1";
+		avalueIDs = "vnev" + elvalaszto + "knev" + elvalaszto + "rovid_nev" + elvalaszto + "alcim" + elvalaszto + "leiras" + elvalaszto + "sorszam";
+		avalues = "'" + $('#edzovname').val() + "'" + elvalaszto + "'" + $('#edzokname').val() + "'" + elvalaszto + "'" + $('#edzorname').val() + "'" + elvalaszto + "'" + $('#edzoaltitle').val() + "'" + elvalaszto + "'" + $('#edzodescription').val() + "'" + elvalaszto + "fitness.zero_if_null((SELECT max(sorszam) FROM fitness.edzok)) + 1";
 	}
 	else if (data_type == "orak") {
 		if (!$('#oraname').val())
@@ -191,8 +201,8 @@ function end_new_data(data_type) {
 			error_message += (error_message ? "\nAz óra alcíme maximum 30 karakter lehet!" : "Az óra alcíme maximum 30 karakter lehet!");
 
 		atableNameWithSchema = "fitness.orak"
-		avalueIDs = "nev,rovid_nev,alcim,leiras,max_letszam,perc,belepodij,sorszam";
-		avalues = "'" + $('#oraname').val() + "','" + $('#orarname').val() + "','" + $('#oraaltitle').val() + "','" + $('#oradescription').val() + "'," + $('#oramaxletszam').val() + "," + $('#oraperc').val() + ",'" + ($('#orabelepodij').prop("checked") ? "t" : "f") + "',fitness.zero_if_null((SELECT max(sorszam) FROM fitness.orak)) + 1";
+		avalueIDs = "nev" + elvalaszto + "rovid_nev" + elvalaszto + "alcim" + elvalaszto + "leiras" + elvalaszto + "max_letszam" + elvalaszto + "perc" + elvalaszto + "belepodij" + elvalaszto + "sorszam";
+		avalues = "'" + $('#oraname').val() + "'" + elvalaszto + "'" + $('#orarname').val() + "'" + elvalaszto + "'" + $('#oraaltitle').val() + "'" + elvalaszto + "'" + $('#oradescription').val() + "'" + elvalaszto + "" + $('#oramaxletszam').val() + "" + elvalaszto + "" + $('#oraperc').val() + "" + elvalaszto + "'" + ($('#orabelepodij').prop("checked") ? "t" : "f") + "'" + elvalaszto + "fitness.zero_if_null((SELECT max(sorszam) FROM fitness.orak)) + 1";
 	}
 	else if (data_type == "termek") {
 		if (!$('#teremname').val())
@@ -205,8 +215,8 @@ function end_new_data(data_type) {
 			error_message += (error_message ? "\nA terem alcíme maximum 20 karakter lehet!" : "A terem alcíme maximum 20 karakter lehet!");
 
 		atableNameWithSchema = "fitness.termek"
-		avalueIDs = "nev,alcim,foglalhato,sorszam";
-		avalues = "'" + $('#teremname').val() + "','" + $('#teremaltitle').val() + "','" + ($('#teremavailable').prop("checked") ? "t" : "f") + "',fitness.zero_if_null((SELECT max(sorszam) FROM fitness.termek)) + 1";
+		avalueIDs = "nev" + elvalaszto + "alcim" + elvalaszto + "foglalhato" + elvalaszto + "sorszam";
+		avalues = "'" + $('#teremname').val() + "'" + elvalaszto + "'" + $('#teremaltitle').val() + "'" + elvalaszto + "'" + ($('#teremavailable').prop("checked") ? "t" : "f") + "'" + elvalaszto + "fitness.zero_if_null((SELECT max(sorszam) FROM fitness.termek)) + 1";
 	}
 
 	if (error_message) {
