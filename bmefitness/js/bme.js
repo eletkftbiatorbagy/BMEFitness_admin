@@ -10,7 +10,7 @@ function change_main_site(site) {
 
 	if (site == "edit_data") {
 		if (!edit_data_content)
-			edit_data_content = "info";
+			edit_data_content = "edzok";
 
 		if (edit_data_content == "info") {
 			contentSite = "alsites/edit_data_content_info.php";
