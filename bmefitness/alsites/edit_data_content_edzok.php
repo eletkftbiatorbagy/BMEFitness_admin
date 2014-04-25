@@ -19,7 +19,7 @@
 				$jsonobject = json_from_object($result[$i]);
 				// a js mar egybol tudja, hogy ez egy object, szoval ott nem kell atalakitani...
 				if (!is_null($jsonobject))
-					print "<div class=\"edit_data_available\" onclick='change_edit_data_site(\"edzok\", ".$jsonobject.");'>edzo id: ".$result[$i]->id.", nev: ".$result[$i]->vnev." ".$result[$i]->knev." (".$result[$i]->rovid_nev.")"."</div>";
+					print "<div class=\"edit_data_available\" onclick='change_edit_data_site(\"edzok\", ".$jsonobject.");'><b>".$result[$i]->vnev." ".$result[$i]->knev."</b><br><span style=\"font-size: smaller;\"><i>".$result[$i]->rovid_nev."</i></span>"."</div>";
 			}
 		}
 		print "</div>";

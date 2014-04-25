@@ -20,7 +20,7 @@
 					$jsonobject = json_from_object($result[$i]);
 					// a js mar egybol tudja, hogy ez egy object, szoval ott nem kell atalakitani...
 					if (!is_null($jsonobject))
-						print "<div class=\"edit_data_available\" onclick='change_edit_data_site(\"orak\", ".$jsonobject.");'>óra id: ".$result[$i]->id.", név: ".$result[$i]->nev."</div>";
+						print "<div class=\"edit_data_available\" onclick='change_edit_data_site(\"orak\", ".$jsonobject.");'><b>".$result[$i]->nev."</b><br><span style=\"font-size: smaller;\"><i>".$result[$i]->alcim."</i></span>"."</div>";
 				}
 			}
 		}
