@@ -1,9 +1,10 @@
 
 <?php
 	require_once("../functions/database.php");
+	require_once("../functions/functions.php");
 
 	print "<div style=\"border-width: 2px; border-color: #333334; border-style: solid;\"><h1 style=\"color: #489d1e;\">Infó</h1></div>";
-	print "<div class=\"rightcontent\" style=\"margin-left: 0px;\">";
+	print "<div id=\"rightcontent\" style=\"margin-left: 0px;\">";
 	$query = "SELECT * FROM fitness.info;";
 	$result = db_query_object_array($query);
 

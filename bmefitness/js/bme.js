@@ -1,4 +1,5 @@
 var edit_data_content = null;
+var edit_data_object = null;
 
 function change_main_site(site) {
 	if (!site) // check: "", null, undefined, 0, false, NaN
@@ -42,11 +43,20 @@ function change_main_site(site) {
 	}
 
 	if (settingsSite && contentSite) {
-		$.get(contentSite, { }, function (result) {
-			if (result) {
-				$('#content').html(result);
-			}
-		});
+		if (edit_data_object) {
+			$.get(contentSite, { selectedObject: edit_data_object }, function (result) {
+			  if (result) {
+				  $('#content').html(result);
+			  }
+			});
+		}
+		else {
+			$.get(contentSite, { }, function (result) {
+				if (result) {
+					$('#content').html(result);
+				}
+			});
+		}
 
 		$.get(settingsSite, { }, function (result) {
 			if (result) {
@@ -62,11 +72,12 @@ function change_main_site(site) {
 	}
 }
 
-function change_edit_data_site(site) {
+function change_edit_data_site(site, object) {
 	if (!site) // check: "", null, undefined, 0, false, NaN
 		return;
 
 	edit_data_content = site;
+	edit_data_object = object;
 	change_main_site("edit_data");
 }
 

@@ -82,20 +82,26 @@ div#content {
 	overflow: hidden;
 }
 
-div.leftcontent {
+div#leftcontent {
 	padding: 10px;
 	position: relative;
 	width: 200px;
 	float: left;
 }
 
-div.rightcontent {
+div#rightcontent {
 	padding: 10px;
 	margin-left: 220px;
 }
 
-div.rightcontent p {
+div#rightcontent p {
 	text-align: justify;
+}
+
+div#rightcontent table tr td {
+	padding: 5px;
+/*	padding-top: 10px; */
+/*	padding-bottom: 10px; */
 }
 
 div.scrollcontent {
@@ -113,6 +119,8 @@ div.edit_data_available {
 	color: white;
 	position: relative;
 	border-bottom: 1px solid #409915;
+	cursor: pointer;
+	text-align: left;
 }
 
 table.edit_data_table td.td_right {
