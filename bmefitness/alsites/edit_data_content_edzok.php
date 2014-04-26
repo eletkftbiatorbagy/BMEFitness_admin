@@ -5,7 +5,7 @@
 
 	print "<div style=\"border-width: 2px; border-color: #333334; border-style: solid;\"><h1 style=\"color: #489d1e;\">Edzők</h1></div>";
 	print "<div id=\"leftcontent\">";
-	$query = "SELECT * FROM fitness.edzok;";
+	$query = "SELECT * FROM fitness.edzok ORDER BY sorszam;";
 	$result = db_query_object_array($query);
 
 	if (!is_null($result)) {
