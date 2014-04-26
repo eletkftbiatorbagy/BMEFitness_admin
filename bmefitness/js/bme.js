@@ -122,7 +122,7 @@ function begin_new_or_edit_data(data_type, edit_data_object) {
 		$.post("functions/edit_data/new_data_forms.php", {type: data_type, selectedObject: jsondata}, function(result) {
 		   $('#newOrEditArea').html(result);
 		   // elore beallitjuk a linket az ujnak, mert ugyebar egybol ujat lehet hozzaadni, es nem szerkeszteni a regit...
-		   $('#neworeditlink').attr("onclick", "end_new_or_edit_data('" + data_type + "');");
+		   $('#neworeditlink').attr("onclick", "end_new_or_edit_data('" + data_type + "', " + jsondata + ");");
 		});
 	}
 	else {
@@ -161,7 +161,11 @@ function begin_new_or_edit_data(data_type, edit_data_object) {
 		$('.editTitle').html(title);
 }
 
-function end_new_or_edit_data(data_type) {
+/*!
+ * \param data_type			kötelező paraméter, hogy tudjuk mit szerkesztünk.
+ * \param jsondata			opcionális paraméter, csak akkor kell, ha valtoztatni akarom az adatatot es nem ujat letrehozni...
+ */
+function end_new_or_edit_data(data_type, jsondata) {
 	if (!data_type)
 		return;
 
@@ -169,17 +173,22 @@ function end_new_or_edit_data(data_type) {
 	var atableNameWithSchema = "";
 	var avalueIDs = "";
 	var avalues = "";
+	var returningValues = ""; // ide az osszes ertek kell, ami megjelenik, tehat nem csak az, amit szerkesztettunk...
 	var aid = "-1";
 
 	var elvalaszto = ",";
 	var allelvalaszto = "<!±!>";
 
+
 	/*
-	 
 	 Figyelem, ha all, vagy updatelni szeretnénk, akkor az allelvalszot kell hasznalni a sima miatt.
 	 Mert az UPDATE az szétbontja részekre és csak utána saját maga teszi össze vesszővel elválasztva
-	 
 	*/
+
+	if (jsondata) {
+		aid = jsondata.id;
+		elvalaszto = allelvalaszto;
+	}
 
 	if (data_type == "info") {
 		if (!$('#infodebut').val())
@@ -193,6 +202,7 @@ function end_new_or_edit_data(data_type) {
 		atableNameWithSchema = "fitness.info"
 		avalueIDs = "bemutatkozas" + allelvalaszto + "hazirend" + allelvalaszto + "nyitvatartas";
 		avalues = "'" + $('#infodebut').val() + "'" + allelvalaszto + "'" + $('#infopolicy').val() + "'" + allelvalaszto + "'" + $('#infoopeninghours').val() + "'";
+		returningValues = avalueIDs; // itt nincs id....
 	}
 	else if (data_type == "edzok") {
 		if (!$('#edzovname').val())
@@ -216,8 +226,14 @@ function end_new_or_edit_data(data_type) {
 			error_message += (error_message ? "\nAz edző alcíme maximum 30 karakter lehet!" : "Az edző alcíme maximum 30 karakter lehet!");
 
 		atableNameWithSchema = "fitness.edzok"
-		avalueIDs = "vnev" + elvalaszto + "knev" + elvalaszto + "rovid_nev" + elvalaszto + "alcim" + elvalaszto + "leiras" + elvalaszto + "sorszam";
-		avalues = "'" + $('#edzovname').val() + "'" + elvalaszto + "'" + $('#edzokname').val() + "'" + elvalaszto + "'" + $('#edzorname').val() + "'" + elvalaszto + "'" + $('#edzoaltitle').val() + "'" + elvalaszto + "'" + $('#edzodescription').val() + "'" + elvalaszto + "fitness.zero_if_null((SELECT max(sorszam) FROM fitness.edzok)) + 1";
+		avalueIDs = "vnev" + elvalaszto + "knev" + elvalaszto + "rovid_nev" + elvalaszto + "alcim" + elvalaszto + "leiras";
+		avalues = "'" + $('#edzovname').val() + "'" + elvalaszto + "'" + $('#edzokname').val() + "'" + elvalaszto + "'" + $('#edzorname').val() + "'" + elvalaszto + "'" + $('#edzoaltitle').val() + "'" + elvalaszto + "'" + $('#edzodescription').val() + "'";
+		returningValues = "id" + elvalaszto + avalueIDs + elvalaszto + "ertekeles"; // az ertekeles nem modosithato, de meg kell jeleniteni, azert van itt....
+		// hozzafuzzuk a sorszamot, ha ujat akarunk felvinni, mert amugy a sorszam nem valtozik
+		if (!jsondata) {
+			avalueIDs += elvalaszto + "sorszam";
+			avalues += elvalaszto + "fitness.zero_if_null((SELECT max(sorszam) FROM fitness.edzok)) + 1";
+		}
 	}
 	else if (data_type == "orak") {
 		if (!$('#oraname').val())
@@ -241,8 +257,14 @@ function end_new_or_edit_data(data_type) {
 			error_message += (error_message ? "\nAz óra alcíme maximum 30 karakter lehet!" : "Az óra alcíme maximum 30 karakter lehet!");
 
 		atableNameWithSchema = "fitness.orak"
-		avalueIDs = "nev" + elvalaszto + "rovid_nev" + elvalaszto + "alcim" + elvalaszto + "leiras" + elvalaszto + "max_letszam" + elvalaszto + "perc" + elvalaszto + "belepodij" + elvalaszto + "sorszam";
-		avalues = "'" + $('#oraname').val() + "'" + elvalaszto + "'" + $('#orarname').val() + "'" + elvalaszto + "'" + $('#oraaltitle').val() + "'" + elvalaszto + "'" + $('#oradescription').val() + "'" + elvalaszto + "" + $('#oramaxletszam').val() + "" + elvalaszto + "" + $('#oraperc').val() + "" + elvalaszto + "'" + ($('#orabelepodij').prop("checked") ? "t" : "f") + "'" + elvalaszto + "fitness.zero_if_null((SELECT max(sorszam) FROM fitness.orak)) + 1";
+		avalueIDs = "nev" + elvalaszto + "rovid_nev" + elvalaszto + "alcim" + elvalaszto + "leiras" + elvalaszto + "max_letszam" + elvalaszto + "perc" + elvalaszto + "belepodij";
+		avalues = "'" + $('#oraname').val() + "'" + elvalaszto + "'" + $('#orarname').val() + "'" + elvalaszto + "'" + $('#oraaltitle').val() + "'" + elvalaszto + "'" + $('#oradescription').val() + "'" + elvalaszto + "" + $('#oramaxletszam').val() + "" + elvalaszto + "" + $('#oraperc').val() + "" + elvalaszto + "'" + ($('#orabelepodij').prop("checked") ? "t" : "f") + "'";
+		returningValues = "id" + elvalaszto + avalueIDs;
+		// hozzafuzzuk a sorszamot, ha ujat akarunk felvinni, mert amugy a sorszam nem valtozik
+		if (!jsondata) {
+			avalueIDs += elvalaszto + "sorszam";
+			avalues += elvalaszto + "fitness.zero_if_null((SELECT max(sorszam) FROM fitness.orak)) + 1";
+		}
 	}
 	else if (data_type == "termek") {
 		if (!$('#teremname').val())
@@ -255,8 +277,14 @@ function end_new_or_edit_data(data_type) {
 			error_message += (error_message ? "\nA terem alcíme maximum 20 karakter lehet!" : "A terem alcíme maximum 20 karakter lehet!");
 
 		atableNameWithSchema = "fitness.termek"
-		avalueIDs = "nev" + elvalaszto + "alcim" + elvalaszto + "foglalhato" + elvalaszto + "sorszam";
-		avalues = "'" + $('#teremname').val() + "'" + elvalaszto + "'" + $('#teremaltitle').val() + "'" + elvalaszto + "'" + ($('#teremavailable').prop("checked") ? "t" : "f") + "'" + elvalaszto + "fitness.zero_if_null((SELECT max(sorszam) FROM fitness.termek)) + 1";
+		avalueIDs = "nev" + elvalaszto + "alcim" + elvalaszto + "foglalhato";
+		avalues = "'" + $('#teremname').val() + "'" + elvalaszto + "'" + $('#teremaltitle').val() + "'" + elvalaszto + "'" + ($('#teremavailable').prop("checked") ? "t" : "f") + "'";
+		returningValues = "id" + elvalaszto + avalueIDs;
+		// hozzafuzzuk a sorszamot, ha ujat akarunk felvinni, mert amugy a sorszam nem valtozik
+		if (!jsondata) {
+			avalueIDs += elvalaszto + "sorszam";
+			avalues += elvalaszto + "fitness.zero_if_null((SELECT max(sorszam) FROM fitness.termek)) + 1";
+		}
 	}
 
 	if (error_message) {
@@ -265,10 +293,12 @@ function end_new_or_edit_data(data_type) {
 	}
 
 	if (atableNameWithSchema && avalueIDs && avalues) {
-		$.post("functions/edit_data/insert_or_update_data.php", {data_id: aid, table_name_with_schema: atableNameWithSchema, value_ids: avalueIDs, values: avalues}, function(result) {
+		$.post("functions/edit_data/insert_or_update_data.php", {data_id: aid, table_name_with_schema: atableNameWithSchema, value_ids: avalueIDs, values: avalues, returning: returningValues}, function(result) {
 //			window.alert("elvileg kesz, eredmeny: " + (result ? "OK" : "XAR") + " (result: " + result + ")");
 			if (result) {
-			   change_main_site("edit_data");
+			   // at kell alakitani json objektte
+			   var json_decoded = JSON.parse(result);
+			   change_edit_data_site(data_type, json_decoded);
 			}
 	   });
 	}

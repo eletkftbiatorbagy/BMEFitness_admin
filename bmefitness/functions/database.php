@@ -57,14 +57,22 @@
 		$elvalaszto = "<!±!>";
 		$avalueids = explode($elvalaszto, $vauleIDs);
 		$avalues = explode($elvalaszto, $values);
+		$areturnValues = $returnID; // init a biztonsag kedveert
+		if (!is_null($returnID) && !empty($returnID))
+			$areturnValues = explode($elvalaszto, $returnID);
 
 		if (count($avalueids) == 0 || (count($avalueids) != count($avalues)))
 			return NULL;
 
 		$vauleIDsAndValues = "";
+		$returningIDs = "";
 
 		for ($i = 0; $i < count($avalueids); $i++) {
 			$vauleIDsAndValues .= ($vauleIDsAndValues == "" ? ($avalueids[$i]." = ".$avalues[$i]) : (",".$avalueids[$i]." = ".$avalues[$i]));
+		}
+
+		for ($i = 0; $i < count($areturnValues); $i++) {
+			$returningIDs .= ($returningIDs == "" ? $areturnValues[$i] : ",".$areturnValues[$i]);
 		}
 
 		if ($ids == "all")
@@ -72,8 +80,8 @@
 		else
 			$query = "UPDATE ".$tableNameWithSchema." SET ".$vauleIDsAndValues." WHERE id IN (".$ids.")";
 
-		if ($returnID != '')
-			$query .= " RETURNING ".$returnID;
+		if (!is_null($returningIDs) && !empty($returningIDs))
+			$query .= " RETURNING ".$returningIDs;
 		else if ($ids == "all")
 			$query .= " RETURNING ".$avalueids[0]; // azert csinalom igy, mert igy lesz visszztero ertek, tehat nem viszi fel uj sort, ha nem kell
 		$query .= ";";
@@ -86,7 +94,7 @@
 			// at kell alakitani ,-re az elvalaszto karaktereket
 			$vauleIDs = str_replace($elvalaszto, ",", $vauleIDs);
 			$values = str_replace($elvalaszto, ",", $values);
-			return db_insert_into_table($tableNameWithSchema, $vauleIDs, $values, $returnID);
+			return db_insert_into_table($tableNameWithSchema, $vauleIDs, $values, $returningIDs);
 		}
 		else {
 			return $result;

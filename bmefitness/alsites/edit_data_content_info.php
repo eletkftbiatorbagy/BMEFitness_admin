@@ -8,9 +8,11 @@
 	$query = "SELECT * FROM fitness.info;";
 	$result = db_query_object_array($query);
 
-	print "<div onclick=\"begin_new_or_edit_data('info'); neworeditClick();\"class=\"action_button\">Szerkesztés</div>";
-
 	if (!is_null($result) == count($result) > 0) {
+		$object = object_from_array($result[0]);
+		$ojson = json_from_object($object);
+
+		print "<div onclick='begin_new_or_edit_data(\"info\", ".$ojson."); neworeditClick();' class='action_button'>Szerkesztés</div>";
 		print "<b>Bemutatkozás</b><br><p>";
 		print $result[0]->bemutatkozas."</p>";
 
@@ -19,14 +21,16 @@
 
 		print "<b>Nyitvatartás</b><br><p>";
 		print $result[0]->nyitvatartas."</p>";
+		print "<div onclick='begin_new_or_edit_data(\"info\", ".$ojson."); neworeditClick();' class='action_button'>Szerkesztés</div>";
 	}
 	else {
+		print "<div onclick='begin_new_or_edit_data(\"info\"); neworeditClick();' class='action_button'>Szerkesztés</div>";
 		print "<b>Bemutatkozás</b><br><p><div style=\"color: red;\">Nincs adat hozzáadva</div></p>";
 		print "<b>Házirend</b><br><p><div style=\"color: red;\">Nincs adat hozzáadva</div></p>";
 		print "<b>Nyitvatartás</b><br><p><div style=\"color: red;\">Nincs adat hozzáadva</div></p>";
+		print "<div onclick='begin_new_or_edit_data(\"info\"); neworeditClick();' class='action_button'>Szerkesztés</div>";
 	}
 
-	print "<div onclick=\"begin_new_or_edit_data('info'); neworeditClick();\"class=\"action_button\">Szerkesztés</div>";
 
 	print "</div>";
 ?>

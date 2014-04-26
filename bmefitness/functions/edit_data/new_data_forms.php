@@ -8,10 +8,7 @@
 		if (isset($_POST["selectedObject"])) {
 			// visszaalakitjuk, hogy tudjuk hasznalni...
 			$jsonobject = $_POST["selectedObject"];
-//			$object = object_from_array($jsonobject);
 			$object = json_decode($jsonobject);
-//			$object = $_POST["selectedObject"];
-//			print "jsonobject: ".$jsonobject."<br><br>";
 		}
 
 		$file = "";
