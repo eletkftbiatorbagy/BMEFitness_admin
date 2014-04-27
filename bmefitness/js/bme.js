@@ -76,6 +76,8 @@ function change_edit_data_site(site, object) {
 	if (!site) // check: "", null, undefined, 0, false, NaN
 		return;
 
+//	window.alert("change alsite");
+
 	edit_data_content = site;
 	edit_data_object = object;
 	change_main_site("edit_data");
@@ -294,7 +296,7 @@ function end_new_or_edit_data(data_type, jsondata) {
 
 	if (atableNameWithSchema && avalueIDs && avalues) {
 		$.post("functions/edit_data/insert_or_update_data.php", {data_id: aid, table_name_with_schema: atableNameWithSchema, value_ids: avalueIDs, values: avalues, returning: returningValues}, function(result) {
-//			window.alert("elvileg kesz, eredmeny: " + (result ? "OK" : "XAR") + " (result: " + result + ")");
+//			window.alert("elvileg kesz, eredmeny: " + (result ? "OK" : "XAR") + " result: " + result);
 			if (result) {
 			   // at kell alakitani json objektte
 			   var json_decoded = JSON.parse(result);
@@ -305,3 +307,14 @@ function end_new_or_edit_data(data_type, jsondata) {
 
 	disablePopup();
 }
+
+function changeSorszam(table_name_with_schema, id, ujsorszam) {
+//	window.alert("change sorszam table: " + table + ", id: " + id + ", ujsorszam: " + ujsorszam);
+	$.post("functions/edit_data/change_sorszam.php", {table: table_name_with_schema, id: id, ujsorszam: ujsorszam}, function(result) {
+//		window.alert("elvileg kesz, eredmeny: " + (result ? "OK" : "XAR") + " result: " + result);
+		if (result && result == "true") {
+		   change_main_site("edit_data");
+		}
+	});
+}
+

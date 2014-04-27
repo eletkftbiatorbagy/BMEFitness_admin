@@ -3,9 +3,12 @@
 	require_once("../functions/database.php");
 	require_once("../functions/functions.php");
 
+	$tablename = "edzok"; // ezt kesobb is felhasznalom, azert van itt...
+	$table = "fitness.".$tablename;
+
 	print "<div style=\"border-width: 2px; border-color: #333334; border-style: solid;\"><h1 style=\"color: #489d1e;\">Edzők</h1></div>";
 	print "<div id=\"leftcontent\">";
-	$query = "SELECT * FROM fitness.edzok ORDER BY sorszam;";
+	$query = "SELECT * FROM ".$table." ORDER BY sorszam;";
 	$result = db_query_object_array($query);
 
 	if (!is_null($result)) {
@@ -18,12 +21,23 @@
 			for ($i = 0; $i < count($result); $i++) {
 				$jsonobject = json_from_object($result[$i]);
 				// a js mar egybol tudja, hogy ez egy object, szoval ott nem kell atalakitani...
-				if (!is_null($jsonobject))
-					print "<div class=\"edit_data_available\" onclick='change_edit_data_site(\"edzok\", ".$jsonobject.");'><b>".$result[$i]->vnev." ".$result[$i]->knev."</b><br><span style=\"font-size: smaller;\"><i>".$result[$i]->rovid_nev."</i></span>"."</div>";
+				$upsorszam = $result[$i]->sorszam - 1; // felfele mozgatjuk
+				$downsorszam = $result[$i]->sorszam + 1; // lefele mozgatjuk
+
+				if (!is_null($jsonobject)) {
+					print "<div class=\"edit_data_available\" onclick='change_edit_data_site(\"".$tablename."\", ".$jsonobject.");'><b>".$result[$i]->vnev." ".$result[$i]->knev."</b>";
+					if ($i > 0) // csak akkor van velfele nyil, ha van is felette valami...
+						print "<div onclick='changeSorszam(\"".$table."\", \"".$result[$i]->id."\", \"".$upsorszam."\"); window.event.stopPropagation();' style=\"float: right;\"><img src=\"images/icon_accordion_arrow_up\"></div>";
+					print "<br>";
+					print "<span style=\"font-size: smaller;\"><i>".$result[$i]->rovid_nev."</i></span>";
+					if ($i < count($result) - 1) // csak akkor jelenitjuk meg, ha van is alatta valami
+						print "<div onclick='changeSorszam(\"".$table."\", \"".$result[$i]->id."\", \"".$downsorszam."\"); window.event.stopPropagation();' style=\"float: right;\"><img src=\"images/icon_accordion_arrow_down\"></div>";
+					print "</div>";
+				}
 			}
 		}
 		print "</div>";
-		print "<div onclick=\"begin_new_or_edit_data('edzok'); neworeditClick();\"class=\"action_button\">Új adat hozzáadása</div>";
+		print "<div onclick=\"begin_new_or_edit_data('".$tablename."'); neworeditClick();\"class=\"action_button\">Új adat hozzáadása</div>";
 	}
 	print "</div>";
 
@@ -37,7 +51,7 @@
 
 		// megjelenes kovetkezik...
 		print "<div id=\"rightcontent\">";
-			print "<div onclick='begin_new_or_edit_data(\"edzok\", ".$ojson."); neworeditClick();'class=\"action_button\">Szerkesztés</div>";
+			print "<div onclick='begin_new_or_edit_data(\"".$tablename."\", ".$ojson."); neworeditClick();'class=\"action_button\">Szerkesztés</div>";
 			print "<p>";
 				print "<table>";
 					print "<tr><td><b>Vezetéknév:</b></td><td>".$object->vnev."</td></tr>";
@@ -48,7 +62,7 @@
 					print "<tr><td><b>Értékelés:</b></td><td>".$object->ertekeles."</td></tr>";
 				print "</table>";
 			print "</p>";
-			print "<div onclick='begin_new_or_edit_data(\"edzok\", ".$ojson."); neworeditClick();'class=\"action_button\">Szerkesztés</div>";
+			print "<div onclick='begin_new_or_edit_data(\"".$tablename."\", ".$ojson."); neworeditClick();'class=\"action_button\">Szerkesztés</div>";
 		print "</div>";
 	}
 	else {
