@@ -44,11 +44,20 @@ function change_main_site(site) {
 
 	if (settingsSite && contentSite) {
 		if (edit_data_object) {
-			$.get(contentSite, { selectedObject: edit_data_object }, function (result) {
-			  if (result) {
-				  $('#content').html(result);
-			  }
-			});
+			if (site == "edit_data") {
+				$.get(contentSite, { selectedObject: edit_data_object }, function (result) {
+					if (result) {
+					  $('#content').html(result);
+					}
+				});
+			}
+			else if (site == "timetable") {
+				$.post(contentSite, { het: edit_data_object }, function (result) {
+					if (result) {
+					  $('#content').html(result);
+					}
+				});
+			}
 		}
 		else {
 			$.get(contentSite, { }, function (result) {
@@ -76,11 +85,14 @@ function change_edit_data_site(site, object) {
 	if (!site) // check: "", null, undefined, 0, false, NaN
 		return;
 
-//	window.alert("change alsite");
-
 	edit_data_content = site;
 	edit_data_object = object;
 	change_main_site("edit_data");
+}
+
+function change_timetable_het(het) {
+	edit_data_object = het;
+	change_main_site("timetable");
 }
 
 /*!

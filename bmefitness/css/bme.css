@@ -135,8 +135,22 @@ div.action_button {
 	border-width: 2px;
 	border-style: dashed double;
 	font-weight: bold;
+	text-align: center;
 	color: white;
 	background-color: #409915;
+}
+
+span.action_button {
+	cursor: pointer;
+	margin: 10px;
+	padding: 10px;
+	font-weight: bold;
+	font-size: 2em;
+/*	border-color: black;
+	border-width: 2px;
+	border-style: dashed double;
+	color: white;
+	background-color: #409915; */
 }
 
 table.calendartable tr td {
