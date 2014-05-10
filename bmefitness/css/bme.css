@@ -139,6 +139,13 @@ div.action_button {
 	background-color: #409915;
 }
 
+table.calendartable tr td {
+	border: 1px solid gray;
+	border-collapse: collapse;
+/*	padding: 5px; */
+	text-align: center;
+}
+
 
 
 

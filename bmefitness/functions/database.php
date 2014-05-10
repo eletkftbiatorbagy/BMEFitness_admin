@@ -100,4 +100,20 @@
 			return $result;
 		}
 	}
+
+	function db_select_all_data($tableNameWithSchema, $expression = '') {
+		if (is_null($tableNameWithSchema) ||
+			$tableNameWithSchema == "")
+			return NULL;
+
+		// SELECT * FROM $tableNameWithSchema WHERE $expression
+		$query = "SELECT * FROM ".$tableNameWithSchema;
+		if ($expression != '')
+			$query .= " WHERE ".$expression;
+		$query .= ";";
+
+//		return $query;
+
+		return db_query_object_array($query);
+	}
 ?>

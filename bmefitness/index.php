@@ -14,6 +14,7 @@
 		<script src="js/jquery.js" type="text/javascript"></script>
 		<link rel="stylesheet" href="css/popup.css" />
 		<script src="js/popup.js" type="text/javascript"></script>
+		<link rel="stylesheet" href="css/reset.css" />
 		<link rel="stylesheet" href="css/base.css" />
 		<link rel="stylesheet" href="css/bme.css" />
 		<script src="js/bme.js" type="text/javascript"></script>
@@ -33,7 +34,7 @@
 ?>
 
 	</head>
-	<body onload="hideddrivetip(); change_main_site('edit_data');">
+	<body onload="hideddrivetip(); change_main_site('timetable');">
 		<div id="dhtmltooltip" class="tooltipandinfodivstyle"></div>
 
 		<script type="text/javascript">
