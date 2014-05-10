@@ -101,15 +101,17 @@
 		}
 	}
 
-	function db_select_all_data($tableNameWithSchema, $expression = '') {
+	function db_select_data($tableNameWithSchema, $columns, $where = '', $order = '') {
 		if (is_null($tableNameWithSchema) ||
 			$tableNameWithSchema == "")
 			return NULL;
 
-		// SELECT * FROM $tableNameWithSchema WHERE $expression
-		$query = "SELECT * FROM ".$tableNameWithSchema;
-		if ($expression != '')
-			$query .= " WHERE ".$expression;
+		// SELECT $columns FROM $tableNameWithSchema WHERE $where
+		$query = "SELECT ".$columns." FROM ".$tableNameWithSchema;
+		if (!is_null($where) && !empty($where))
+			$query .= " WHERE ".$where;
+		if (!is_null($order) && !empty($order))
+			$query .= " ORDER BY ".$order;
 		$query .= ";";
 
 //		return $query;
