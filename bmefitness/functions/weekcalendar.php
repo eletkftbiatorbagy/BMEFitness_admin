@@ -5,6 +5,8 @@
 	$MAXHOUR = 23;
 	$TDWIDTH = 120;
 	$TDHEIGHT = 30;
+	$MINHEIGHTFOREDZO = 70;
+	$SHOWNAPTARINFO = true;
 
 	/*! Egy 7 tagú tömb lesz a végeredmény, így könnyen fogjuk tudni az adott nap adatait (például hétfő az a 0. elem)
 	 */
@@ -141,30 +143,34 @@
 		$maxhour = $GLOBALS['MAXHOUR'];
 		$tdwidth = $GLOBALS['TDWIDTH'];
 		$tdheight = $GLOBALS['TDHEIGHT'];
+		$minheightforedzo = $GLOBALS['MINHEIGHTFOREDZO'];
+		$shownaptarinfo = $GLOBALS['SHOWNAPTARINFO'];
 
 		print "<table class=\"calendartable\">\n";
+		// azert minusz egy, mert az elso oszlop az orak kiiratasa
 		for ($hours = $minhour - 1; $hours <= $maxhour; $hours++) {
 			print "<tr style=\"height: ".$tdheight."px;\">\n";
-			for ($weeks = -1; $weeks < count($weekdays); $weeks++) {
+			// azert minusz egytol kezdodik, mert a -1 sor a datumot tartalmazza
+			for ($day = -1; $day < count($weekdays); $day++) {
 				$tdstyle = "<td style=\"";
 				$tdcontent = "";
 				// ekkor a fejlecet iratjuk ki (datumokat)
-				if ($weeks == -1 && $hours == $minhour - 1) {
+				if ($day == -1 && $hours == $minhour - 1) {
 					$tdstyle .= " padding: 5px;";
 					$tdcontent = "óra";
 				}
-				else if ($weeks == -1) {
+				else if ($day == -1) {
 					$tdstyle .= " padding: 5px;";
 					$tdcontent = $hours;
 				}
 				else if ($hours == $minhour - 1) {
 					$tdstyle .= "width: ".$tdwidth."px; padding: 5px;";
-					$tdcontent = date("Y", $weekdays[$weeks])." ".shortMonthName(date("n", $weekdays[$weeks]))." ".date("j", $weekdays[$weeks]).".<br>".dayName($weeks + 1)."\n";
+					$tdcontent = date("Y", $weekdays[$day])." ".shortMonthName(date("n", $weekdays[$day]))." ".date("j", $weekdays[$day]).".<br>".dayName($day + 1)."\n";
 				}
 				// ekkor mar az orakat
 				else {
 					$tdcontent = "<div style=\"position: relative; width: 100%; height: ".$tdheight."px;\">";
-					foreach (orakAtHourOfDayInNaptarak($naptarak, date("Y", $weekdays[$weeks]), date("m", $weekdays[$weeks]), date("d", $weekdays[$weeks]), $hours) as $adat) {
+					foreach (orakAtHourOfDayInNaptarak($naptarak, date("Y", $weekdays[$day]), date("m", $weekdays[$day]), date("d", $weekdays[$day]), $hours) as $adat) {
 						// szin kiszedese
 						$bcolor = "#FFFFFF"; // feher lesz, ha nincs szine...
 						if ($adat->bejegyzes->color != "")
@@ -186,14 +192,30 @@
 						$topsz = $adat->min == 0 ? "top: 0px;" : " top: ".$minm."px;";
 						$tdcontent .= "<div style=\"position: absolute; width: 100%;".$topsz.($amax >= 60 && $adat->min == 0 ? " height: 100%;" : " height: ".$maxm."px;")." background-color: ".$bcolor.";\"></div>";
 
-						// kiiratjuk a naptar nevet es egyeb infojat, ha ez a kezdodatum.
-						$mindate = date("Y", $weekdays[$weeks])."-".date("m", $weekdays[$weeks])."-".date("d", $weekdays[$weeks])." ".$hours.":".($adat->min < 10 ? "0".$adat->min : $adat->min);
-						if (date("Y-m-d H:i", $adat->bejegyzes->tol) == date("Y-m-d H:i", strtotime($mindate))) {
-							$tdcontent .= "<div style=\"position: relative; z-index: 1;".$topsz."\">".$adat->bejegyzes->ora_nev;
-							// ha nagyobb vagy egyenlo, mint 70 perc, akkor megjelenitjuk az edzo rovid nevet is, mert egyebkent nem fer ki...
-							if ((($adat->bejegyzes->ig - $adat->bejegyzes->tol) / 60) >= 70)
-								$tdcontent .= "<br>".$adat->bejegyzes->edzo_rovid_nev;
-							$tdcontent .= "</div>";
+						if ($shownaptarinfo) {
+							// kiiratjuk a naptar nevet es egyeb infojat, ha ez a kezdodatum.
+							$mindate = date("Y", $weekdays[$day])."-".date("m", $weekdays[$day])."-".date("d", $weekdays[$day])." ".$hours.":".($adat->min < 10 ? "0".$adat->min : $adat->min);
+
+							// ha az elso napon az elso oraban vagyunk es az esemenynek korabbi a kezdo idopontja, akkor megjelenitjuk a neve elott egy '<-' szoveget is.
+							if ($hours == $minhour && $day == 0 && date("Y-m-d H:i", $adat->bejegyzes->tol) < date("Y-m-d H:i", strtotime($mindate))) {
+								$tdcontent .= "<div style=\"position: relative; z-index: 1;".$topsz."\"><- ".$adat->bejegyzes->ora_nev;
+								// ha nagyobb vagy egyenlo, mint 70 perc, akkor megjelenitjuk az edzo rovid nevet is, mert egyebkent nem fer ki...
+								if (($adat->bejegyzes->ig - strtotime(date("Y", $weekdays[$day])."-".date("m", $weekdays[$day])."-".date("d", $weekdays[$day])." ".$hours.":00") / 60) >= $minheightforedzo)
+									$tdcontent .= "<br>".$adat->bejegyzes->edzo_rovid_nev;
+								$tdcontent .= "</div>";
+							}
+							// ha az utolso napon az utolso oraban vagyunk es az esemenynek kesobbi a zaro idopontja, akkor megjelenitjuk '->' szoveget. // nevre itt nincs szukseg, mert elotte szerepel
+							else if ($hours == $maxhour && $day == count($weekdays) - 1 && date("Y-m-d H:i", $adat->bejegyzes->ig) > date("Y-m-d H:i", strtotime(date("Y", $weekdays[$day])."-".date("m", $weekdays[$day])."-".date("d", $weekdays[$day])." ".$hours.":59"))) {
+								$tdcontent .= "<div style=\"position: relative; z-index: 1;".$topsz."\">-></div>";
+							}
+							// egyebkent csak akkor iratjuk ki az ora adatait, ha ez a kezdodatum
+							else if (date("Y-m-d H:i", $adat->bejegyzes->tol) == date("Y-m-d H:i", strtotime($mindate))) {
+								$tdcontent .= "<div style=\"position: relative; z-index: 1;".$topsz."\">".$adat->bejegyzes->ora_nev;
+								// ha nagyobb vagy egyenlo, mint 70 perc, akkor megjelenitjuk az edzo rovid nevet is, mert egyebkent nem fer ki...
+								if ((($adat->bejegyzes->ig - $adat->bejegyzes->tol) / 60) >= $minheightforedzo)
+									$tdcontent .= "<br>".$adat->bejegyzes->edzo_rovid_nev;
+								$tdcontent .= "</div>";
+							}
 						}
 					}
 					$tdcontent .= "</div>";
