@@ -190,17 +190,18 @@
 			for ($day = -1; $day < count($weekdays); $day++) {
 				$tdstyle = "<td style=\"";
 				$tdcontent = "";
+				$fejlecstyle = "border-top: 1px solid gray; border-bottom: 1px solid gray; background-color: #FEFEFE;";
 				// ekkor a fejlecet iratjuk ki (datumokat)
 				if ($day == -1 && $hours == $minhour - 1) {
-					$tdstyle .= "border-top: 1px solid gray; border-bottom: 1px solid gray; padding: 5px;";
+					$tdstyle .= $fejlecstyle." padding: 5px;";
 					$tdcontent = "óra";
 				}
 				else if ($day == -1) {
-					$tdstyle .= "border-top: 1px solid gray; border-bottom: 1px solid gray; padding: 5px;";
+					$tdstyle .= $fejlecstyle." padding: 5px;";
 					$tdcontent = $hours;
 				}
 				else if ($hours == $minhour - 1) {
-					$tdstyle .= "border-top: 1px solid gray; border-bottom: 1px solid gray; width: ".$tdwidth."px; padding: 5px 0px 5px 0px;";
+					$tdstyle .= $fejlecstyle." width: ".$tdwidth."px; padding: 5px 0px 5px 0px;";
 					$tdcontent = date("Y", $weekdays[$day])." ".shortMonthName(date("n", $weekdays[$day]))." ".date("j", $weekdays[$day]).".<br>".dayName($day + 1)."\n";
 				}
 				// ekkor mar az orakat
