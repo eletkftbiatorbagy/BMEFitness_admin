@@ -133,6 +133,31 @@
 			$naptarak[$i]->letrehozva = strtotime($naptarak[$i]->letrehozva);
 		}
 
+		//!! Figyelem: direkt van kulon ez a resz es nem egyben az elozovel, mert az elozoben alakitom at integerre szovg helyett a datumokat.
+		for ($i = 0; $i < count($naptarak); $i++) {
+			// itt pedig megkeressuk, hogy hany naptarbejegyzes talalhato meg atfedesben hozza kepest
+			$naptarak[$i]->maxatfedes = 1; // hany darab naptar atfedesunk van..., azert kezdodik 1-rol, mert az egy azt jelenti, hogy csak az az egy bejegzesunk van... kesobb nem kell hozzaadni egyet...
+			$naptarak[$i]->hanyadik = 0; // ha a masik naptar tol-ja elorebb van, akkor ennek bentebb kell lenni, es hogy mennyivel bentebb...
+			for ($j = 0; $j < count($naptarak); $j++) {
+				if ($j == $i) // nyilvan sajat magat nem ellenorizzuk...
+					continue;
+
+				// eleg csak a tol vagy ig idopontokat megnezni, hogy az adott naptar tolig kozott van-e, es ha valamelyik kozotte van, akkor atfedes van
+				if ((date("Y-m-d H:i", $naptarak[$i]->tol) <= date("Y-m-d H:i", $naptarak[$j]->tol) && date("Y-m-d H:i", $naptarak[$i]->ig) >= date("Y-m-d H:i", $naptarak[$j]->tol)) ||
+					(date("Y-m-d H:i", $naptarak[$i]->tol) <= date("Y-m-d H:i", $naptarak[$j]->ig) && date("Y-m-d H:i", $naptarak[$i]->ig) >= date("Y-m-d H:i", $naptarak[$j]->ig)) ||
+					// vagy ha a masik tolja az kisebb, egyenlo, mint a mi tolunk, de ugyanakkor nagyobb vagy egyenlo a masik igje :)
+					(date("Y-m-d H:i", $naptarak[$j]->tol) <= date("Y-m-d H:i", $naptarak[$i]->tol) && date("Y-m-d H:i", $naptarak[$j]->ig) >= date("Y-m-d H:i", $naptarak[$i]->tol))) {
+					$naptarak[$i]->maxatfedes++;
+
+
+					// tehat ha kisebb a masik tolja, vagy ha egyenlo es a mi igunk kisebb, akkor kerul bentebb
+					if ((date("Y-m-d H:i", $naptarak[$j]->tol) < date("Y-m-d H:i", $naptarak[$i]->tol)) || (date("Y-m-d H:i", $naptarak[$j]->tol) == date("Y-m-d H:i", $naptarak[$i]->tol) && date("Y-m-d H:i", $naptarak[$j]->ig) > date("Y-m-d H:i", $naptarak[$i]->ig))) {
+						$naptarak[$i]->hanyadik++;
+					}
+				}
+			}
+		}
+
 //		foreach (orakAtHourOfDayInNaptarak($naptarak, '2014', '05', '09', '17') as $adat) {
 //			print "bejegyzes id: ".$adat->bejegyzes->id.", tol: ".date("Y-m-d H:i", $adat->bejegyzes->tol).", ig: ".date("Y-m-d H:i", $adat->bejegyzes->ig).", min: ".$adat->min.", max: ".$adat->max."<br>\n";
 //		}
@@ -164,12 +189,12 @@
 					$tdcontent = $hours;
 				}
 				else if ($hours == $minhour - 1) {
-					$tdstyle .= "width: ".$tdwidth."px; padding: 5px;";
+					$tdstyle .= "width: ".$tdwidth."px; padding: 5px 0px 5px 0px;";
 					$tdcontent = date("Y", $weekdays[$day])." ".shortMonthName(date("n", $weekdays[$day]))." ".date("j", $weekdays[$day]).".<br>".dayName($day + 1)."\n";
 				}
 				// ekkor mar az orakat
 				else {
-					$tdcontent = "<div style=\"position: relative; width: 100%; height: ".$tdheight."px;\">";
+					$tdcontent = "<div style=\"position: relative; width: ".$tdwidth."px; height: ".$tdheight."px;\">";
 					foreach (orakAtHourOfDayInNaptarak($naptarak, date("Y", $weekdays[$day]), date("m", $weekdays[$day]), date("d", $weekdays[$day]), $hours) as $adat) {
 						// szin kiszedese
 						$bcolor = "#FFFFFF"; // feher lesz, ha nincs szine...
@@ -188,9 +213,18 @@
 						if ($amax == 60)
 							$tdstyle .= "border-bottom-color: ".$bcolor.";";
 
+						$width = $tdwidth / $adat->bejegyzes->maxatfedes;
+						$widthsz = " width: ".$width."px;";
+						$leftsz = " left: ".($adat->bejegyzes->hanyadik * $width)."px;";
+
 						// kiszamitjuj a magassagot, mert ez kell a naptar info kiiratasahoz is
-						$topsz = $adat->min == 0 ? "top: 0px;" : " top: ".$minm."px;";
-						$tdcontent .= "<div style=\"position: absolute; width: 100%;".$topsz.($amax >= 60 && $adat->min == 0 ? " height: 100%;" : " height: ".$maxm."px;")." background-color: ".$bcolor.";\"></div>";
+						$topsz = " top: ".$minm."px;";
+
+						$tdcontent .= "<div style=\"position: absolute;".$widthsz.$leftsz.$topsz.($amax >= 60 && $adat->min == 0 ? " height: 100%;" : " height: ".$maxm."px;")." background-color: ".$bcolor.";\"></div>";
+
+						// kikapcsoljuk a naptarinfot, ha nem egyeduli bejegyzes
+						if ($adat->bejegyzes->maxatfedes > 1)
+							$shownaptarinfo = false;
 
 						if ($shownaptarinfo) {
 							// kiiratjuk a naptar nevet es egyeb infojat, ha ez a kezdodatum.
