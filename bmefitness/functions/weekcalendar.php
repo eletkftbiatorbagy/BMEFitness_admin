@@ -192,20 +192,28 @@
 				$tdcontent = "";
 				// ekkor a fejlecet iratjuk ki (datumokat)
 				if ($day == -1 && $hours == $minhour - 1) {
-					$tdstyle .= " padding: 5px;";
+					$tdstyle .= "border-top: 1px solid gray; border-bottom: 1px solid gray; padding: 5px;";
 					$tdcontent = "óra";
 				}
 				else if ($day == -1) {
-					$tdstyle .= " padding: 5px;";
+					$tdstyle .= "border-top: 1px solid gray; border-bottom: 1px solid gray; padding: 5px;";
 					$tdcontent = $hours;
 				}
 				else if ($hours == $minhour - 1) {
-					$tdstyle .= "width: ".$tdwidth."px; padding: 5px 0px 5px 0px;";
+					$tdstyle .= "border-top: 1px solid gray; border-bottom: 1px solid gray; width: ".$tdwidth."px; padding: 5px 0px 5px 0px;";
 					$tdcontent = date("Y", $weekdays[$day])." ".shortMonthName(date("n", $weekdays[$day]))." ".date("j", $weekdays[$day]).".<br>".dayName($day + 1)."\n";
 				}
 				// ekkor mar az orakat
 				else {
+					// kulso div kezdete
 					$tdcontent = "<div style=\"position: relative; width: ".$tdwidth."px; height: ".$tdheight."px;\">";
+
+					// felso vonal es also vonal
+					if ($hours > $minhour) // a 0-s oranak a tetejen ne jelenjen meg...
+						$tdcontent .= "<div style=\"position: absolute; width: 100%; height: 1px; top: 0px; background-color: gray;\"></div>";
+					$tdcontent .= "<div style=\"position: absolute; width: 100%; height: 1px; top: ".$tdheight."px; background-color: gray;\"></div>";
+
+					// naptar kirajzolasa
 					foreach (orakAtHourOfDayInNaptarak($naptarak, date("Y", $weekdays[$day]), date("m", $weekdays[$day]), date("d", $weekdays[$day]), $hours) as $adat) {
 						// szin kiszedese
 						$bcolor = "#FFFFFF"; // feher lesz, ha nincs szine...
@@ -236,6 +244,7 @@
 						$tooltip .= "\nEdző:\n\t".$adat->bejegyzes->edzo_kereszt_nev." ".$adat->bejegyzes->edzo_vezetek_nev." (".$adat->bejegyzes->edzo_rovid_nev.")";
 						$tooltip .= "\nTerem:\n\t".$adat->bejegyzes->terem_nev."\n\t".$adat->bejegyzes->terem_alcim;
 
+						// ez a szines div
 						$tdcontent .= "<div title=\"".$tooltip."\" style=\"position: absolute;".$widthsz.$leftsz.$topsz.($amax >= 60 && $adat->min == 0 ? " height: 100%;" : " height: ".$maxm."px;")." background-color: ".$bcolor.";\"></div>";
 
 						// kikapcsoljuk a naptarinfot, ha nem egyeduli bejegyzes
