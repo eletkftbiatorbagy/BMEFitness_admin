@@ -128,6 +128,12 @@
 //			print "ora neve: ".$naptarak[$i]->ora_nev.", ora color = ".$naptarak[$i]->color."<br>";
 			$naptarak[$i]->tol = strtotime($naptarak[$i]->tol);
 			$naptarak[$i]->ig = strtotime($naptarak[$i]->ig);
+			$naptarak[$i]->masodperc_levonva = false;
+			if (date("H:i", $naptarak[$i]->ig) == date("H:i", strtotime("00:00"))) {
+				$naptarak[$i]->ig -= 1; // egy perccel csokkentjuk..., pl ha 16:00-ig tart, akkor tartson 15:59, es akkor teljesen kitolti majd. Kesobb is jol jon az 'atfedesek' szamitasanal, hogy nem lgonak at...
+				$naptarak[$i]->masodperc_levonva = true;
+			}
+
 			$naptarak[$i]->torolve_mikor = strtotime($naptarak[$i]->torolve_mikor);
 			$naptarak[$i]->visszaigazolva = strtotime($naptarak[$i]->visszaigazolva);
 			$naptarak[$i]->letrehozva = strtotime($naptarak[$i]->letrehozva);
