@@ -117,9 +117,14 @@
 
 		// forditva kell lekerdezni, tehat az ig, a befejezodesnek nagyobbnak kell lennie, mint az elso nap reggele, es a tol, azaz el kell kezdodnie a het utolso perce elott...
 		$where = "naptar.aktiv AND NOT naptar.torolve";
-		$where .= " AND naptar.ig > cast('".$firstday."' AS timestamp) AND naptar.tol < cast('".$lastday."' AS timestamp) AND naptar.ora = orak.id AND naptar.edzo = edzok.id";
+		$where .= " AND naptar.ig > cast('".$firstday."' AS timestamp) AND naptar.tol < cast('".$lastday."' AS timestamp) AND naptar.ora = orak.id AND naptar.edzo = edzok.id AND naptar.terem = termek.id";
 
-		$naptarak = db_select_data("fitness.naptar, fitness.orak, fitness.edzok", "*, naptar.id AS naptar_id, orak.nev AS ora_nev, orak.id AS ora_id, edzok.id AS edzo_id, edzok.rovid_nev AS edzo_rovid_nev", $where, "");
+		$select = "*"; // minden legyen benne
+		$select .= ", naptar.id AS naptar_id"; // naptar atalakitasok
+		$select .= ", orak.nev AS ora_nev, orak.id AS ora_id"; // ora atalakitasok
+		$select .= ", edzok.id AS edzo_id, edzok.rovid_nev AS edzo_rovid_nev, edzok.vnev AS edzo_vezetek_nev, edzok.knev AS edzo_kereszt_nev"; // edzo atalakitasok
+		$select .= ", termek.nev AS terem_nev, termek.alcim AS terem_alcim"; // terem atalakitasok
+		$naptarak = db_select_data("fitness.naptar, fitness.orak, fitness.edzok, fitness.termek", $select, $where, "");
 
 //		print $naptarak; return;
 
@@ -226,7 +231,12 @@
 						// kiszamitjuj a magassagot, mert ez kell a naptar info kiiratasahoz is
 						$topsz = " top: ".$minm."px;";
 
-						$tdcontent .= "<div style=\"position: absolute;".$widthsz.$leftsz.$topsz.($amax >= 60 && $adat->min == 0 ? " height: 100%;" : " height: ".$maxm."px;")." background-color: ".$bcolor.";\"></div>";
+						// hozzaadjuk a tooltipet, hogy ne kelljen kattingatni az informacio miatt...
+						$tooltip = "Óra:\n\t".$adat->bejegyzes->ora_nev."\n\t".date("Y. m. d. H:i", $adat->bejegyzes->tol)." - ".($adat->bejegyzes->masodperc_levonva ? date("Y. m. d. H:i", $adat->bejegyzes->ig + 1) : date("Y. m. d. H:i", $adat->bejegyzes->ig))."\n\tMax létszám: ".$adat->bejegyzes->max_letszam." fő";
+						$tooltip .= "\nEdző:\n\t".$adat->bejegyzes->edzo_kereszt_nev." ".$adat->bejegyzes->edzo_vezetek_nev." (".$adat->bejegyzes->edzo_rovid_nev.")";
+						$tooltip .= "\nTerem:\n\t".$adat->bejegyzes->terem_nev."\n\t".$adat->bejegyzes->terem_alcim;
+
+						$tdcontent .= "<div title=\"".$tooltip."\" style=\"position: absolute;".$widthsz.$leftsz.$topsz.($amax >= 60 && $adat->min == 0 ? " height: 100%;" : " height: ".$maxm."px;")." background-color: ".$bcolor.";\"></div>";
 
 						// kikapcsoljuk a naptarinfot, ha nem egyeduli bejegyzes
 						if ($adat->bejegyzes->maxatfedes > 1)
