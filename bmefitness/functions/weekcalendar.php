@@ -102,6 +102,7 @@
 		return $eredmeny;
 	}
 
+
 	/*!	Órák lefoglalásának időpontjai.
 	 */
 	function printOrakTable($weekplusz = 0) {
@@ -130,50 +131,119 @@
 
 		// szerintem az osszes datum szoveget atkonvertalom rendes datumra
 		for ($i = 0; $i < count($naptarak); $i++) {
-//			print "ora neve: ".$naptarak[$i]->ora_nev.", ora color = ".$naptarak[$i]->color."<br>";
 			$naptarak[$i]->tol = strtotime($naptarak[$i]->tol);
 			$naptarak[$i]->ig = strtotime($naptarak[$i]->ig);
-			$naptarak[$i]->masodperc_levonva = false;
-			if (date("H:i", $naptarak[$i]->ig) == date("H:i", strtotime("00:00"))) {
-				$naptarak[$i]->ig -= 1; // egy perccel csokkentjuk..., pl ha 16:00-ig tart, akkor tartson 15:59, es akkor teljesen kitolti majd. Kesobb is jol jon az 'atfedesek' szamitasanal, hogy nem lgonak at...
-				$naptarak[$i]->masodperc_levonva = true;
-			}
+
+			// fixen levonok egyet, mert altalaban ha azt irjuk, hogy 17:10-ig tart, akkor 17:10-kor mar nincs, azaz 17:09:59 -ig tart...
+			$naptarak[$i]->ig -= 1;
 
 			$naptarak[$i]->torolve_mikor = strtotime($naptarak[$i]->torolve_mikor);
 			$naptarak[$i]->visszaigazolva = strtotime($naptarak[$i]->visszaigazolva);
 			$naptarak[$i]->letrehozva = strtotime($naptarak[$i]->letrehozva);
+
+			$naptarak[$i]->maxatfedes = 1; // hany darab naptar atfedesunk van..., azert kezdodik 1-rol, mert az egy azt jelenti, hogy csak az az egy bejegzesunk van... kesobb nem kell hozzaadni egyet...
+			$naptarak[$i]->hanyadik = -1; // ha a masik naptar tol-ja elorebb van, akkor ennek bentebb kell lenni, es hogy mennyivel bentebb...
+			$naptarak[$i]->atfedesek = array();
+//			$naptarak[$i]->sajatatfedes = 0; // peldaul ha ez egyiknek harom atfedese van maximum, de az adottak csak ketto, akkor annak a keteto atfedesesnek szelesebbnek kell lennie
+			$naptarak[$i]->sajatatfedesek = array();
 		}
 
 		//!! Figyelem: direkt van kulon ez a resz es nem egyben az elozovel, mert az elozoben alakitom at integerre szovg helyett a datumokat.
 		for ($i = 0; $i < count($naptarak); $i++) {
 			// itt pedig megkeressuk, hogy hany naptarbejegyzes talalhato meg atfedesben hozza kepest
-			$naptarak[$i]->maxatfedes = 1; // hany darab naptar atfedesunk van..., azert kezdodik 1-rol, mert az egy azt jelenti, hogy csak az az egy bejegzesunk van... kesobb nem kell hozzaadni egyet...
-			$naptarak[$i]->hanyadik = 0; // ha a masik naptar tol-ja elorebb van, akkor ennek bentebb kell lenni, es hogy mennyivel bentebb...
-			for ($j = 0; $j < count($naptarak); $j++) {
-				if ($j == $i) // nyilvan sajat magat nem ellenorizzuk...
-					continue;
+				for ($j = 0; $j < count($naptarak); $j++) {
+					if ($j == $i) // nyilvan sajat magat nem ellenorizzuk...
+						continue;
 
-				// eleg csak a tol vagy ig idopontokat megnezni, hogy az adott naptar tolig kozott van-e, es ha valamelyik kozotte van, akkor atfedes van
-				if ((date("Y-m-d H:i", $naptarak[$i]->tol) <= date("Y-m-d H:i", $naptarak[$j]->tol) && date("Y-m-d H:i", $naptarak[$i]->ig) >= date("Y-m-d H:i", $naptarak[$j]->tol)) ||
-					(date("Y-m-d H:i", $naptarak[$i]->tol) <= date("Y-m-d H:i", $naptarak[$j]->ig) && date("Y-m-d H:i", $naptarak[$i]->ig) >= date("Y-m-d H:i", $naptarak[$j]->ig)) ||
-					// vagy ha a masik tolja az kisebb, egyenlo, mint a mi tolunk, de ugyanakkor nagyobb vagy egyenlo a masik igje :)
-					(date("Y-m-d H:i", $naptarak[$j]->tol) <= date("Y-m-d H:i", $naptarak[$i]->tol) && date("Y-m-d H:i", $naptarak[$j]->ig) >= date("Y-m-d H:i", $naptarak[$i]->tol))) {
-					$naptarak[$i]->maxatfedes++;
+					// eleg csak a tol vagy ig idopontokat megnezni, hogy az adott naptar tolig kozott van-e, es ha valamelyik kozotte van, akkor atfedes van
+					if ((date("Y-m-d H:i", $naptarak[$i]->tol) <= date("Y-m-d H:i", $naptarak[$j]->tol) && date("Y-m-d H:i", $naptarak[$i]->ig) >= date("Y-m-d H:i", $naptarak[$j]->tol)) ||
+						(date("Y-m-d H:i", $naptarak[$i]->tol) <= date("Y-m-d H:i", $naptarak[$j]->ig) && date("Y-m-d H:i", $naptarak[$i]->ig) >= date("Y-m-d H:i", $naptarak[$j]->ig)) ||
+						// vagy ha a masik tolja az kisebb, egyenlo, mint a mi tolunk, de ugyanakkor nagyobb vagy egyenlo a masik igje :)
+						(date("Y-m-d H:i", $naptarak[$j]->tol) <= date("Y-m-d H:i", $naptarak[$i]->tol) && date("Y-m-d H:i", $naptarak[$j]->ig) >= date("Y-m-d H:i", $naptarak[$i]->tol))) {
 
+						if (!in_array($j, $naptarak[$i]->atfedesek))
+							$naptarak[$i]->atfedesek[] = $j;
 
-					// tehat ha kisebb a masik tolja, vagy ha egyenlo es a mi igunk kisebb, akkor kerul bentebb
-					if ((date("Y-m-d H:i", $naptarak[$j]->tol) < date("Y-m-d H:i", $naptarak[$i]->tol)) || (date("Y-m-d H:i", $naptarak[$j]->tol) == date("Y-m-d H:i", $naptarak[$i]->tol) && date("Y-m-d H:i", $naptarak[$j]->ig) > date("Y-m-d H:i", $naptarak[$i]->ig))) {
+						if (!in_array($i, $naptarak[$j]->atfedesek))
+							$naptarak[$j]->atfedesek[] = $i;
+
+						if (!in_array($j, $naptarak[$i]->sajatatfedesek))
+							$naptarak[$i]->sajatatfedesek[] = $j;
+
+						if (!in_array($i, $naptarak[$j]->sajatatfedesek))
+							$naptarak[$j]->sajatatfedesek[] = $i;
+
+						for ($id = 0; $id < count($naptarak); $id++) {
+							if ($id != $i && $id != $j) {
+								if (in_array($i, $naptarak[$id]->atfedesek) && !in_array($j, $naptarak[$id]->atfedesek))
+									$naptarak[$id]->atfedesek[] = $j;
+
+								if (in_array($j, $naptarak[$id]->atfedesek) && !in_array($i, $naptarak[$id]->atfedesek))
+									$naptarak[$id]->atfedesek[] = $i;
+							}
+						}
+					}
+				}
+		}
+
+		// eddig megvan, hogy ki kivel van atfedve, most megkeressuk a max atfedest es hogy hanyadik...
+		$vizsgalt = array(); // ez csak azert, mert felesleges tobbszor vizsgalni ugyanazt a csoportot
+		for ($i = 0; $i < count($naptarak); $i++) {
+			$maxatfedes = 0;
+			for ($perc = $naptarak[$i]->tol; $perc <= $naptarak[$i]->ig; $perc += 60) { // 60 masodpercenkent, azaz egy percenkent nezzuk...
+				$atfedes = 0;
+				for ($j = 0; $j < count($naptarak[$i]->atfedesek); $j++) {
+					if ($naptarak[$naptarak[$i]->atfedesek[$j]]->tol <= $perc && $naptarak[$naptarak[$i]->atfedesek[$j]]->ig >= $perc) {
+						$atfedes++;
+					}
+				}
+
+				if ($atfedes > $maxatfedes)
+					$maxatfedes = $atfedes;
+			}
+
+			$maxatfedes++; // egyel noveljk, mert minimum 1 kell, hogy legyen.
+
+			if ($naptarak[$i]->maxatfedes < $maxatfedes)
+				$naptarak[$i]->maxatfedes = $maxatfedes;
+
+//			$naptarak[$i]->sajatatfedes = $maxatfedes;
+
+			// az osszesnel ujra kell allitani a max atfedest
+			for ($j = 0; $j < count($naptarak[$i]->atfedesek); $j++) {
+				if ($naptarak[$naptarak[$i]->atfedesek[$j]]->maxatfedes < $maxatfedes)
+					$naptarak[$naptarak[$i]->atfedesek[$j]]->maxatfedes = $maxatfedes;
+
+				// most megkeressuk, hogy ki hanyadik, itt mar figyelhetem, hogy aki volt mar, azt nem ellenorizzuk meg egyszer
+				// nem kell csak az adott $i naptarat nezni, a tobbit kesobb fogom
+
+				if (in_array($naptarak[$i]->atfedesek[$j], $naptarak[$i]->sajatatfedesek)) {
+					if ((date("Y-m-d H:i", $naptarak[$i]->tol) > date("Y-m-d H:i", $naptarak[$naptarak[$i]->atfedesek[$j]]->tol)) ||
+						// ha netan egyenlo lenne, akkor az kerul beljebb, aki hatrabb van a listaban...
+						(date("Y-m-d H:i", $naptarak[$i]->tol) == date("Y-m-d H:i", $naptarak[$naptarak[$i]->atfedesek[$j]]->tol) && ($i > $naptarak[$i]->atfedesek[$j]))) {
 						$naptarak[$i]->hanyadik++;
 					}
 				}
 			}
+
+			if (count($naptarak[$i]->sajatatfedesek) > 0) {
+				$foglalt = true;
+				while ($foglalt) {
+					$foglalt = false;
+					for ($j = 0; $j < count($naptarak[$i]->sajatatfedesek); $j++) {
+//						$bejegyzes = $naptarak[$naptarak[$i]->sajatatfedesek[$j]];
+//						if ($bejegyzes->hanyadik + ($bejegyzes->hanyadik * ($bejegyzes->maxatfedes - $bejegyzes->sajatatfedes)) == $naptarak[$i]->hanyadik) {
+						if ($naptarak[$naptarak[$i]->sajatatfedesek[$j]]->hanyadik == $naptarak[$i]->hanyadik) {
+							$foglalt = true;
+							$naptarak[$i]->hanyadik++;
+							break;
+						}
+					}
+				}
+			}
+			else // ez itt azert van, mert -1 az alap beallitas, es ha nincs "rivalis", akkor 0-nak kell lennie...
+				$naptarak[$i]->hanyadik = 0;
 		}
-
-//		foreach (orakAtHourOfDayInNaptarak($naptarak, '2014', '05', '09', '17') as $adat) {
-//			print "bejegyzes id: ".$adat->bejegyzes->id.", tol: ".date("Y-m-d H:i", $adat->bejegyzes->tol).", ig: ".date("Y-m-d H:i", $adat->bejegyzes->ig).", min: ".$adat->min.", max: ".$adat->max."<br>\n";
-//		}
-
-//		return;
 
 		$minhour = $GLOBALS['MINHOUR'];
 		$maxhour = $GLOBALS['MAXHOUR'];
@@ -234,14 +304,21 @@
 							$tdstyle .= "border-bottom-color: ".$bcolor.";";
 
 						$width = $tdwidth / $adat->bejegyzes->maxatfedes;
-						$widthsz = " width: ".$width."px;";
 						$leftsz = " left: ".($adat->bejegyzes->hanyadik * $width)."px;";
+
+						// ennek kesobb kell lennie, mint a left kiszamitasanak...
+						// ha sajat max atfedese kisebb, mint a csoport max atfedese, akkor ennek szelesebbnek kell lennie
+//						if ($adat->bejegyzes->sajatatfedes < $adat->bejegyzes->maxatfedes)
+//							$width += $width * ($adat->bejegyzes->maxatfedes - $adat->bejegyzes->sajatatfedes);
+
+						$widthsz = " width: ".$width."px;";
 
 						// kiszamitjuj a magassagot, mert ez kell a naptar info kiiratasahoz is
 						$topsz = " top: ".$minm."px;";
 
 						// hozzaadjuk a tooltipet, hogy ne kelljen kattingatni az informacio miatt...
-						$tooltip = "Óra:\n\t".$adat->bejegyzes->ora_nev."\n\t".date("Y. m. d. H:i", $adat->bejegyzes->tol)." - ".($adat->bejegyzes->masodperc_levonva ? date("Y. m. d. H:i", $adat->bejegyzes->ig + 1) : date("Y. m. d. H:i", $adat->bejegyzes->ig))."\n\tMax létszám: ".$adat->bejegyzes->max_letszam." fő";
+						// $adat->bejegyzes->ig, kijelzesnel hozza kell adni egyet...
+						$tooltip = "Óra:\n\t".$adat->bejegyzes->ora_nev."\n\t".date("Y. m. d. H:i", $adat->bejegyzes->tol)." - ".(date("Y. m. d. H:i", $adat->bejegyzes->ig + 1))."\n\tMax létszám: ".$adat->bejegyzes->max_letszam." fő";
 						$tooltip .= "\nEdző:\n\t".$adat->bejegyzes->edzo_kereszt_nev." ".$adat->bejegyzes->edzo_vezetek_nev." (".$adat->bejegyzes->edzo_rovid_nev.")";
 						$tooltip .= "\nTerem:\n\t".$adat->bejegyzes->terem_nev."\n\t".$adat->bejegyzes->terem_alcim;
 
