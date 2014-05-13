@@ -6,5 +6,5 @@
 		$het = $_POST['het'];
 
 	print "<br><span onclick=\"change_timetable_het(".($het - 1).");\" class=\"action_button\"><</span><span style=\"font-size: 2em;\"> ".(date("W") + $het).". hét </span><span onclick=\"change_timetable_het(".($het + 1).");\" class=\"action_button\">></span><br><br>";
-	printOrakTable($het);
+	printOrakTable(false, $het);
 ?>

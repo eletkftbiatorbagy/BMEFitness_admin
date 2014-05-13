@@ -105,7 +105,7 @@
 
 	/*!	Órák lefoglalásának időpontjai.
 	 */
-	function printOrakTable($weekplusz = 0) {
+	function printOrakTable($inaktiv_only, $weekplusz = 0) {
 		$thedate = dateForNextWeek($weekplusz);
 		$weekdays = weekdays($thedate);
 
@@ -117,17 +117,29 @@
 		$lastday .= " 23:59:59";
 
 		// forditva kell lekerdezni, tehat az ig, a befejezodesnek nagyobbnak kell lennie, mint az elso nap reggele, es a tol, azaz el kell kezdodnie a het utolso perce elott...
-		$where = "naptar.aktiv AND NOT naptar.torolve";
+		$where = "";
+		if ($inaktiv_only)
+			$where .= "NOT ";
+		$where .= "naptar.aktiv AND NOT naptar.torolve";
 		$where .= " AND naptar.ig > cast('".$firstday."' AS timestamp) AND naptar.tol < cast('".$lastday."' AS timestamp) AND naptar.ora = orak.id AND naptar.edzo = edzok.id AND naptar.terem = termek.id";
 
 		$select = "*"; // minden legyen benne
 		$select .= ", naptar.id AS naptar_id"; // naptar atalakitasok
-		$select .= ", orak.nev AS ora_nev, orak.id AS ora_id"; // ora atalakitasok
+		$select .= ", orak.id AS ora_id, orak.nev AS ora_nev"; // ora atalakitasok
 		$select .= ", edzok.id AS edzo_id, edzok.rovid_nev AS edzo_rovid_nev, edzok.vnev AS edzo_vezetek_nev, edzok.knev AS edzo_kereszt_nev"; // edzo atalakitasok
-		$select .= ", termek.nev AS terem_nev, termek.alcim AS terem_alcim"; // terem atalakitasok
+		$select .= ", termek.id AS terem_id, termek.nev AS terem_nev, termek.alcim AS terem_alcim"; // terem atalakitasok
+
+//		print "SELECT ".$select." FROM fitness.naptar, fitness.orak, fitness.edzok, fitness.termek WHERE ".$where."<br>";
+
 		$naptarak = db_select_data("fitness.naptar, fitness.orak, fitness.edzok, fitness.termek", $select, $where, "");
 
-//		print $naptarak; return;
+		printTable($weekdays, $naptarak);
+	}
+
+	/*!	Tabla kirajzolasa a het napjai es naptarak alapjan
+	 */
+	function printTable($weekdays, $naptarak) {
+		$percek = array();
 
 		// szerintem az osszes datum szoveget atkonvertalom rendes datumra
 		for ($i = 0; $i < count($naptarak); $i++) {
