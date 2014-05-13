@@ -255,6 +255,9 @@
 			}
 			else // ez itt azert van, mert -1 az alap beallitas, es ha nincs "rivalis", akkor 0-nak kell lennie...
 				$naptarak[$i]->hanyadik = 0;
+
+			if ($naptarak[$i]->hanyadik >= $naptarak[$i]->maxatfedes)
+				$naptarak[$i]->hanyadik = $naptarak[$i]->maxatfedes - 1;
 		}
 
 		$minhour = $GLOBALS['MINHOUR'];
