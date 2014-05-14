@@ -7,6 +7,10 @@
 	$TDHEIGHT = 30;
 	$MINHEIGHTFOREDZO = 70;
 	$SHOWNAPTARINFO = true;
+	$FEJLECSZIN = "#FEFEFE";
+	$MAINAPFEJLECSZIN = "#99FF75";
+	$CELLASZIN = "#EDEDED";
+	$MAINAPCELLASZIN = "#F3FFE7";
 
 	/*! Egy 7 tagú tömb lesz a végeredmény, így könnyen fogjuk tudni az adott nap adatait (például hétfő az a 0. elem)
 	 */
@@ -51,26 +55,13 @@
 	function orakAtHourOfDayInNaptarak($naptarak, $year, $month, $day, $hour) {
 		$eredmeny = array();
 		$adate = $year."-".$month."-".$day." ".$hour;
-//		print "adate: ".$adate.":00<br>";
 
 		foreach ($naptarak as $bejegyzes) {
-//			print "bejegyzes<br>";
 			$tol = date("Y-m-d H:i", $bejegyzes->tol);
 			$ig = date("Y-m-d H:i", $bejegyzes->ig);
-//			print "tol, ig: ".$tol." - ".$ig."<br>";
-
-//			$tol = strtotime($tol);
-//			$ig = strtotime($ig);
-//			if ($tol <= date("Y-m-d H:i", strtotime($adate.":00")))
-//				print "bejegyzes id: ".$bejegyzes->id." toltol nagyobb<br>";
-
-//			if ($ig > date("Y-m-d H:i", strtotime($adate.":00")))
-//				print "bejegyzes id: ".$bejegyzes->id." igtol kisebb<br>";
 
 			if (($tol <= date("Y-m-d H:i", strtotime($adate.":00")) || $tol <= date("Y-m-d H:i", strtotime($adate.":59"))) &&
 				($ig > date("Y-m-d H:i", strtotime($adate.":59")) || $ig > date("Y-m-d H:i", strtotime($adate.":00")))) {
-//				print "van<br>";
-				//date("j", $bejegyzes->ig) <= $day) {
 				// ekkor biztosan aznap is van...
 				// megkeressuk a minimumot
 				$min = 0;
@@ -241,12 +232,17 @@
 				$naptarak[$i]->hanyadik = $naptarak[$i]->maxatfedes - 1;
 		}
 
+		// globalis adatok beolvasasa, hogy ne kesobb kelljen...
 		$minhour = $GLOBALS['MINHOUR'];
 		$maxhour = $GLOBALS['MAXHOUR'];
 		$tdwidth = $GLOBALS['TDWIDTH'];
 		$tdheight = $GLOBALS['TDHEIGHT'];
 		$minheightforedzo = $GLOBALS['MINHEIGHTFOREDZO'];
 		$shownaptarinfo = $GLOBALS['SHOWNAPTARINFO'];
+		$fejlecszin = $GLOBALS['FEJLECSZIN'];
+		$mainapfejlecszin = $GLOBALS['MAINAPFEJLECSZIN'];
+		$cellaszin = $GLOBALS['CELLASZIN'];
+		$mainapcellaszin = $GLOBALS['MAINAPCELLASZIN'];
 
 		print "<table class=\"calendartable\">\n";
 		// azert minusz egy, mert az elso oszlop az orak kiiratasa
@@ -256,18 +252,23 @@
 			for ($day = -1; $day < count($weekdays); $day++) {
 				$tdstyle = "<td style=\"";
 				$tdcontent = "";
-				$fejlecstyle = "border-top: 1px solid gray; border-bottom: 1px solid gray; background-color: #FEFEFE;";
+				$fejlecstyle = "border-top: 1px solid gray; border-bottom: 1px solid gray;";
 				// ekkor a fejlecet iratjuk ki (datumokat)
 				if ($day == -1 && $hours == $minhour - 1) {
-					$tdstyle .= $fejlecstyle." padding: 5px;";
+					$tdstyle .= $fejlecstyle." padding: 5px; background-color: ".$fejlecszin.";";
 					$tdcontent = "óra";
 				}
 				else if ($day == -1) {
-					$tdstyle .= $fejlecstyle." padding: 5px;";
+					$tdstyle .= $fejlecstyle." padding: 5px; background-color: ".$fejlecszin.";";
 					$tdcontent = $hours;
 				}
 				else if ($hours == $minhour - 1) {
-					$tdstyle .= $fejlecstyle." width: ".$tdwidth."px; padding: 5px 0px 5px 0px;";
+					$tdstyle .= $fejlecstyle." width: ".$tdwidth."px; padding: 5px 0px 5px 0px; background-color: ";
+					if (date("j", $weekdays[$day]) == date("j"))
+						$tdstyle .= $mainapfejlecszin.";";
+					else
+						$tdstyle .= $fejlecszin.";";
+
 					$tdcontent = date("Y", $weekdays[$day])." ".shortMonthName(date("n", $weekdays[$day]))." ".date("j", $weekdays[$day]).".<br>".dayName($day + 1)."\n";
 				}
 				// ekkor mar az orakat
@@ -279,6 +280,12 @@
 					if ($hours > $minhour) // a 0-s oranak a tetejen ne jelenjen meg...
 						$tdcontent .= "<div style=\"position: absolute; width: 100%; height: 1px; top: 0px; background-color: gray;\"></div>";
 					$tdcontent .= "<div style=\"position: absolute; width: 100%; height: 1px; top: ".$tdheight."px; background-color: gray;\"></div>";
+
+					// cella hatterszinenk beallitasa...
+					if (date("Y-m-d", $weekdays[$day]) == date("Y-m-d"))
+						$tdstyle .= " background-color: ".$mainapcellaszin.";";
+					else
+						$tdstyle .= " background-color: ".$cellaszin.";";
 
 					// naptar kirajzolasa
 					foreach (orakAtHourOfDayInNaptarak($naptarak, date("Y", $weekdays[$day]), date("m", $weekdays[$day]), date("d", $weekdays[$day]), $hours) as $adat) {
