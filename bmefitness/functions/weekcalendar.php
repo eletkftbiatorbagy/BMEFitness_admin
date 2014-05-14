@@ -131,7 +131,7 @@
 
 //		print "SELECT ".$select." FROM fitness.naptar, fitness.orak, fitness.edzok, fitness.termek WHERE ".$where."<br>";
 
-		$naptarak = db_select_data("fitness.naptar, fitness.orak, fitness.edzok, fitness.termek", $select, $where, "");
+		$naptarak = db_select_data("fitness.naptar, fitness.orak, fitness.edzok, fitness.termek", $select, $where, "naptar.tol");
 
 		printTable($weekdays, $naptarak);
 	}
@@ -156,7 +156,6 @@
 			$naptarak[$i]->maxatfedes = 1; // hany darab naptar atfedesunk van..., azert kezdodik 1-rol, mert az egy azt jelenti, hogy csak az az egy bejegzesunk van... kesobb nem kell hozzaadni egyet...
 			$naptarak[$i]->hanyadik = -1; // ha a masik naptar tol-ja elorebb van, akkor ennek bentebb kell lenni, es hogy mennyivel bentebb...
 			$naptarak[$i]->atfedesek = array();
-//			$naptarak[$i]->sajatatfedes = 0; // peldaul ha ez egyiknek harom atfedese van maximum, de az adottak csak ketto, akkor annak a keteto atfedesesnek szelesebbnek kell lennie
 			$naptarak[$i]->sajatatfedesek = array();
 		}
 
@@ -219,41 +218,20 @@
 			if ($naptarak[$i]->maxatfedes < $maxatfedes)
 				$naptarak[$i]->maxatfedes = $maxatfedes;
 
-//			$naptarak[$i]->sajatatfedes = $maxatfedes;
-
 			// az osszesnel ujra kell allitani a max atfedest
 			for ($j = 0; $j < count($naptarak[$i]->atfedesek); $j++) {
 				if ($naptarak[$naptarak[$i]->atfedesek[$j]]->maxatfedes < $maxatfedes)
 					$naptarak[$naptarak[$i]->atfedesek[$j]]->maxatfedes = $maxatfedes;
-
-				// most megkeressuk, hogy ki hanyadik, itt mar figyelhetem, hogy aki volt mar, azt nem ellenorizzuk meg egyszer
-				// nem kell csak az adott $i naptarat nezni, a tobbit kesobb fogom
-
-				if (in_array($naptarak[$i]->atfedesek[$j], $naptarak[$i]->sajatatfedesek)) {
-					if ((date("Y-m-d H:i", $naptarak[$i]->tol) > date("Y-m-d H:i", $naptarak[$naptarak[$i]->atfedesek[$j]]->tol)) ||
-						// ha netan egyenlo lenne, akkor az kerul beljebb, aki hatrabb van a listaban...
-						(date("Y-m-d H:i", $naptarak[$i]->tol) == date("Y-m-d H:i", $naptarak[$naptarak[$i]->atfedesek[$j]]->tol) && ($i > $naptarak[$i]->atfedesek[$j]))) {
-						$naptarak[$i]->hanyadik++;
-					}
-				}
 			}
 
-			if (count($naptarak[$i]->sajatatfedesek) > 0) {
-				$foglalt = true;
-				while ($foglalt) {
-					$foglalt = false;
-					for ($j = 0; $j < count($naptarak[$i]->sajatatfedesek); $j++) {
-//						$bejegyzes = $naptarak[$naptarak[$i]->sajatatfedesek[$j]];
-//						if ($bejegyzes->hanyadik + ($bejegyzes->hanyadik * ($bejegyzes->maxatfedes - $bejegyzes->sajatatfedes)) == $naptarak[$i]->hanyadik) {
-						if ($naptarak[$naptarak[$i]->sajatatfedesek[$j]]->hanyadik == $naptarak[$i]->hanyadik) {
-							$foglalt = true;
-							$naptarak[$i]->hanyadik++;
-							break;
-						}
-					}
-				}
+			// most megkeressuk, hogy ki hanyadik
+			for ($j = 0; $j < count($naptarak[$i]->sajatatfedesek); $j++) {
+				if ($naptarak[$naptarak[$i]->sajatatfedesek[$j]]->hanyadik == $naptarak[$i]->hanyadik;
+					$naptarak[$i]->hanyadik++;
 			}
-			else // ez itt azert van, mert -1 az alap beallitas, es ha nincs "rivalis", akkor 0-nak kell lennie...
+
+			// ez itt azert van, mert -1 az alap beallitas, es ha nincs "rivalis", akkor 0-nak kell lennie...
+			if (count($naptarak[$i]->sajatatfedesek) == 0) {
 				$naptarak[$i]->hanyadik = 0;
 
 			if ($naptarak[$i]->hanyadik >= $naptarak[$i]->maxatfedes)
@@ -318,14 +296,9 @@
 						if ($amax == 60)
 							$tdstyle .= "border-bottom-color: ".$bcolor.";";
 
+						// szelesseg es bal oldal kizamitasa
 						$width = $tdwidth / $adat->bejegyzes->maxatfedes;
 						$leftsz = " left: ".($adat->bejegyzes->hanyadik * $width)."px;";
-
-						// ennek kesobb kell lennie, mint a left kiszamitasanak...
-						// ha sajat max atfedese kisebb, mint a csoport max atfedese, akkor ennek szelesebbnek kell lennie
-//						if ($adat->bejegyzes->sajatatfedes < $adat->bejegyzes->maxatfedes)
-//							$width += $width * ($adat->bejegyzes->maxatfedes - $adat->bejegyzes->sajatatfedes);
-
 						$widthsz = " width: ".$width."px;";
 
 						// kiszamitjuj a magassagot, mert ez kell a naptar info kiiratasahoz is
