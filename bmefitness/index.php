@@ -19,6 +19,10 @@
 		<link rel="stylesheet" href="css/bme.css" />
 		<script src="js/bme.js" type="text/javascript"></script>
 <?php
+
+// ddddddd
+//	fsdfa
+//	fadsf
 	/*
 
 
@@ -118,7 +122,7 @@
 		<!-- hatter miatt kell -->
 		<div id="backgroundPopup"></div>
 		<div id="popupNewOrEdit" class="popupContact">
-			<a class="popupContactClose">bezár</a>
+			<a class="popupContactClose">X</a>
 			<h1 class="editTitle"></h1>
 			<p class="contactArea" id="newOrEditArea"></p>
 			<a id="neworeditlink">létrehozás</a>

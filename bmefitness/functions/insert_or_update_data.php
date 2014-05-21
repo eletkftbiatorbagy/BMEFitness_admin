@@ -1,7 +1,7 @@
 <?php
 	if (isset($_POST["data_id"]) && isset($_POST["table_name_with_schema"]) && isset($_POST["value_ids"]) && isset($_POST["values"]) && isset($_POST["returning"])) {
-		require_once("../database.php");
-		require_once("../functions.php");
+		require_once("database.php");
+		require_once("functions.php");
 
 		$data_id = $_POST["data_id"];
 		$tableNameWithSchema = $_POST["table_name_with_schema"];

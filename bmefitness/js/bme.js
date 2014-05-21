@@ -101,8 +101,8 @@ function change_timetable_het(het) {
 
 /*!
  * \param field				Ez a mezo lesz piros, ha nem jo az eredmeny
- * \param checkfield		Ennel a mezonel ellenorizzuk, hogy lehet-e ures illetve a karakterszamot
- * \param isAvailableEmpty	Ha ez igaz, akkor csak a karakter szamat ellenorzi
+ * \param checkfield			Ennel a mezonel ellenorizzuk, hogy lehet-e ures illetve a karakterszamot
+ * \param isAvailableEmpty		Ha ez igaz, akkor csak a karakter szamat ellenorzi
  * \param charCount			Ha nagyobb, mint 0, akkor azt is ellenorzi...
  */
 function editedField(field, checkfield, isAvailableEmpty, maxCharCount) {
@@ -122,6 +122,93 @@ function editedField(field, checkfield, isAvailableEmpty, maxCharCount) {
 		afield.removeClass("redcolor");
 }
 
+/*!	yyyy-mm-dd HH:MM formatumban ellenorzi az idot, hogy ilyen formatum-e
+ * \param	datetime			ezt csekkoljuk
+ * \return	boolean			igaz, ha jo a formatum es valos a datum
+ */
+function is_yyyymmddHHMM_FormattedDateTime(datetime) {
+	if (!datetime || datetime.length != 16)
+		return false;
+
+	var formatok = true;
+
+	if (isNaN(parseInt(datetime[0])))		// y
+		formatok = false;
+	else if (isNaN(parseInt(datetime[1])))	// y
+		formatok = false;
+	else if (isNaN(parseInt(datetime[2])))	// y
+		formatok = false;
+	else if (isNaN(parseInt(datetime[3])))	// y
+		formatok = false;
+	else if (datetime[4] != "-")				// -
+		formatok = false;
+	else if (isNaN(parseInt(datetime[5])))	// m
+		formatok = false;
+	else if (isNaN(parseInt(datetime[6])))	// m
+		formatok = false;
+	else if (datetime[7] != "-")				// -
+		formatok = false;
+	else if (isNaN(parseInt(datetime[8])))	// d
+		formatok = false;
+	else if (isNaN(parseInt(datetime[9])))	// d
+		formatok = false;
+	else if (datetime[10] != " ")			// _
+		formatok = false;
+	else if (isNaN(parseInt(datetime[11])))	// H
+		formatok = false;
+	else if (isNaN(parseInt(datetime[12])))	// H
+		formatok = false;
+	else if (datetime[13] != ":")			// :
+		formatok = false;
+	else if (isNaN(parseInt(datetime[14])))	// M
+		formatok = false;
+	else if (isNaN(parseInt(datetime[15])))	// M
+		formatok = false;
+
+	if (!formatok)
+		return false;
+
+	// egyszeruen szet kell szednunk az ellenorzes miatt
+	var ev = datetime.substring(0, 4);
+	var ho = datetime.substring(5, 7);
+	var nap = datetime.substring(8, 10);
+	var ora = datetime.substring(11, 13);
+	var perc = datetime.substring(14, 16);
+
+	// letrehozunk
+	var adate = new Date(ev, ho - 1, nap, ora, perc, 0);
+
+	// most visszaellenorizzuk az ertekeket
+	// azert kell ezt igy csinalni, mert elfogad peldaul februar 30-at is, de akkor ugyebar marcius 1 vagy 2 lesz belole, es akkor nem egyezik
+	if (parseInt(ev) != adate.getFullYear()) return false;
+	if ((parseInt(ho) - 1) != adate.getMonth()) return false;
+	if (parseInt(nap) != adate.getDate()) return false;
+	if (parseInt(ora) != adate.getHours()) return false;
+	if (parseInt(perc) != adate.getMinutes()) return false;
+
+	return true;
+}
+
+/*!
+* \param field				Ez a mezo lesz piros, ha nem jo az eredmeny
+ * \param checkfield			Ennel a mezonel ellenorizzuk, hogy lehet-e ures illetve a karakterszamot
+ */
+function editedDateTimeFormatField(field, checkfield) {
+	if (!field || !checkfield)
+		return;
+
+	var afield = $('#' + field);
+	var acheckfield = $('#' + checkfield);
+
+	if (!afield || !acheckfield)
+		return;
+
+	if (is_yyyymmddHHMM_FormattedDateTime(acheckfield.val()))
+		afield.removeClass("redcolor");
+	else
+		afield.addClass("redcolor");
+}
+
 /*!
  * \param data_type			kötelező paraméter, hogy tudjuk mit szerkesztünk.
  * \param edit_data_object		opcionális paraméter, csak akkor kell, ha valtoztatni akarom az adatatot es nem ujat letrehozni...
@@ -137,7 +224,7 @@ function begin_new_or_edit_data(data_type, edit_data_object) {
 
 	if (jsondata) {
 		$('#neworeditlink').html("Módosítás");
-		$.post("functions/edit_data/new_data_forms.php", {type: data_type, selectedObject: jsondata}, function(result) {
+		$.post("functions/edit_data/new_or_edit_data_forms.php", {type: data_type, selectedObject: jsondata}, function(result) {
 		   $('#newOrEditArea').html(result);
 		   // elore beallitjuk a linket az ujnak, mert ugyebar egybol ujat lehet hozzaadni, es nem szerkeszteni a regit...
 		   $('#neworeditlink').attr("onclick", "end_new_or_edit_data('" + data_type + "', " + jsondata + ");");
@@ -145,7 +232,7 @@ function begin_new_or_edit_data(data_type, edit_data_object) {
 	}
 	else {
 		$('#neworeditlink').html("Létrehozás");
-		$.post("functions/edit_data/new_data_forms.php", {type: data_type}, function(result) {
+		$.post("functions/edit_data/new_or_edit_data_forms.php", {type: data_type}, function(result) {
 		   $('#newOrEditArea').html(result);
 		   // elore beallitjuk a linket az ujnak, mert ugyebar egybol ujat lehet hozzaadni, es nem szerkeszteni a regit...
 		   $('#neworeditlink').attr("onclick", "end_new_or_edit_data('" + data_type + "');");
@@ -217,7 +304,7 @@ function end_new_or_edit_data(data_type, jsondata) {
 			error_message += (error_message ? "\nA nyitvatartást meg kell adni!" : "A nyitvatartást meg kell adni!");
 
 		aid = "all";
-		atableNameWithSchema = "fitness.info"
+		atableNameWithSchema = "fitness.info";
 		avalueIDs = "bemutatkozas" + allelvalaszto + "hazirend" + allelvalaszto + "nyitvatartas";
 		avalues = "'" + $('#infodebut').val() + "'" + allelvalaszto + "'" + $('#infopolicy').val() + "'" + allelvalaszto + "'" + $('#infoopeninghours').val() + "'";
 		returningValues = avalueIDs; // itt nincs id....
@@ -243,7 +330,7 @@ function end_new_or_edit_data(data_type, jsondata) {
 		if ($('#edzoaltitle').val() && $('#edzoaltitle').val().length > 30)
 			error_message += (error_message ? "\nAz edző alcíme maximum 30 karakter lehet!" : "Az edző alcíme maximum 30 karakter lehet!");
 
-		atableNameWithSchema = "fitness.edzok"
+		atableNameWithSchema = "fitness.edzok";
 		avalueIDs = "vnev" + elvalaszto + "knev" + elvalaszto + "rovid_nev" + elvalaszto + "alcim" + elvalaszto + "leiras";
 		avalues = "'" + $('#edzovname').val() + "'" + elvalaszto + "'" + $('#edzokname').val() + "'" + elvalaszto + "'" + $('#edzorname').val() + "'" + elvalaszto + "'" + $('#edzoaltitle').val() + "'" + elvalaszto + "'" + $('#edzodescription').val() + "'";
 		returningValues = "id" + elvalaszto + avalueIDs + elvalaszto + "ertekeles"; // az ertekeles nem modosithato, de meg kell jeleniteni, azert van itt....
@@ -274,7 +361,7 @@ function end_new_or_edit_data(data_type, jsondata) {
 		if ($('#oraaltitle').val() && $('#oraaltitle').val().length > 30)
 			error_message += (error_message ? "\nAz óra alcíme maximum 30 karakter lehet!" : "Az óra alcíme maximum 30 karakter lehet!");
 
-		atableNameWithSchema = "fitness.orak"
+		atableNameWithSchema = "fitness.orak";
 		avalueIDs = "nev" + elvalaszto + "rovid_nev" + elvalaszto + "alcim" + elvalaszto + "leiras" + elvalaszto + "max_letszam" + elvalaszto + "perc" + elvalaszto + "belepodij";
 		avalues = "'" + $('#oraname').val() + "'" + elvalaszto + "'" + $('#orarname').val() + "'" + elvalaszto + "'" + $('#oraaltitle').val() + "'" + elvalaszto + "'" + $('#oradescription').val() + "'" + elvalaszto + "" + $('#oramaxletszam').val() + "" + elvalaszto + "" + $('#oraperc').val() + "" + elvalaszto + "'" + ($('#orabelepodij').prop("checked") ? "t" : "f") + "'";
 		returningValues = "id" + elvalaszto + avalueIDs;
@@ -294,7 +381,7 @@ function end_new_or_edit_data(data_type, jsondata) {
 		if ($('#teremaltitle').val() && $('#teremaltitle').val().length > 20)
 			error_message += (error_message ? "\nA terem alcíme maximum 20 karakter lehet!" : "A terem alcíme maximum 20 karakter lehet!");
 
-		atableNameWithSchema = "fitness.termek"
+		atableNameWithSchema = "fitness.termek";
 		avalueIDs = "nev" + elvalaszto + "alcim" + elvalaszto + "foglalhato";
 		avalues = "'" + $('#teremname').val() + "'" + elvalaszto + "'" + $('#teremaltitle').val() + "'" + elvalaszto + "'" + ($('#teremavailable').prop("checked") ? "t" : "f") + "'";
 		returningValues = "id" + elvalaszto + avalueIDs;
@@ -311,7 +398,7 @@ function end_new_or_edit_data(data_type, jsondata) {
 	}
 
 	if (atableNameWithSchema && avalueIDs && avalues) {
-		$.post("functions/edit_data/insert_or_update_data.php", {data_id: aid, table_name_with_schema: atableNameWithSchema, value_ids: avalueIDs, values: avalues, returning: returningValues}, function(result) {
+		$.post("functions/insert_or_update_data.php", {data_id: aid, table_name_with_schema: atableNameWithSchema, value_ids: avalueIDs, values: avalues, returning: returningValues}, function(result) {
 //			window.alert("elvileg kesz, eredmeny: " + (result ? "OK" : "XAR") + " result: " + result);
 			if (result) {
 			   // at kell alakitani json objektte
@@ -334,3 +421,131 @@ function changeSorszam(table_name_with_schema, id, ujsorszam) {
 	});
 }
 
+
+
+/*!
+ * \param naptar_object	opcionális paraméter, csak akkor kell, ha valtoztatni akarom az adatatot es nem ujat letrehozni...
+ */
+function begin_new_or_edit_naptar(naptar_object) {
+	// megprobaljuk atkonvertalni json-ra, ha nem sikerul, akkor ujat viszunk fel, nem a legjobb, de nem rossz...
+	var jsondata = null;
+	if (naptar_object)
+		jsondata = JSON.stringify(naptar_object);
+
+	if (jsondata) {
+		$('#neworeditlink').html("Módosítás");
+		$.post("functions/edit_naptar/new_or_edit_naptar_forms.php", {selectedObject: jsondata}, function(result) {
+			if (result) {
+			   if (result.substring(0, 5) == "Hiba.") {
+				   window.alert(result.substring(5, result.length));
+				   return;
+			   }
+			   else {
+				   $('#newOrEditArea').html(result);
+				   // elore beallitjuk a linket az ujnak, mert ugyebar egybol ujat lehet hozzaadni, es nem szerkeszteni a regit...
+				   $('#neworeditlink').attr("onclick", "end_new_or_edit_naptar(" + jsondata + ");");
+				   neworeditClick();
+			   }
+			}
+		});
+	}
+	else {
+		$('#neworeditlink').html("Létrehozás");
+		$.post("functions/edit_naptar/new_or_edit_naptar_forms.php", {}, function(result) {
+			if (result) {
+			   if (result.substring(0, 5) == "Hiba.") {
+				   window.alert(result.substring(5, result.length));
+				   return;
+			   }
+			   else {
+				   $('#newOrEditArea').html(result);
+					// elore beallitjuk a linket az ujnak, mert ugyebar egybol ujat lehet hozzaadni, es nem szerkeszteni a regit...
+				   $('#neworeditlink').attr("onclick", "end_new_or_edit_naptar();");
+				   neworeditClick();
+			   }
+			}
+		});
+	}
+
+	if (jsondata)
+		$('.editTitle').html("Naptárbejegyzés szerkesztése");
+	else
+		$('.editTitle').html("Új naptárbejegyzés létrehozása");
+}
+
+/*!
+ * \param jsondata			opcionális paraméter, csak akkor kell, ha valtoztatni akarom az adatatot es nem ujat letrehozni...
+ */
+function end_new_or_edit_naptar(jsondata) {
+	var error_message = "";
+	var tol = $('#naptartol');
+	var ig = $('#naptarig');
+	var ora = $('#naptarora');
+	var edzo = $('#naptaredzo');
+	var terem = $('#naptarterem');
+
+	if (!tol) {
+		if (error_message)
+			error_message += "\n";
+		error_message += "A 'Mikor' mező kitöltése kötelező!";
+	}
+	else if (!is_yyyymmddHHMM_FormattedDateTime(tol.val())) {
+		if (error_message)
+			error_message += "\n";
+		error_message += "A 'Mikor' mező formátuma nem megfelelő vagy érvénytelen a dátum vagy az idő!";//\nA 'Mikor' mező formátuma kötelezően: 'eeee-hh-nn oo:pp', például: '2014-01-01 06:00'!";
+	}
+
+	if (!ig) {
+		if (error_message)
+			error_message += "\n";
+		error_message += "A 'Meddig' mező kitöltése kötelező!";
+	}
+	else if (!is_yyyymmddHHMM_FormattedDateTime(ig.val())) {
+		if (error_message)
+			error_message += "\n";
+		error_message += "A 'Meddig' mező formátuma nem megfelelő vagy érvénytelen a dátum vagy az idő!";//\nA 'Meddig' mező formátuma kötelezően: 'eeee-hh-nn oo:pp', például: '2014-01-01 06:00'!";
+	}
+
+	if (ora.prop("selectedIndex") === 0) {
+		if (error_message)
+			error_message += "\n";
+		error_message += "Kötelező kiválasztani az óra típusát!";
+	}
+
+	if (edzo.prop("selectedIndex") === 0) {
+		if (error_message)
+			error_message += "\n";
+		error_message += "Kötelező kiválasztani az edzőt!";
+	}
+
+	if (terem.prop("selectedIndex") === 0) {
+		if (error_message)
+			error_message += "\n";
+		error_message += "Kötelező kiválasztani a termet!";
+	}
+
+	if (error_message) {
+		window.alert(error_message);
+		return;
+	}
+
+	var aid = "-1";
+	if (jsondata)
+		aid = jsondata.id;
+
+	var elvalaszto = ",";
+	var allelvalaszto = "<!±!>";
+	var atableNameWithSchema = "fitness.naptar";
+	var avalueIDs = "tol" + elvalaszto + "ig" + elvalaszto + "ora" + elvalaszto + "edzo" + elvalaszto + "terem";
+	var avalues = "'" + tol.val() + "'" + elvalaszto + "'" + ig.val() + "'" + elvalaszto + "'" + ora.val() + "'" + elvalaszto + "'" + edzo.val() + "'" + elvalaszto + "'" + terem.val() + "'";
+	var returningValues = "id";
+
+	$.post("functions/insert_or_update_data.php", {data_id: aid, table_name_with_schema: atableNameWithSchema, value_ids: avalueIDs, values: avalues, returning: returningValues}, function(result) {
+//		window.alert("elvileg kesz, eredmeny: " + (result ? "OK" : "XAR") + " result: " + result);
+		if (result) {
+		   change_main_site("timetable");
+		}
+	});
+
+	disablePopup();
+}

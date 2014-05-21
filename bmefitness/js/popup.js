@@ -6,12 +6,12 @@ var actualPopup = "";
 //loading popup with jQuery magic!
 function loadPopup() {
 	//loads popup only if it is disabled
-	if (popupStatus == 0) {
+	if (popupStatus === 0) {
 		$("#backgroundPopup").css( {
 			"opacity": "0.4"
 		});
-		$("#backgroundPopup").fadeIn("slow");
-		$(actualPopup).fadeIn("slow");
+		$("#backgroundPopup").fadeIn("normal");
+		$(actualPopup).fadeIn("normal");
 		popupStatus = 1;
 	}
 }
@@ -20,8 +20,8 @@ function loadPopup() {
 function disablePopup() {
 	//disables popup only if it is enabled
 	if (popupStatus == 1) {
-		$("#backgroundPopup").fadeOut("slow");
-		$(actualPopup).fadeOut("slow");
+		$("#backgroundPopup").fadeOut("normal");
+		$(actualPopup).fadeOut("normal");
 		popupStatus = 0;
 	}
 }
