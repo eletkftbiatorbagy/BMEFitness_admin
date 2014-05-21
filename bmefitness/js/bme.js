@@ -228,6 +228,8 @@ function begin_new_or_edit_data(data_type, edit_data_object) {
 		   $('#newOrEditArea').html(result);
 		   // elore beallitjuk a linket az ujnak, mert ugyebar egybol ujat lehet hozzaadni, es nem szerkeszteni a regit...
 		   $('#neworeditlink').attr("onclick", "end_new_or_edit_data('" + data_type + "', " + jsondata + ");");
+			if (data_type == "orak")
+			   jscolor.init();
 		});
 	}
 	else {
@@ -236,6 +238,8 @@ function begin_new_or_edit_data(data_type, edit_data_object) {
 		   $('#newOrEditArea').html(result);
 		   // elore beallitjuk a linket az ujnak, mert ugyebar egybol ujat lehet hozzaadni, es nem szerkeszteni a regit...
 		   $('#neworeditlink').attr("onclick", "end_new_or_edit_data('" + data_type + "');");
+		   if (data_type == "orak")
+			   jscolor.init();
 		});
 	}
 

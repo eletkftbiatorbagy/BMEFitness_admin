@@ -41,7 +41,7 @@
 					<tr><td id=\"edit_ora_maxletszam\" class=\"td_right ".(is_null($object) || strlen($object->max_letszam) == 0 ? "redcolor" : "")."\">Max létszám:</td><td class=\"td_left\"><input maxlength=\"3\" size=\"31\" type=\"text\" id=\"oramaxletszam\" ".(is_null($object) ? "" : "value=\"".$object->max_letszam."\" ")."onchange=\"editedField('edit_ora_maxletszam', 'oramaxletszam', false, 3);\"></input></td></tr>\n
 					<tr><td id=\"edit_ora_description\" class=\"td_right ".(is_null($object) || strlen($object->leiras) == 0 ? "redcolor" : "")."\">Leírás:</td><td class=\"td_left\"><textarea rows=\"5\" cols=\"29\" type=\"text\" id=\"oradescription\" onchange=\"editedField('edit_ora_description', 'oradescription', false, 0);\">".(is_null($object) ? "" : $object->leiras)."</textarea></td></tr>\n
 					<tr><td class=\"td_right\">Belépődíj:</td><td class=\"td_left\"><input ".(is_null($object) || $object->belepodij == "t" ? "checked=\"true\" " : "")."type=\"checkbox\" size=\"23\" type=\"text\" id=\"orabelepodij\"></input></td></tr>\n
-					<tr><td id=\"edit_ora_color\" class=\"td_right\">Szín:</td><td class=\"td_left\"><input maxlength=\"6\" size=\"31\" type=\"text\" id=\"oracolor\" ".(is_null($object) ? "" : "value=\"".(strval($object->color))."\" ")."></input></td></tr>\n
+					<tr><td id=\"edit_ora_color\" class=\"td_right\">Szín:</td><td class=\"td_left\"><input class=\"color\" maxlength=\"6\" size=\"31\" type=\"text\" id=\"oracolor\" ".(is_null($object) ? "" : "value=\"".(strval($object->color))."\" ")."></input></td></tr>\n
 				</table>
 			";
 		}

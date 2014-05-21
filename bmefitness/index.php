@@ -18,6 +18,7 @@
 		<link rel="stylesheet" href="css/base.css" />
 		<link rel="stylesheet" href="css/bme.css" />
 		<script src="js/bme.js" type="text/javascript"></script>
+		<script type="text/javascript" src="jscolor/jscolor.js"></script>
 <?php
 
 // ddddddd
