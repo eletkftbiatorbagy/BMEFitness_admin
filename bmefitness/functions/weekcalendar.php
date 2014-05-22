@@ -124,12 +124,12 @@
 
 		$naptarak = db_select_data("fitness.naptar, fitness.orak, fitness.edzok, fitness.termek", $select, $where, "naptar.tol");
 
-		printTable($weekdays, $naptarak);
+		printTable($weekdays, $naptarak, "begin_new_or_edit_naptar");
 	}
 
 	/*!	Tabla kirajzolasa a het napjai es naptarak alapjan
 	 */
-	function printTable($weekdays, $naptarak) {
+	function printTable($weekdays, $naptarak, $editfunction) {
 		$percek = array();
 
 		// szerintem az osszes datum szoveget atkonvertalom rendes datumra
@@ -317,11 +317,15 @@
 						// hozzaadjuk a tooltipet, hogy ne kelljen kattingatni az informacio miatt...
 						// $adat->bejegyzes->ig, kijelzesnel hozza kell adni egyet...
 						$tooltip = "Óra:\n\t".$adat->bejegyzes->ora_nev."\n\t".date("Y. m. d. H:i", $adat->bejegyzes->tol)." - ".(date("Y. m. d. H:i", $adat->bejegyzes->ig + 1))."\n\tMax létszám: ".$adat->bejegyzes->max_letszam." fő";
-						$tooltip .= "\nEdző:\n\t".$adat->bejegyzes->edzo_kereszt_nev." ".$adat->bejegyzes->edzo_vezetek_nev." (".$adat->bejegyzes->edzo_rovid_nev.")";
+						$tooltip .= "\nEdző:\n\t".$adat->bejegyzes->edzo_vezetek_nev." ".$adat->bejegyzes->edzo_kereszt_nev." (".$adat->bejegyzes->edzo_rovid_nev.")";
 						$tooltip .= "\nTerem:\n\t".$adat->bejegyzes->terem_nev."\n\t".$adat->bejegyzes->terem_alcim;
 
+						$onclickfunction = "";
+						if (!is_null($editfunction) && $editfunction != "")
+							$onclickfunction =  " onclick=\"".$editfunction."(".$adat->bejegyzes->naptar_id.")\"";
+
 						// ez a szines div
-						$tdcontent .= "<div title=\"".$tooltip."\" style=\"position: absolute;".$widthsz.$leftsz.$topsz.($amax >= 60 && $adat->min == 0 ? " height: 100%;" : " height: ".$maxm."px;")." background-color: ".$bcolor.";\"></div>";
+						$tdcontent .= "<div title=\"".$tooltip."\"".$onclickfunction." style=\"cursor: pointer; position: absolute;".$widthsz.$leftsz.$topsz.($amax >= 60 && $adat->min == 0 ? " height: 100%;" : " height: ".$maxm."px;")." background-color: ".$bcolor.";\"></div>";
 
 						// kikapcsoljuk a naptarinfot, ha nem egyeduli bejegyzes
 						if ($adat->bejegyzes->maxatfedes > 1)
@@ -330,10 +334,11 @@
 						if ($shownaptarinfo) {
 							// kiiratjuk a naptar nevet es egyeb infojat, ha ez a kezdodatum.
 							$mindate = date("Y", $weekdays[$day])."-".date("m", $weekdays[$day])."-".date("d", $weekdays[$day])." ".$hours.":".($adat->min < 10 ? "0".$adat->min : $adat->min);
+							$diveloke = "<div title=\"".$tooltip."\"".$onclickfunction." style=\"position: relative; z-index: 1; cursor: pointer;".$topsz."\">";
 
 							// ha az elso napon az elso oraban vagyunk es az esemenynek korabbi a kezdo idopontja, akkor megjelenitjuk a neve elott egy '<-' szoveget is.
 							if ($hours == $minhour && $day == 0 && date("Y-m-d H:i", $adat->bejegyzes->tol) < date("Y-m-d H:i", strtotime($mindate))) {
-								$tdcontent .= "<div style=\"position: relative; z-index: 1;".$topsz."\"><- ".$adat->bejegyzes->ora_nev;
+								$tdcontent .= $diveloke."<- ".$adat->bejegyzes->ora_nev;
 								// ha nagyobb vagy egyenlo, mint 70 perc, akkor megjelenitjuk az edzo rovid nevet is, mert egyebkent nem fer ki...
 								if (($adat->bejegyzes->ig - strtotime(date("Y", $weekdays[$day])."-".date("m", $weekdays[$day])."-".date("d", $weekdays[$day])." ".$hours.":00") / 60) >= $minheightforedzo)
 									$tdcontent .= "<br>".$adat->bejegyzes->edzo_rovid_nev;
@@ -341,11 +346,11 @@
 							}
 							// ha az utolso napon az utolso oraban vagyunk es az esemenynek kesobbi a zaro idopontja, akkor megjelenitjuk '->' szoveget. // nevre itt nincs szukseg, mert elotte szerepel
 							else if ($hours == $maxhour && $day == count($weekdays) - 1 && date("Y-m-d H:i", $adat->bejegyzes->ig) > date("Y-m-d H:i", strtotime(date("Y", $weekdays[$day])."-".date("m", $weekdays[$day])."-".date("d", $weekdays[$day])." ".$hours.":59"))) {
-								$tdcontent .= "<div style=\"position: relative; z-index: 1;".$topsz."\">-></div>";
+								$tdcontent .= $diveloke."-></div>";
 							}
 							// egyebkent csak akkor iratjuk ki az ora adatait, ha ez a kezdodatum
 							else if (date("Y-m-d H:i", $adat->bejegyzes->tol) == date("Y-m-d H:i", strtotime($mindate))) {
-								$tdcontent .= "<div style=\"position: relative; z-index: 1;".$topsz."\">".$adat->bejegyzes->ora_nev;
+								$tdcontent .= $diveloke.$adat->bejegyzes->ora_nev;
 								// ha nagyobb vagy egyenlo, mint 70 perc, akkor megjelenitjuk az edzo rovid nevet is, mert egyebkent nem fer ki...
 								if ((($adat->bejegyzes->ig - $adat->bejegyzes->tol) / 60) >= $minheightforedzo)
 									$tdcontent .= "<br>".$adat->bejegyzes->edzo_rovid_nev;

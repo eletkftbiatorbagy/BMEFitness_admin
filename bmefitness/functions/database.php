@@ -68,11 +68,19 @@
 		$returningIDs = "";
 
 		for ($i = 0; $i < count($avalueids); $i++) {
-			$vauleIDsAndValues .= ($vauleIDsAndValues == "" ? ($avalueids[$i]." = ".$avalues[$i]) : (",".$avalueids[$i]." = ".$avalues[$i]));
+			if ($vauleIDsAndValues != "")
+				$vauleIDsAndValues .= ",";
+
+//			$vauleIDsAndValues .= ($vauleIDsAndValues == "" ? ($avalueids[$i]." = ".$avalues[$i]) : (",".$avalueids[$i]." = ".$avalues[$i]));
+			$vauleIDsAndValues .= $avalueids[$i]." = ".$avalues[$i];
 		}
 
 		for ($i = 0; $i < count($areturnValues); $i++) {
-			$returningIDs .= ($returningIDs == "" ? $areturnValues[$i] : ",".$areturnValues[$i]);
+			if ($returningIDs != "")
+				$returningIDs .= ",";
+
+//			$returningIDs .= ($returningIDs == "" ? $areturnValues[$i] : ",".$areturnValues[$i]);
+			$returningIDs .= $areturnValues[$i];
 		}
 
 		if ($ids == "all")

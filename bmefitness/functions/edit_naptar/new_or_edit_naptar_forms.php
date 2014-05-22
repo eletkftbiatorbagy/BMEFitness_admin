@@ -31,8 +31,16 @@
 
 	if (isset($_POST["selectedObject"])) {
 		// visszaalakitjuk, hogy tudjuk hasznalni...
-		$jsonobject = $_POST["selectedObject"];
-		$object = json_decode($jsonobject);
+		$edited_naptar_id = $_POST["selectedObject"];
+		$selected_naptar_data = db_select_data("fitness.naptar", "*", "naptar.id = ".$edited_naptar_id, "");
+/*		foreach ($selected_naptar_data as $key => $avalue) {
+			foreach ($avalue as $value) {
+				print $key.": ".$value."<br>";
+			}
+		}
+ */
+		if (count($selected_naptar_data) > 0)
+			$object = $selected_naptar_data[0];
 	}
 
 	print "
@@ -46,7 +54,7 @@
 	print "<tr><td class=\"td_right\">Óra:</td><td class=\"td_left\"><select id=\"naptarora\">\n";
 	print "<option>Óra kiválasztása...</option>";
 	foreach ($orak as $ora)
-		print "<option value=\"".$ora->id."\">".$ora->nev." (".$ora->id.")</option>";
+	print "<option".((!is_null($object) && $object->ora == $ora->id) ? " selected=\"selected\"" : "")." value=\"".$ora->id."\">".$ora->nev." (".$ora->id.")</option>";
 	print "</select>";
 
 	// edzok
@@ -54,7 +62,7 @@
 	print "<tr><td class=\"td_right\">Edző:</td><td class=\"td_left\"><select id=\"naptaredzo\">\n";
 	print "<option>Edző kiválasztása...</option>";
 	foreach ($edzok as $edzo)
-		print "<option value=\"".$edzo->id."\">".$edzo->vnev." ".$edzo->knev." (".$edzo->id.")</option>";
+		print "<option".((!is_null($object) && $object->edzo == $edzo->id) ? " selected=\"selected\"" : "")." value=\"".$edzo->id."\">".$edzo->vnev." ".$edzo->knev." (".$edzo->id.")</option>";
 	print "</select>";
 
 	// termek
@@ -62,7 +70,7 @@
 	print "<tr><td class=\"td_right\">Terem:</td><td class=\"td_left\"><select id=\"naptarterem\">\n";
 	print "<option>Terem kiválasztása...</option>";
 	foreach ($termek as $terem)
-		print "<option value=\"".$terem->id."\">".$terem->nev." (".$terem->id.")</option>";
+		print "<option".((!is_null($object) && $object->terem == $terem->id) ? " selected=\"selected\"" : "")." value=\"".$terem->id."\">".$terem->nev." (".$terem->id.")</option>";
 	print "</select>";
 
 

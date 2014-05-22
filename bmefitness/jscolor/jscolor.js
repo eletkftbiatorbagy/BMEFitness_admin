@@ -345,17 +345,17 @@ var jscolor = {
 
 		this.pickerOnfocus = true; // display picker on focus?
 		this.pickerMode = 'HSV'; // HSV | HVS
-		this.pickerPosition = 'bottom'; // left | right | top | bottom
+		this.pickerPosition = 'top'; // left | right | top | bottom
 		this.pickerSmartPosition = true; // automatically adjust picker position when necessary
-		this.pickerButtonHeight = 20; // px
+		this.pickerButtonHeight = 0; // px
 		this.pickerClosable = false;
 		this.pickerCloseText = 'Close';
 		this.pickerButtonColor = 'ButtonText'; // px
-		this.pickerFace = 10; // px
+		this.pickerFace = 0; // px
 		this.pickerFaceColor = 'ThreeDFace'; // CSS color
-		this.pickerBorder = 1; // px
+		this.pickerBorder = 0; // px
 		this.pickerBorderColor = 'ThreeDHighlight ThreeDShadow ThreeDShadow ThreeDHighlight'; // CSS color
-		this.pickerInset = 1; // px
+		this.pickerInset = 0; // px
 		this.pickerInsetColor = 'ThreeDShadow ThreeDHighlight ThreeDHighlight ThreeDShadow'; // CSS color
 		this.pickerZIndex = 10000;
 

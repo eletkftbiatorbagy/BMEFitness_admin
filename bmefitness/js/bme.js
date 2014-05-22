@@ -430,17 +430,13 @@ function changeSorszam(table_name_with_schema, id, ujsorszam) {
 
 
 /*!
- * \param naptar_object	opcionális paraméter, csak akkor kell, ha valtoztatni akarom az adatatot es nem ujat letrehozni...
+ * \param naptar_id	opcionális paraméter, csak akkor kell, ha valtoztatni akarom az adatatot es nem ujat letrehozni...
  */
-function begin_new_or_edit_naptar(naptar_object) {
+function begin_new_or_edit_naptar(naptar_id) {
 	// megprobaljuk atkonvertalni json-ra, ha nem sikerul, akkor ujat viszunk fel, nem a legjobb, de nem rossz...
-	var jsondata = null;
-	if (naptar_object)
-		jsondata = JSON.stringify(naptar_object);
-
-	if (jsondata) {
+	if (naptar_id) {
 		$('#neworeditlink').html("Módosítás");
-		$.post("functions/edit_naptar/new_or_edit_naptar_forms.php", {selectedObject: jsondata}, function(result) {
+		$.post("functions/edit_naptar/new_or_edit_naptar_forms.php", {selectedObject: naptar_id}, function(result) {
 			if (result) {
 			   if (result.substring(0, 5) == "Hiba.") {
 				   window.alert(result.substring(5, result.length));
@@ -449,7 +445,7 @@ function begin_new_or_edit_naptar(naptar_object) {
 			   else {
 				   $('#newOrEditArea').html(result);
 				   // elore beallitjuk a linket az ujnak, mert ugyebar egybol ujat lehet hozzaadni, es nem szerkeszteni a regit...
-				   $('#neworeditlink').attr("onclick", "end_new_or_edit_naptar(" + jsondata + ");");
+				   $('#neworeditlink').attr("onclick", "end_new_or_edit_naptar(" + naptar_id + ");");
 				   neworeditClick();
 			   }
 			}
@@ -473,16 +469,16 @@ function begin_new_or_edit_naptar(naptar_object) {
 		});
 	}
 
-	if (jsondata)
+	if (naptar_id)
 		$('.editTitle').html("Naptárbejegyzés szerkesztése");
 	else
 		$('.editTitle').html("Új naptárbejegyzés létrehozása");
 }
 
 /*!
- * \param jsondata			opcionális paraméter, csak akkor kell, ha valtoztatni akarom az adatatot es nem ujat letrehozni...
+ * \param naptar_id			opcionális paraméter, csak akkor kell, ha valtoztatni akarom az adatatot es nem ujat letrehozni...
  */
-function end_new_or_edit_naptar(jsondata) {
+function end_new_or_edit_naptar(naptar_id) {
 	var error_message = "";
 	var tol = $('#naptartol');
 	var ig = $('#naptarig');
@@ -536,11 +532,14 @@ function end_new_or_edit_naptar(jsondata) {
 	}
 
 	var aid = "-1";
-	if (jsondata)
-		aid = jsondata.id;
-
 	var elvalaszto = ",";
 	var allelvalaszto = "<!±!>";
+
+	if (naptar_id) {
+		aid = naptar_id;
+		elvalaszto = allelvalaszto;
+	}
+
 	var atableNameWithSchema = "fitness.naptar";
 	var avalueIDs = "tol" + elvalaszto + "ig" + elvalaszto + "ora" + elvalaszto + "edzo" + elvalaszto + "terem";
 	var avalues = "'" + tol.val() + "'" + elvalaszto + "'" + ig.val() + "'" + elvalaszto + "'" + ora.val() + "'" + elvalaszto + "'" + edzo.val() + "'" + elvalaszto + "'" + terem.val() + "'";
