@@ -64,6 +64,8 @@ function fileSelected(aFolder, aSchema, aTable, aColumn, aId_name, aId, aConvert
 
 	if (file) {
 		if (aIsLogo) {
+			document.getElementById("edit_ora_logo").className = document.getElementById("edit_ora_logo").className.replace(/\bredcolor\b/,'');
+
 			logoselected = true;
 			logofolder = aFolder;
 			logoschema = aSchema;
@@ -76,6 +78,13 @@ function fileSelected(aFolder, aSchema, aTable, aColumn, aId_name, aId, aConvert
 			isLogo = aIsLogo;
 		}
 		else {
+			if (aTable == "edzok")
+				document.getElementById("edit_edzo_foto").className = document.getElementById("edit_edzo_foto").className.replace(/\bredcolor\b/,'');
+			else if (aTable == "orak")
+				document.getElementById("edit_ora_foto").className = document.getElementById("edit_ora_foto").className.replace(/\bredcolor\b/,'');
+			else if (aTable == "termek")
+				document.getElementById("edit_terem_foto").className = document.getElementById("edit_terem_foto").className.replace(/\bredcolor\b/,'');
+
 			fileselected = true;
 			filefolder = aFolder;
 			fileschema = aSchema;
