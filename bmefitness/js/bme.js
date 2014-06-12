@@ -222,29 +222,6 @@ function begin_new_or_edit_data(data_type, edit_data_object) {
 	if (edit_data_object)
 		jsondata = JSON.stringify(edit_data_object);
 
-	if (jsondata) {
-		$('#neworeditlink').html("Módosítás");
-		$.post("functions/edit_data/new_or_edit_data_forms.php", {type: data_type, selectedObject: jsondata, random: Math.random()}, function(result) {
-		   $('#newOrEditArea').html(result);
-		   // elore beallitjuk a linket az ujnak, mert ugyebar egybol ujat lehet hozzaadni, es nem szerkeszteni a regit...
-		   $('#neworeditlink').attr("onclick", "end_new_or_edit_data('" + data_type + "', " + jsondata + ");");
-			if (data_type == "orak")
-			   jscolor.init();
-		   popupDiv('popupNewOrEdit');
-		});
-	}
-	else {
-		$('#neworeditlink').html("Létrehozás");
-		$.post("functions/edit_data/new_or_edit_data_forms.php", {type: data_type, random: Math.random()}, function(result) {
-		   $('#newOrEditArea').html(result);
-		   // elore beallitjuk a linket az ujnak, mert ugyebar egybol ujat lehet hozzaadni, es nem szerkeszteni a regit...
-		   $('#neworeditlink').attr("onclick", "end_new_or_edit_data('" + data_type + "');");
-		   if (data_type == "orak")
-			   jscolor.init();
-		   popupDiv('popupNewOrEdit');
-		});
-	}
-
 	var title = null;
 	if (data_type == "info") {
 		title = "Infó adatok szerkesztése";
@@ -270,6 +247,29 @@ function begin_new_or_edit_data(data_type, edit_data_object) {
 
 	if (title)
 		$('.editTitle').html(title);
+
+	if (jsondata) {
+		$('#neworeditlink').html("Módosítás");
+		$.post("functions/edit_data/new_or_edit_data_forms.php", {type: data_type, selectedObject: jsondata, random: Math.random()}, function(result) {
+		   $('#newOrEditArea').html(result);
+		   // elore beallitjuk a linket az ujnak, mert ugyebar egybol ujat lehet hozzaadni, es nem szerkeszteni a regit...
+		   $('#neworeditlink').attr("onclick", "end_new_or_edit_data('" + data_type + "', " + jsondata + ");");
+			if (data_type == "orak")
+			   jscolor.init();
+		   popupDiv('popupNewOrEdit');
+		});
+	}
+	else {
+		$('#neworeditlink').html("Létrehozás");
+		$.post("functions/edit_data/new_or_edit_data_forms.php", {type: data_type, random: Math.random()}, function(result) {
+		   $('#newOrEditArea').html(result);
+		   // elore beallitjuk a linket az ujnak, mert ugyebar egybol ujat lehet hozzaadni, es nem szerkeszteni a regit...
+		   $('#neworeditlink').attr("onclick", "end_new_or_edit_data('" + data_type + "');");
+		   if (data_type == "orak")
+			   jscolor.init();
+		   popupDiv('popupNewOrEdit');
+		});
+	}
 }
 
 /*!
@@ -422,10 +422,7 @@ function end_new_or_edit_data(data_type, jsondata) {
 	disablePopup();
 }
 
-function fileUploadCompleted(json_decoded, data_type, fileid) {
-	if (fileid)
-		json_decoded.foto = fileid;
-	
+function fileUploadCompleted(json_decoded, data_type) {
 	change_edit_data_site(data_type, json_decoded);
 }
 

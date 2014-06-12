@@ -7,6 +7,8 @@
 		echo "error:".$messsage;
 		if ($clean_file != NULL)
 			clean_file($clean_file);
+
+		closeDatabaseHandle();
 	}
 
 	function clean_file($fileName) {
@@ -15,6 +17,11 @@
 	}
 
 	$vanhiba = false;
+	if (!isset($_POST['type'])) {
+		hiba("Belső működési hiba, nem található a 'type' változó.");
+		$vanhiba = true;
+	}
+
 	if (!isset($_POST['folder'])) {
 		hiba("Belső működési hiba, nem található a 'folder' változó.");
 		$vanhiba = true;
@@ -58,12 +65,14 @@
 	if ($vanhiba)
 		exit(2);
 
+	echo $_POST['type']; // kiiratjik, hogy milyen tipusu volt, file vagy logo lehet
+
 	$temp_path = "../data_tmp/";
 	$target_path = "../".$_POST['folder']."/";
 	$oldfilename = $_FILES['uploadedfile']['tmp_name'];
 	$filename = basename($_FILES['uploadedfile']['name']);
 	$move_path = $temp_path.$filename;
-	$convert_path = $temp_path.$_POST['folder']."_uploaded.jpg"; // azert adom meg ezt igy, hogy ha hiba van valahol utkozben, akkor a kovetkezo feltoltes biztosan torolje az elozo probalkozast
+	$convert_path = $temp_path.$_POST['type']."_".$_POST['folder']."_uploaded.jpg"; // azert adom meg ezt igy, hogy ha hiba van valahol utkozben, akkor a kovetkezo feltoltes biztosan torolje az elozo probalkozast
 
 	// eloszor eltavolitjuk a mar letezo kepet.
 	clean_file($convert_path);
@@ -90,7 +99,7 @@
 
 			// leellenorizzuk, hogy a hash nincs-e hasznalatban...
 			$query = "SELECT * FROM ".$schema.".kepek WHERE hash = '".$file_hash."';";
-			$result = db_query_object_array_without_close($query, true);
+			$result = db_query_object_array_without_close($query, false);
 			if (is_array($result)) { // nem jo a sima !$result, mert ha ures a visszateresi ertek (marpedig ures, ha nincs RETURNING)
 				$kellrename = true;
 				if (count($result) > 0) {
@@ -114,7 +123,7 @@
 						hiba("Nem sikerült átnevezni a feltöltött fájlt.", $convert_path);
 						if ($kellrename) { // el kell tavolitani az adatbazisbol a kepet, hogy ujra fel lehessen tolteni
 							$query = "DELETE FROM ".$schema.".kepek WHERE id = ".$fileid.";";
-							$result = db_query_object_array_without_close($query, false);
+							$result = db_query_object_array_without_close($query, true);
 						}
 						exit(1);
 					}
@@ -160,7 +169,7 @@
 
 						// feltoltjuk az adatbazisba eloszor a kepet
 						$query = "UPDATE ".$schema.".".$table." SET ".$column." = '".$newbasefile."' WHERE ".$id_name." = ".$id.";";
-						$result = db_query_object_array_without_close($query, true);
+						$result = db_query_object_array_without_close($query, false);
 						if (!is_array($result)) { // nem jo a sima !$result, mert ha ures a visszateresi ertek (marpedig ures, ha nincs RETURNING, akkor ures az array...)
 							hiba("Nem sikerült feltölteni az adatbázisba a fájlt.", $convert_path);
 							if ($kellrename) { // el kell tavolitani az adatbazisbol a kepet, hogy ujra fel lehessen tolteni
@@ -171,6 +180,7 @@
 						}
 						else {
 							echo "|".$newbasefile; // visszakuldjuk, hogy at tudjuk adni
+							closeDatabaseHandle();
 							exit(0);
 							// azert nincs ok, mert hulyen nez ki, ha mar letezik a fajl, hibat ir ki a vegere meg OK-t.
 							// igy javascriptben akkor lesz hibamentes a feltoltes, ha az eredeny total ures

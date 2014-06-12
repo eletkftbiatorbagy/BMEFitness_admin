@@ -125,6 +125,7 @@ div.edit_data_available {
 
 table.edit_data_table td.td_right {
 	text-align: right;
+	padding: 5px;
 }
 
 div.action_button {

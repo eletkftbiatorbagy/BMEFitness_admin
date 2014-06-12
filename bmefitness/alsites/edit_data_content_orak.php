@@ -61,6 +61,8 @@
 					print "<tr><td><b>Perc:</b></td><td>".$object->perc."</td></tr>";
 					print "<tr><td><b>Belépődíj:</b></td><td>".($object->belepodij == "t" ? "Van" : "Nincs")."</td></tr>";
 					print "<tr><td><b>Max létszám:</b></td><td>".$object->max_letszam."</td></tr>";
+					print "<tr><td><b>Fotó:</b></td><td>".($object->foto == "" ? "" : "<img src=\"data_orak/".$object->foto.".jpg\">")."</td></tr>";
+					print "<tr><td><b>Logó:</b></td><td>".($object->logo == "" ? "" : "<img src=\"data_orak/".$object->logo.".jpg\">")."</td></tr>";
 				print "</table>";
 			print "</p>";
 			print "<div onclick='begin_new_or_edit_data(\"".$tablename."\", ".$ojson.");' class=\"action_button\">Szerkesztés</div>";

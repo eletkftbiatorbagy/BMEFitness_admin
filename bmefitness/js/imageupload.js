@@ -1,40 +1,91 @@
 var fileselected = false;
-var folder = null;
-var schema = null;
-var table = null;
-var column = null;
-var id_name = null;
-var id = null;
-var convertToWidth = null;
-var convertToHeight = null;
-var json_decoded;
-var data_type;
+var filefolder = null;
+var fileschema = null;
+var filetable = null;
+var filecolumn = null;
+var fileid_name = null;
+var fileid = null;
+var fileconvertToWidth = null;
+var fileconvertToHeight = null;
+
+var logoselected = false;
+var logofolder = null;
+var logoschema = null;
+var logotable = null;
+var logocolumn = null;
+var logoid_name = null;
+var logoid = null;
+var logoconvertToWidth = null;
+var logoconvertToHeight = null;
+
+var json_decoded = null;
+var data_type = null;
+var isLogo = false;
+var completeUploads = 0;
+var errorsmessages = "";
+var warningsmessages = "";
 
 function clearAll() {
-	folder = null;
-	schema = null;
-	table = null;
-	column = null;
-	id_name = null;
-	id = null;
-	convertToWidth = null;
-	convertToHeight = null;
+	fileselected = false;
+	filefolder = null;
+	fileschema = null;
+	filetable = null;
+	filecolumn = null;
+	fileid_name = null;
+	fileid = null;
+	fileconvertToWidth = null;
+	fileconvertToHeight = null;
 	json_decoded = null;
 	data_type = null;
+	isLogo = false;
+
+	logoselected = false;
+	logofolder = null;
+	logoschema = null;
+	logotable = null;
+	logocolumn = null;
+	logoid_name = null;
+	logoid = null;
+	logoconvertToWidth = null;
+	logoconvertToHeight = null;
+	completeUploads = 0;
+	errorsmessages = "";
+	warningsmessages = "";
 }
 
 function fileSelected(aFolder, aSchema, aTable, aColumn, aId_name, aId, aConvertToWidth, aConvertToHeight) {
-	var file = document.getElementById('fileToUpload').files[0];
+	var file = null;
+	var aIsLogo = aColumn == "logo" ? true : false;
+
+	if (aIsLogo)
+		file = document.getElementById('logoToUpload').files[0];
+	else
+		file = document.getElementById('fileToUpload').files[0];
+
 	if (file) {
-		fileselected = true;
-		folder = aFolder;
-		schema = aSchema;
-		table = aTable;
-		column = aColumn;
-		id_name = aId_name;
-		id = aId;
-		convertToWidth = aConvertToWidth;
-		convertToHeight = aConvertToHeight;
+		if (aIsLogo) {
+			logoselected = true;
+			logofolder = aFolder;
+			logoschema = aSchema;
+			logotable = aTable;
+			logocolumn = aColumn;
+			logoid_name = aId_name;
+			logoid = aId;
+			logoconvertToWidth = aConvertToWidth;
+			logoconvertToHeight = aConvertToHeight;
+			isLogo = aIsLogo;
+		}
+		else {
+			fileselected = true;
+			filefolder = aFolder;
+			fileschema = aSchema;
+			filetable = aTable;
+			filecolumn = aColumn;
+			fileid_name = aId_name;
+			fileid = aId;
+			fileconvertToWidth = aConvertToWidth;
+			fileconvertToHeight = aConvertToHeight;
+		}
 
 		/*
 		var fileSize = 0;
@@ -51,11 +102,12 @@ function fileSelected(aFolder, aSchema, aTable, aColumn, aId_name, aId, aConvert
 }
 
 function uploadFile(aJson_decoded, aData_type) {
-	if (!fileselected)
+	if (!fileselected && !logoselected)
 		return;
 
 	if (aJson_decoded) { // kaphatja az ID-t a feltolto rutinbol is, de nem kotelezo
-		id = aJson_decoded.id;
+		fileid = aJson_decoded.id;
+		logoid = aJson_decoded.id;
 		json_decoded = aJson_decoded;
 	}
 
@@ -69,27 +121,55 @@ function uploadFile(aJson_decoded, aData_type) {
 	popupDiv('popupUploadFile'); // ujra eloterbehozzuk az ablakot
 	setDoNotDisable(true);
 
-	fileselected = false;
 
-	var fd = new FormData();
-	fd.append("uploadedfile", document.getElementById('fileToUpload').files[0]);
-	fd.append("folder", folder);
-	fd.append("schema", schema);
-	fd.append("table", table);
-	fd.append("column", column);
-	fd.append("id_name", id_name);
-	fd.append("id_value", id);
-	fd.append("convertToWidth", convertToWidth);
-	fd.append("convertToHeight", convertToHeight);
-	fd.append("random", Math.random());
+	if (fileselected) {
+		completeUploads++;
+		var fd1 = new FormData();
+		fd1.append("uploadedfile", document.getElementById('fileToUpload').files[0]);
+		fd1.append("type", "file");
+		fd1.append("folder", filefolder);
+		fd1.append("schema", fileschema);
+		fd1.append("table", filetable);
+		fd1.append("column", filecolumn);
+		fd1.append("id_name", fileid_name);
+		fd1.append("id_value", fileid);
+		fd1.append("convertToWidth", fileconvertToWidth);
+		fd1.append("convertToHeight", fileconvertToHeight);
+		fd1.append("random", Math.random());
 
-	var xhr = new XMLHttpRequest();
-//	xhr.upload.addEventListener("progress", uploadProgress, false);
-	xhr.addEventListener("load", uploadComplete, false);
-	xhr.addEventListener("error", uploadFailed, false);
-	xhr.addEventListener("abort", uploadCanceled, false);
-	xhr.open("POST", "functions/uploadfile.php");
-	xhr.send(fd);
+		var xhr1 = new XMLHttpRequest();
+//		xhr.upload.addEventListener("progress", uploadProgress, false);
+		xhr1.addEventListener("load", uploadComplete, false);
+		xhr1.addEventListener("error", uploadFailed, false);
+		xhr1.addEventListener("abort", uploadCanceled, false);
+		xhr1.open("POST", "functions/uploadfile.php");
+		xhr1.send(fd1);
+	}
+
+//	if (!fileselected && logoselected) {
+	if (logoselected) {
+		completeUploads++;
+		var fd2 = new FormData();
+		fd2.append("uploadedfile", document.getElementById('logoToUpload').files[0]);
+		fd2.append("type", "logo");
+		fd2.append("folder", logofolder);
+		fd2.append("schema", logoschema);
+		fd2.append("table", logotable);
+		fd2.append("column", logocolumn);
+		fd2.append("id_name", logoid_name);
+		fd2.append("id_value", logoid);
+		fd2.append("convertToWidth", logoconvertToWidth);
+		fd2.append("convertToHeight", logoconvertToHeight);
+		fd2.append("random", Math.random());
+
+		var xhr2 = new XMLHttpRequest();
+//		xhr.upload.addEventListener("progress", uploadProgress, false);
+		xhr2.addEventListener("load", uploadComplete, false);
+		xhr2.addEventListener("error", uploadFailed, false);
+		xhr2.addEventListener("abort", uploadCanceled, false);
+		xhr2.open("POST", "functions/uploadfile.php");
+		xhr2.send(fd2);
+	}
 }
 
 function uploadProgress(evt) {
@@ -105,14 +185,27 @@ function uploadProgress(evt) {
 function uploadComplete(evt) {
 	var log_level = 0;
 	var hiba = false;
-	var szoveg = null;
-	var fileid = null;
+	var szoveg = "";
+	var afileid = null;
+	var typeIsLogo = false;
 
 	var response = evt.target.responseText;
 	if (response) {
+		if (response.length >= 4) {
+			if (response.substring(0, 4) == "logo") {
+				typeIsLogo = true;
+				response = response.substring(4);
+			}
+			else if (response.substring(0, 4) == "file") {
+				response = response.substring(4);
+			}
+		}
+
+//		alert("response: " + response);
+
 		var comps = response.split('|');
 		if (comps.length > 1) {
-			fileid = comps[1];
+			afileid = comps[1];
 			response = comps[0];
 		}
 
@@ -120,33 +213,58 @@ function uploadComplete(evt) {
 			if (response.length >= 6) {
 				var errors = response.split('error:');
 				if (errors.length > 1) { // ha talal benne error: szoveget, akkor mar legalabb ketto lesz a length, meg akkor is, ha egy van es az is a legelejen van
-					szoveg = "Hibák:<br>";
 					for (i = 0; i < errors.length; i++) {
 						if (errors[i])
-							szoveg += errors[i] + "<br>";
+							errorsmessages += errors[i] + "<br>";
 					}
 					log_level = 2;
 				}
 				else {
-					szoveg = "Figyelem:<br>" + response;
+					warningsmessages += response + "<br>";
 					log_level = 1;
 				}
 			}
 			else {
-				szoveg = "Figyelem:<br>" + response;
+				warningsmessages += response + "<br>";
 				log_level = 1;
 			}
 		}
 		else {
-			szoveg = "Kész!";
+//			szoveg = "Kész!";
 		}
 	}
 	// most mar mindig van response, nem kell else
 
-	if (!szoveg) // ha valamiert megiscsak baj lenne
-		szoveg = "hiba";
+	if (typeIsLogo)
+		json_decoded.logo = afileid;
+	else
+		json_decoded.foto = afileid;
 
-	endUploadFile(szoveg, log_level, fileid);
+	completeUploads--;
+	/* ezzel talan sorrendben lehetne oket feltolteni
+	if (completeUploads > 0) {
+		fileselected = false;
+		// ha nagyobb, nint 0, akkor azt jelenti, hogy most feltoltjuk a logot
+		uploadFile(null, null); // nem kell ujra beallitani oket
+	}
+	else {
+	 */
+	
+	if (completeUploads === 0) {
+		if (errorsmessages) {
+			szoveg += "Hibák:<br>";
+			szoveg += errorsmessages;
+		}
+		if (warningsmessages) {
+			szoveg += "Figyelmeztetések:<br>";
+			szoveg += warningsmessages;
+		}
+
+		if (!szoveg)
+			szoveg = "Kész!";
+
+		endUploadFile(szoveg, log_level);
+	}
 }
 
 function uploadFailed(evt) {
@@ -157,7 +275,7 @@ function uploadCanceled(evt) {
 	endUploadFile("A fájl feltöltését megszakították vagy a böngésző szakította meg.", 1);
 }
 
-function endUploadFile(message, log_level, fileid) {
+function endUploadFile(message, log_level) {
 	setDoNotDisable(false);
 
 	document.getElementById('uploadArea').innerHTML = message;
@@ -181,7 +299,7 @@ function endUploadFile(message, log_level, fileid) {
 
 	document.getElementById('uploadImage').src = imgFile;
 
-	centerPopup();
-	fileUploadCompleted(json_decoded, data_type, fileid);
+	centerPopup(); // ujra kozepre kell helyeztetni, mert mar eleve latszik, es valtozik a tartalma...
+	fileUploadCompleted(json_decoded, data_type);
 	clearAll();
 }

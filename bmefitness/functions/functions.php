@@ -33,13 +33,14 @@
 		return $data;
 	}
 
-	function uploadImageForm($folder, $schema, $table, $column, $id_name, $id, $convertToWidth, $convertToHeight) {
+	function uploadImageForm($functionlabel, $functionname, $folder, $schema, $table, $column, $id_name, $id, $convertToWidth, $convertToHeight) {
 //		return "
 //			<form id=\"form1\" enctype=\"multipart/form-data\" method=\"post\" action=\"functions/uploadfile.php\">\n
 		return "	
-			<div class=\"row\">\n
-				<label for=\"fileToUpload\">Kép kiválasztása</label><br />\n
-				<input type=\"file\" accept=\".jpeg,.jpg\" name=\"fileToUpload\" id=\"fileToUpload\" onchange=\"fileSelected('".$folder."', '".$schema."', '".$table."', '".$column."', '".$id_name."', '".$id."', '".$convertToWidth."', '".$convertToHeight."');\"/>\n
+			<div style=\"padding: 5px;\" class=\"row\">\n
+				<div style=\"text-align: center;\">____________________</div>
+				<label for=\"".$functionname."\">".$functionlabel."</label><br />\n
+				<input type=\"file\" accept=\".jpeg,.jpg\" name=\"".$functionname."\" id=\"".$functionname."\" onchange=\"fileSelected('".$folder."', '".$schema."', '".$table."', '".$column."', '".$id_name."', '".$id."', '".$convertToWidth."', '".$convertToHeight."');\"/>\n
 			</div>\n
 		";
 //			</form>

@@ -65,6 +65,13 @@
 		return $result_ar;
 	}
 
+	function closeDatabaseHandle() {
+		if (!is_null($GLOBALS['DatabaseHandle'])) {
+			pg_close($GLOBALS['DatabaseHandle']);
+			$GLOBALS['DatabaseHandle'] = NULL;
+		}
+	}
+
 	/*!
 	 *	$returnID a tablazat egyik oszlopanak neve lehet, ha nem ures string, akkor az kerul visszakuldesre
 	 */
