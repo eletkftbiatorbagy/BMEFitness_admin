@@ -14,7 +14,49 @@
 			unlink(realpath($fileName));
 	}
 
-	// TODO: isseteket be kell allitani...
+	$vanhiba = false;
+	if (!isset($_POST['folder'])) {
+		hiba("Belső működési hiba, nem található a 'folder' változó.");
+		$vanhiba = true;
+	}
+
+	if (!isset($_POST['schema'])) {
+		hiba("Belső működési hiba, nem található a 'schema' változó.");
+		$vanhiba = true;
+	}
+
+	if (!isset($_POST['table'])) {
+		hiba("Belső működési hiba, nem található a 'table' változó.");
+		$vanhiba = true;
+	}
+
+	if (!isset($_POST['column'])) {
+		hiba("Belső működési hiba, nem található a 'column' változó.");
+		$vanhiba = true;
+	}
+
+	if (!isset($_POST['id_name'])) {
+		hiba("Belső működési hiba, nem található a 'id_name' változó.");
+		$vanhiba = true;
+	}
+
+	if (!isset($_POST['id_value'])) {
+		hiba("Belső működési hiba, nem található a 'id_value' változó.");
+		$vanhiba = true;
+	}
+
+	if (!isset($_POST['convertToWidth'])) {
+		hiba("Belső működési hiba, nem található a 'convertToWidth' változó.");
+		$vanhiba = true;
+	}
+
+	if (!isset($_POST['convertToHeight'])) {
+		hiba("Belső működési hiba, nem található a 'convertToHeight' változó.");
+		$vanhiba = true;
+	}
+
+	if ($vanhiba)
+		exit(2);
 
 	$temp_path = "../data_tmp/";
 	$target_path = "../".$_POST['folder']."/";
@@ -74,6 +116,7 @@
 							$query = "DELETE FROM ".$schema.".kepek WHERE id = ".$fileid.";";
 							$result = db_query_object_array_without_close($query, false);
 						}
+						exit(1);
 					}
 					else  { // ha esetleg letezett mar hash alapjan ez a fajl, akkor nem kell torolni, hiszen ezt rendeljuk az adott kephez...
 						// eloszor megkeressuk a regi kepet, ha volt, es azt toroljuk a lemezrol es a kepek tablabol
@@ -124,9 +167,11 @@
 								$query = "DELETE FROM ".$schema.".kepek WHERE id = ".$fileid.";";
 								$result = db_query_object_array_without_close($query, true);
 							}
+							exit(1);
 						}
 						else {
 							echo "|".$newbasefile; // visszakuldjuk, hogy at tudjuk adni
+							exit(0);
 							// azert nincs ok, mert hulyen nez ki, ha mar letezik a fajl, hibat ir ki a vegere meg OK-t.
 							// igy javascriptben akkor lesz hibamentes a feltoltes, ha az eredeny total ures
 //							echo "OK";
@@ -135,18 +180,22 @@
 				}
 				else {
 					hiba("Nem sikerült a fájl hash bejegyzés.", $convert_path);
+					exit(1);
 				}
 			}
 			else {
 				hiba("Nem sikerült a hash lekérdezés lefuttatása.", $convert_path);
+				exit(1);
 			}
 		}
 		else {
 			clean_file($move_path); // eredeti kepet is torlom...
 			hiba("Nem sikerült a fájl konvertálása.(".$move_path.")", $convert_path);
+			exit(1);
 		}
 	}
 	else {
 		hiba("Hiba történt a feltöltés közben, újra fel kell tölteni a fájlt!", $oldfilename);
+		exit(1);
 	}
 ?>
