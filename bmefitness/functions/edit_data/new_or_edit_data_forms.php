@@ -20,7 +20,6 @@
 				</table>
 			";
 		}
-		// TODO: a foto szoveg piros formazasat le kell venni, ha kivalasztottak fotot
 		else if ($edit == "edzok") { // pontosabban egy uj edzo letrehozasa
 			$imageForm = uploadImageForm("Fotó kiválasztása", "fileToUpload", "data_edzok", "fitness", "edzok", "foto", "id", $object->id, 400, 300);
 			print "

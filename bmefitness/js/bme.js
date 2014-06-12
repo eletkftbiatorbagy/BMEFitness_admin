@@ -336,6 +336,9 @@ function end_new_or_edit_data(data_type, jsondata) {
 		if ($('#edzoaltitle').val() && $('#edzoaltitle').val().length > 30)
 			error_message += (error_message ? "\nAz edző alcíme maximum 30 karakter lehet!" : "Az edző alcíme maximum 30 karakter lehet!");
 
+		if (!fileselected || (jsondata && jsondata.foto === ""))
+			error_message +=  (error_message ? "\nKötelező megadni az edző fényképét!" : "Kötelező megadni az edző fényképét!");
+
 		atableNameWithSchema = "fitness.edzok";
 		avalueIDs = "vnev" + elvalaszto + "knev" + elvalaszto + "rovid_nev" + elvalaszto + "alcim" + elvalaszto + "leiras";
 		avalues = "'" + $('#edzovname').val() + "'" + elvalaszto + "'" + $('#edzokname').val() + "'" + elvalaszto + "'" + $('#edzorname').val() + "'" + elvalaszto + "'" + $('#edzoaltitle').val() + "'" + elvalaszto + "'" + $('#edzodescription').val() + "'";
@@ -369,10 +372,15 @@ function end_new_or_edit_data(data_type, jsondata) {
 		if ($('#oracolor').val() && $('#oracolor').val().length != 6)
 			error_message += (error_message ? "\nAz óra színe csak 6 karakter lehet!\npéldául fekete: 000000, fehér: FFFFFF" : "Az óra színe csak 6 karakter lehet!\npéldául fekete: 000000, fehér: FFFFFF");
 
+		if (!fileselected || (jsondata && jsondata.foto === ""))
+			error_message +=  (error_message ? "\nKötelező megadni az óra fényképét!" : "Kötelező megadni az óra fényképét!");
+		if (!logoselected || (jsondata && jsondata.logo === ""))
+			error_message +=  (error_message ? "\nKötelező megadni az óra logóját!" : "Kötelező megadni az óra logóját!");
+
 		atableNameWithSchema = "fitness.orak";
 		avalueIDs = "nev" + elvalaszto + "rovid_nev" + elvalaszto + "alcim" + elvalaszto + "leiras" + elvalaszto + "max_letszam" + elvalaszto + "perc" + elvalaszto + "belepodij" + elvalaszto + "color";
 		avalues = "'" + $('#oraname').val() + "'" + elvalaszto + "'" + $('#orarname').val() + "'" + elvalaszto + "'" + $('#oraaltitle').val() + "'" + elvalaszto + "'" + $('#oradescription').val() + "'" + elvalaszto + "'" + $('#oramaxletszam').val() + "'" + elvalaszto + "'" + $('#oraperc').val() + "'" + elvalaszto + "'" + ($('#orabelepodij').prop("checked") ? "t" : "f") + "'" + elvalaszto + "'" + $('#oracolor').val() + "'";
-		returningValues = "id" + elvalaszto + "foto" + elvalaszto + avalueIDs;
+		returningValues = "id" + elvalaszto + "foto" + elvalaszto + "logo" + elvalaszto + avalueIDs;
 		// hozzafuzzuk a sorszamot, ha ujat akarunk felvinni, mert amugy a sorszam nem valtozik
 		if (!jsondata) {
 			avalueIDs += elvalaszto + "sorszam";
@@ -388,6 +396,9 @@ function end_new_or_edit_data(data_type, jsondata) {
 			error_message += (error_message ? "\nA terem neve maximum 20 karakter lehet!" : "A terem neve maximum 20 karakter lehet!");
 		if ($('#teremaltitle').val() && $('#teremaltitle').val().length > 20)
 			error_message += (error_message ? "\nA terem alcíme maximum 20 karakter lehet!" : "A terem alcíme maximum 20 karakter lehet!");
+
+//		if (!fileselected || (jsondata && jsondata.logo === ""))
+//			error_message +=  (error_message ? "\nKötelező megadni a terem fényképét!" : "Kötelező megadni a terem fényképét!");
 
 		atableNameWithSchema = "fitness.termek";
 		avalueIDs = "nev" + elvalaszto + "alcim" + elvalaszto + "foglalhato";
