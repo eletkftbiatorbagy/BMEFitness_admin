@@ -15,7 +15,6 @@
 	}
 
 	// TODO: isseteket be kell allitani...
-	// TODO: random ajax hivas
 
 	$temp_path = "../data_tmp/";
 	$target_path = "../".$_POST['folder']."/";

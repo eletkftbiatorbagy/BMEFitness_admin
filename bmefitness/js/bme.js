@@ -45,14 +45,14 @@ function change_main_site(site) {
 	if (settingsSite && contentSite) {
 		if (edit_data_object) {
 			if (site == "edit_data") {
-				$.get(contentSite, { selectedObject: edit_data_object }, function (result) {
+				$.get(contentSite, { selectedObject: edit_data_object, random: Math.random() }, function (result) {
 					if (result) {
 					  $('#content').html(result);
 					}
 				});
 			}
 			else if (site == "timetable") {
-				$.post(contentSite, { het: edit_data_object }, function (result) {
+				$.post(contentSite, { het: edit_data_object, random: Math.random() }, function (result) {
 					if (result) {
 					  $('#content').html(result);
 					}
@@ -60,14 +60,14 @@ function change_main_site(site) {
 			}
 		}
 		else {
-			$.get(contentSite, { }, function (result) {
+			$.get(contentSite, { random: Math.random() }, function (result) {
 				if (result) {
 					$('#content').html(result);
 				}
 			});
 		}
 
-		$.get(settingsSite, { }, function (result) {
+		$.get(settingsSite, { random: Math.random() }, function (result) {
 			if (result) {
 				$('#settings').html(result);
 			}
@@ -224,7 +224,7 @@ function begin_new_or_edit_data(data_type, edit_data_object) {
 
 	if (jsondata) {
 		$('#neworeditlink').html("Módosítás");
-		$.post("functions/edit_data/new_or_edit_data_forms.php", {type: data_type, selectedObject: jsondata}, function(result) {
+		$.post("functions/edit_data/new_or_edit_data_forms.php", {type: data_type, selectedObject: jsondata, random: Math.random()}, function(result) {
 		   $('#newOrEditArea').html(result);
 		   // elore beallitjuk a linket az ujnak, mert ugyebar egybol ujat lehet hozzaadni, es nem szerkeszteni a regit...
 		   $('#neworeditlink').attr("onclick", "end_new_or_edit_data('" + data_type + "', " + jsondata + ");");
@@ -234,7 +234,7 @@ function begin_new_or_edit_data(data_type, edit_data_object) {
 	}
 	else {
 		$('#neworeditlink').html("Létrehozás");
-		$.post("functions/edit_data/new_or_edit_data_forms.php", {type: data_type}, function(result) {
+		$.post("functions/edit_data/new_or_edit_data_forms.php", {type: data_type, random: Math.random()}, function(result) {
 		   $('#newOrEditArea').html(result);
 		   // elore beallitjuk a linket az ujnak, mert ugyebar egybol ujat lehet hozzaadni, es nem szerkeszteni a regit...
 		   $('#neworeditlink').attr("onclick", "end_new_or_edit_data('" + data_type + "');");
@@ -407,7 +407,7 @@ function end_new_or_edit_data(data_type, jsondata) {
 	}
 
 	if (atableNameWithSchema && avalueIDs && avalues) {
-		$.post("functions/insert_or_update_data.php", {data_id: aid, table_name_with_schema: atableNameWithSchema, value_ids: avalueIDs, values: avalues, returning: returningValues}, function(result) {
+		$.post("functions/insert_or_update_data.php", {data_id: aid, table_name_with_schema: atableNameWithSchema, value_ids: avalueIDs, values: avalues, returning: returningValues, random: Math.random()}, function(result) {
 //			window.alert("elvileg kesz, eredmeny: " + (result ? "OK" : "XAR") + " result: " + result);
 		   if (result) {
 			   // at kell alakitani json objektte
@@ -432,7 +432,7 @@ function fileUploadCompleted(json_decoded, data_type, fileid) {
 
 function changeSorszam(table_name_with_schema, id, ujsorszam) {
 //	window.alert("change sorszam table: " + table + ", id: " + id + ", ujsorszam: " + ujsorszam);
-	$.post("functions/edit_data/change_sorszam.php", {table: table_name_with_schema, id: id, ujsorszam: ujsorszam}, function(result) {
+	$.post("functions/edit_data/change_sorszam.php", {table: table_name_with_schema, id: id, ujsorszam: ujsorszam, random: Math.random()}, function(result) {
 //		window.alert("elvileg kesz, eredmeny: " + (result ? "OK" : "XAR") + " result: " + result);
 		if (result && result == "true") {
 		   change_main_site("edit_data");
@@ -449,7 +449,7 @@ function begin_new_or_edit_naptar(naptar_id) {
 	// megprobaljuk atkonvertalni json-ra, ha nem sikerul, akkor ujat viszunk fel, nem a legjobb, de nem rossz...
 	if (naptar_id) {
 		$('#neworeditlink').html("Módosítás");
-		$.post("functions/edit_naptar/new_or_edit_naptar_forms.php", {selectedObject: naptar_id}, function(result) {
+		$.post("functions/edit_naptar/new_or_edit_naptar_forms.php", {selectedObject: naptar_id, random: Math.random()}, function(result) {
 			if (result) {
 			   if (result.substring(0, 5) == "Hiba.") {
 				   window.alert(result.substring(5, result.length));
@@ -466,7 +466,7 @@ function begin_new_or_edit_naptar(naptar_id) {
 	}
 	else {
 		$('#neworeditlink').html("Létrehozás");
-		$.post("functions/edit_naptar/new_or_edit_naptar_forms.php", {}, function(result) {
+		$.post("functions/edit_naptar/new_or_edit_naptar_forms.php", {random: Math.random()}, function(result) {
 			if (result) {
 			   if (result.substring(0, 5) == "Hiba.") {
 				   window.alert(result.substring(5, result.length));
@@ -561,7 +561,7 @@ function end_new_or_edit_naptar(naptar_id) {
 	var avalues = "'" + tol.val() + "'" + elvalaszto + "'" + ig.val() + "'" + elvalaszto + "'" + ora.val() + "'" + elvalaszto + "'" + edzo.val() + "'" + elvalaszto + "'" + terem.val() + "'";
 	var returningValues = "id";
 
-	$.post("functions/insert_or_update_data.php", {data_id: aid, table_name_with_schema: atableNameWithSchema, value_ids: avalueIDs, values: avalues, returning: returningValues}, function(result) {
+	$.post("functions/insert_or_update_data.php", {data_id: aid, table_name_with_schema: atableNameWithSchema, value_ids: avalueIDs, values: avalues, returning: returningValues, random: Math.random()}, function(result) {
 //		window.alert("elvileg kesz, eredmeny: " + (result ? "OK" : "XAR") + " result: " + result);
 		if (result) {
 		   change_main_site("timetable");
