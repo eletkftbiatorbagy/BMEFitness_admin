@@ -36,7 +36,7 @@
 			}
 		}
 		print "</div>";
-		print "<div onclick=\"begin_new_or_edit_data('".$tablename."'); popupDiv('popupNewOrEdit');\" class=\"action_button\">Új adat hozzáadása</div>";
+		print "<div onclick=\"begin_new_or_edit_data('".$tablename."');\" class=\"action_button\">Új adat hozzáadása</div>";
 	}
 	print "</div>";
 
@@ -51,7 +51,7 @@
 
 		// megjelenes kovetkezik...
 		print "<div id=\"rightcontent\">";
-			print "<div onclick='begin_new_or_edit_data(\"".$tablename."\", ".$ojson."); popupDiv(\"popupNewOrEdit\");' class=\"action_button\">Szerkesztés</div>";
+			print "<div onclick='begin_new_or_edit_data(\"".$tablename."\", ".$ojson.");' class=\"action_button\">Szerkesztés</div>";
 			print "<p>";
 				print "<table>";
 					print "<tr><td><b>Név:</b></td><td>".$object->nev."</td></tr>";
@@ -63,7 +63,7 @@
 					print "<tr><td><b>Max létszám:</b></td><td>".$object->max_letszam."</td></tr>";
 				print "</table>";
 			print "</p>";
-			print "<div onclick='begin_new_or_edit_data(\"".$tablename."\", ".$ojson."); popupDiv(\"popupNewOrEdit\");' class=\"action_button\">Szerkesztés</div>";
+			print "<div onclick='begin_new_or_edit_data(\"".$tablename."\", ".$ojson.");' class=\"action_button\">Szerkesztés</div>";
 		print "</div>";
 	}
 	else {

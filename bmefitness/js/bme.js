@@ -230,6 +230,7 @@ function begin_new_or_edit_data(data_type, edit_data_object) {
 		   $('#neworeditlink').attr("onclick", "end_new_or_edit_data('" + data_type + "', " + jsondata + ");");
 			if (data_type == "orak")
 			   jscolor.init();
+		   popupDiv('popupNewOrEdit');
 		});
 	}
 	else {
@@ -240,6 +241,7 @@ function begin_new_or_edit_data(data_type, edit_data_object) {
 		   $('#neworeditlink').attr("onclick", "end_new_or_edit_data('" + data_type + "');");
 		   if (data_type == "orak")
 			   jscolor.init();
+		   popupDiv('popupNewOrEdit');
 		});
 	}
 
@@ -268,9 +270,6 @@ function begin_new_or_edit_data(data_type, edit_data_object) {
 
 	if (title)
 		$('.editTitle').html(title);
-
-	// TODO: kozepre kell helyezni az ablakot
-	centerPopup();
 }
 
 /*!
@@ -486,9 +485,6 @@ function begin_new_or_edit_naptar(naptar_id) {
 		$('.editTitle').html("Naptárbejegyzés szerkesztése");
 	else
 		$('.editTitle').html("Új naptárbejegyzés létrehozása");
-
-	// TODO: kozepre kell helyezni az ablakot
-	centerPopup();
 }
 
 /*!

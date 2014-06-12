@@ -36,7 +36,7 @@
 			}
 		}
 		print "</div>";
-		print "<div onclick=\"begin_new_or_edit_data('".$tablename."'); popupDiv('popupNewOrEdit');\" class=\"action_button\">Új adat hozzáadása</div>";
+		print "<div onclick=\"begin_new_or_edit_data('".$tablename."');\" class=\"action_button\">Új adat hozzáadása</div>";
 	}
 	print "</div>";
 
@@ -50,7 +50,7 @@
 
 		// megjelenes kovetkezik...
 		print "<div id=\"rightcontent\">";
-			print "<div onclick='begin_new_or_edit_data(\"".$tablename."\", ".$ojson."); popupDiv(\"popupNewOrEdit\");' class=\"action_button\">Szerkesztés</div>";
+			print "<div onclick='begin_new_or_edit_data(\"".$tablename."\", ".$ojson.");' class=\"action_button\">Szerkesztés</div>";
 			print "<p>";
 				print "<table>";
 					print "<tr><td><b>Vezetéknév:</b></td><td>".$object->vnev."</td></tr>";
@@ -62,7 +62,7 @@
 					print "<tr><td><b>Kép:</b></td><td>".($object->foto == "" ? "" : "<img src=\"data_edzok/".$object->foto.".jpg\">")."</td></tr>";
 				print "</table>";
 			print "</p>";
-			print "<div onclick='begin_new_or_edit_data(\"".$tablename."\", ".$ojson."); popupDiv(\"popupNewOrEdit\");' class=\"action_button\">Szerkesztés</div>";
+			print "<div onclick='begin_new_or_edit_data(\"".$tablename."\", ".$ojson.");' class=\"action_button\">Szerkesztés</div>";
 		print "</div>";
 	}
 	else {
