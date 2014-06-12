@@ -2,6 +2,7 @@
 //0 means disabled; 1 means enabled;
 var popupStatus = 0;
 var actualPopup = "";
+var doNotDisable = false;
 
 //loading popup with jQuery magic!
 function loadPopup() {
@@ -18,12 +19,19 @@ function loadPopup() {
 
 //disabling popup with jQuery magic!
 function disablePopup() {
+	if (doNotDisable)
+		return;
+
 	//disables popup only if it is enabled
 	if (popupStatus == 1) {
 		$("#backgroundPopup").fadeOut("normal");
 		$(actualPopup).fadeOut("normal");
 		popupStatus = 0;
 	}
+}
+
+function setDoNotDisable(value) {
+	doNotDisable = value;
 }
 
 //centering popup
@@ -46,56 +54,8 @@ function centerPopup() {
 	});
 }
 
-function logviewClick () {
-	actualPopup = "#popupLogView";
-	//centering with css
-	centerPopup();
-	//load popup
-	loadPopup();
-}
-
-function editClick () {
-	actualPopup = "#popupEditEszkoz";
-	//centering with css
-	centerPopup();
-	//load popup
-	loadPopup();
-}
-
-function infoClick () {
-	actualPopup = "#popupInfo";
-	//centering with css
-	centerPopup();
-	//load popup
-	loadPopup();
-}
-
-function commandsClick () {
-	actualPopup = "#popupCommands";
-	//centering with css
-	centerPopup();
-	//load popup
-	loadPopup();
-}
-
-function sendRiportClick () {
-	actualPopup = "#popupSendRiport";
-	//centering with css
-	centerPopup();
-	//load popup
-	loadPopup();
-}
-	
-function deleteClick () {
-	actualPopup = "#popupDeleteEszkoz";
-	//centering with css
-	centerPopup();
-	//load popup
-	loadPopup();
-}
-	
-function neworeditClick () {
-	actualPopup = "#popupNewOrEdit";
+function popupDiv (div) {
+	actualPopup = "#" + div;
 	//centering with css
 	centerPopup();
 	//load popup

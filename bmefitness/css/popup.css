@@ -69,7 +69,7 @@ br.both {
 	z-index: 1;
 }
 
-#popupNewOrEdit {
+.popupSajat {
 	text-align: left;
 	display: none;
 	position: fixed;
@@ -85,6 +85,11 @@ br.both {
 	font-size: 13px;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
+}
+
+/* csakazert is kozepre keruljon...*/
+.popupSajatCenter {
+	text-align: center;
 }
 
 .popupContact h1 {

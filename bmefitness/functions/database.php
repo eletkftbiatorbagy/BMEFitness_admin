@@ -5,6 +5,8 @@
 	$DatabaseUser = "bme";
 	$DatabasePassword = "fitness";
 
+	$DatabaseHandle = NULL;
+
 	function db_query_object_array($query) {
 		$handle =	'host='.$GLOBALS['DatabaseIP'].
 					' port='.$GLOBALS['DatabasePort'].
@@ -21,8 +23,44 @@
 		for ($i = 0; $i < pg_num_rows($result); $i++) {
 			$result_ar[] = pg_fetch_object($result, $i);
 		}
+
+		// memoria felszabaditasok
 		pg_freeResult($result);
 		pg_close($db_handle);
+
+		return $result_ar;
+	}
+
+	/*
+	 *	Ez ugyanaz, mint a fenti, azzal a kivetellel, hogy a masodik parameter, hogy ha true, csak akkor zarja le a kapcsolatot
+	 */
+	function db_query_object_array_without_close($query, $close) {
+		if (is_null($GLOBALS['DatabaseHandle'])) {
+			$handle =	'host='.$GLOBALS['DatabaseIP'].
+			' port='.$GLOBALS['DatabasePort'].
+			' dbname='.$GLOBALS['DatabaseName'].
+			' user='.$GLOBALS['DatabaseUser'].
+			' password='.$GLOBALS['DatabasePassword'];
+
+			$GLOBALS['DatabaseHandle'] = pg_connect($handle);
+		}
+
+		$result = pg_query($GLOBALS['DatabaseHandle'], $query);
+		if (!$result)
+			return NULL;
+
+		$result_ar = array();
+		for ($i = 0; $i < pg_num_rows($result); $i++) {
+			$result_ar[] = pg_fetch_object($result, $i);
+		}
+
+		// memoria felszabaditasok
+		pg_freeResult($result);
+
+		if ($close) {
+			pg_close($GLOBALS['DatabaseHandle']);
+			$GLOBALS['DatabaseHandle'] = NULL;
+		}
 
 		return $result_ar;
 	}

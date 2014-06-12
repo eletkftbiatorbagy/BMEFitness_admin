@@ -18,16 +18,16 @@ function change_main_site(site) {
 		else if (edit_data_content == "edzok") {
 			contentSite = "alsites/edit_data_content_edzok.php";
 		}
-		if (edit_data_content == "felhasznalok") {
+		else if (edit_data_content == "felhasznalok") {
 			contentSite = "alsites/edit_data_content_felhasznalok.php";
 		}
-		if (edit_data_content == "termek") {
+		else if (edit_data_content == "termek") {
 			contentSite = "alsites/edit_data_content_termek.php";
 		}
-		if (edit_data_content == "orak") {
+		else if (edit_data_content == "orak") {
 			contentSite = "alsites/edit_data_content_orak.php";
 		}
-		if (edit_data_content == "beallitasok") {
+		else if (edit_data_content == "beallitasok") {
 			contentSite = "alsites/edit_data_content_beallitasok.php";
 		}
 
@@ -268,6 +268,9 @@ function begin_new_or_edit_data(data_type, edit_data_object) {
 
 	if (title)
 		$('.editTitle').html(title);
+
+	// TODO: kozepre kell helyezni az ablakot
+	centerPopup();
 }
 
 /*!
@@ -337,7 +340,7 @@ function end_new_or_edit_data(data_type, jsondata) {
 		atableNameWithSchema = "fitness.edzok";
 		avalueIDs = "vnev" + elvalaszto + "knev" + elvalaszto + "rovid_nev" + elvalaszto + "alcim" + elvalaszto + "leiras";
 		avalues = "'" + $('#edzovname').val() + "'" + elvalaszto + "'" + $('#edzokname').val() + "'" + elvalaszto + "'" + $('#edzorname').val() + "'" + elvalaszto + "'" + $('#edzoaltitle').val() + "'" + elvalaszto + "'" + $('#edzodescription').val() + "'";
-		returningValues = "id" + elvalaszto + avalueIDs + elvalaszto + "ertekeles"; // az ertekeles nem modosithato, de meg kell jeleniteni, azert van itt....
+		returningValues = "id" + elvalaszto + "foto" + elvalaszto + avalueIDs + elvalaszto + "ertekeles"; // az ertekeles nem modosithato, de meg kell jeleniteni, azert van itt....
 		// hozzafuzzuk a sorszamot, ha ujat akarunk felvinni, mert amugy a sorszam nem valtozik
 		if (!jsondata) {
 			avalueIDs += elvalaszto + "sorszam";
@@ -370,7 +373,7 @@ function end_new_or_edit_data(data_type, jsondata) {
 		atableNameWithSchema = "fitness.orak";
 		avalueIDs = "nev" + elvalaszto + "rovid_nev" + elvalaszto + "alcim" + elvalaszto + "leiras" + elvalaszto + "max_letszam" + elvalaszto + "perc" + elvalaszto + "belepodij" + elvalaszto + "color";
 		avalues = "'" + $('#oraname').val() + "'" + elvalaszto + "'" + $('#orarname').val() + "'" + elvalaszto + "'" + $('#oraaltitle').val() + "'" + elvalaszto + "'" + $('#oradescription').val() + "'" + elvalaszto + "'" + $('#oramaxletszam').val() + "'" + elvalaszto + "'" + $('#oraperc').val() + "'" + elvalaszto + "'" + ($('#orabelepodij').prop("checked") ? "t" : "f") + "'" + elvalaszto + "'" + $('#oracolor').val() + "'";
-		returningValues = "id" + elvalaszto + avalueIDs;
+		returningValues = "id" + elvalaszto + "foto" + elvalaszto + avalueIDs;
 		// hozzafuzzuk a sorszamot, ha ujat akarunk felvinni, mert amugy a sorszam nem valtozik
 		if (!jsondata) {
 			avalueIDs += elvalaszto + "sorszam";
@@ -390,7 +393,7 @@ function end_new_or_edit_data(data_type, jsondata) {
 		atableNameWithSchema = "fitness.termek";
 		avalueIDs = "nev" + elvalaszto + "alcim" + elvalaszto + "foglalhato";
 		avalues = "'" + $('#teremname').val() + "'" + elvalaszto + "'" + $('#teremaltitle').val() + "'" + elvalaszto + "'" + ($('#teremavailable').prop("checked") ? "t" : "f") + "'";
-		returningValues = "id" + elvalaszto + avalueIDs;
+		returningValues = "id" + elvalaszto + "foto" + elvalaszto + avalueIDs;
 		// hozzafuzzuk a sorszamot, ha ujat akarunk felvinni, mert amugy a sorszam nem valtozik
 		if (!jsondata) {
 			avalueIDs += elvalaszto + "sorszam";
@@ -406,15 +409,25 @@ function end_new_or_edit_data(data_type, jsondata) {
 	if (atableNameWithSchema && avalueIDs && avalues) {
 		$.post("functions/insert_or_update_data.php", {data_id: aid, table_name_with_schema: atableNameWithSchema, value_ids: avalueIDs, values: avalues, returning: returningValues}, function(result) {
 //			window.alert("elvileg kesz, eredmeny: " + (result ? "OK" : "XAR") + " result: " + result);
-			if (result) {
+		   if (result) {
 			   // at kell alakitani json objektte
 			   var json_decoded = JSON.parse(result);
-			   change_edit_data_site(data_type, json_decoded);
+
+			   // talan ha ide teszem, akkor megvarja a feltoltest mielott frissit
+			   if (!uploadFile(json_decoded, data_type))
+				   change_edit_data_site(data_type, json_decoded);
 			}
 	   });
 	}
 
 	disablePopup();
+}
+
+function fileUploadCompleted(json_decoded, data_type, fileid) {
+	if (fileid)
+		json_decoded.foto = fileid;
+	
+	change_edit_data_site(data_type, json_decoded);
 }
 
 function changeSorszam(table_name_with_schema, id, ujsorszam) {
@@ -446,7 +459,7 @@ function begin_new_or_edit_naptar(naptar_id) {
 				   $('#newOrEditArea').html(result);
 				   // elore beallitjuk a linket az ujnak, mert ugyebar egybol ujat lehet hozzaadni, es nem szerkeszteni a regit...
 				   $('#neworeditlink').attr("onclick", "end_new_or_edit_naptar(" + naptar_id + ");");
-				   neworeditClick();
+				   popupDiv('popupNewOrEdit');
 			   }
 			}
 		});
@@ -463,7 +476,7 @@ function begin_new_or_edit_naptar(naptar_id) {
 				   $('#newOrEditArea').html(result);
 					// elore beallitjuk a linket az ujnak, mert ugyebar egybol ujat lehet hozzaadni, es nem szerkeszteni a regit...
 				   $('#neworeditlink').attr("onclick", "end_new_or_edit_naptar();");
-				   neworeditClick();
+				   popupDiv('popupNewOrEdit');
 			   }
 			}
 		});
@@ -473,6 +486,9 @@ function begin_new_or_edit_naptar(naptar_id) {
 		$('.editTitle').html("Naptárbejegyzés szerkesztése");
 	else
 		$('.editTitle').html("Új naptárbejegyzés létrehozása");
+
+	// TODO: kozepre kell helyezni az ablakot
+	centerPopup();
 }
 
 /*!
@@ -489,7 +505,7 @@ function end_new_or_edit_naptar(naptar_id) {
 	if (!tol) {
 		if (error_message)
 			error_message += "\n";
-		error_message += "A 'Mikor' mező kitöltése kötelező!";
+		error_message += "A 'Mikortól' mező kitöltése kötelező!";
 	}
 	else if (!is_yyyymmddHHMM_FormattedDateTime(tol.val())) {
 		if (error_message)

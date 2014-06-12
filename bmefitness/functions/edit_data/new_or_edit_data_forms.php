@@ -21,12 +21,22 @@
 			";
 		}
 		else if ($edit == "edzok") { // pontosabban egy uj edzo letrehozasa
+			$imageForm = uploadImageForm("data_edzok", "fitness", "edzok", "foto", "id", $object->id, 400, 300);
 			print "
 				<table class=\"edit_data_table\">
 					<tr><td id=\"edit_edzo_vname\" class=\"td_right ".(is_null($object) || strlen($object->vnev) == 0 ? "redcolor" : "")."\">Vezetéknév:</td><td class=\"td_left\"><input maxlength=\"30\" size=\"31\" type=\"text\" id=\"edzovname\" ".(is_null($object) ? "" : "value=\"".$object->vnev."\" ")."onchange=\"editedField('edit_edzo_vname', 'edzovname', false, 30);\"></input></td></tr>\n
 					<tr><td id=\"edit_edzo_kname\" class=\"td_right ".(is_null($object) || strlen($object->knev) == 0 ? "redcolor" : "")."\">Keresztnév:</td><td class=\"td_left\"><input maxlength=\"30\" size=\"31\" type=\"text\" id=\"edzokname\" ".(is_null($object) ? "" : "value=\"".$object->knev."\" ")."onchange=\"editedField('edit_edzo_kname', 'edzokname', false, 30);\"></input></td></tr>\n
 					<tr><td id=\"edit_edzo_rname\" class=\"td_right ".(is_null($object) || strlen($object->rovid_nev) == 0 ? "redcolor" : "")."\">Rövid név:</td><td class=\"td_left\"><input maxlength=\"10\" size=\"31\" type=\"text\" id=\"edzorname\" ".(is_null($object) ? "" : "value=\"".$object->rovid_nev."\" ")."onchange=\"editedField('edit_edzo_rname', 'edzorname', false, 10);\"></input></td></tr>\n
 					<tr><td id=\"edit_edzo_altitle\" class=\"td_right ".(is_null($object) || strlen($object->alcim) == 0 ? "redcolor" : "")."\">Alcím:</td><td class=\"td_left\"><input maxlength=\"30\" size=\"31\" type=\"text\" id=\"edzoaltitle\" ".(is_null($object) ? "" : "value=\"".$object->alcim."\" ")."onchange=\"editedField('edit_edzo_altitle', 'edzoaltitle', false, 30);\"></input></td></tr>\n
+					<tr>
+						<td id=\"edit_edzo_foto\" class=\"td_right ".(is_null($object) || strlen($object->alcim) == 0 ? "redcolor" : "")."\">Fotó:
+						</td>
+						<td class=\"td_left\">"
+
+							.$imageForm."\n"
+
+							.((is_null($object) || $object->foto == "") ? "" : "<br><img src=\"data_edzok/".$object->foto.".jpg\"></img>")."
+						</td></tr>\n
 					<tr><td id=\"edit_edzo_description\" class=\"td_right ".(is_null($object) || strlen($object->leiras) == 0 ? "redcolor" : "")."\">Leírás:</td><td class=\"td_left\"><textarea rows=\"5\" cols=\"29\" type=\"text\" id=\"edzodescription\" onchange=\"editedField('edit_edzo_description', 'edzodescription', false, 0);\">".(is_null($object) ? "" : $object->leiras)."</textarea></td></tr>\n
 				</table>
 			";

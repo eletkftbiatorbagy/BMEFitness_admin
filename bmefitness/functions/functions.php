@@ -32,4 +32,28 @@
 
 		return $data;
 	}
+
+	function uploadImageForm($folder, $schema, $table, $column, $id_name, $id, $convertToWidth, $convertToHeight) {
+//		return "
+//			<form id=\"form1\" enctype=\"multipart/form-data\" method=\"post\" action=\"functions/uploadfile.php\">\n
+		return "	
+			<div class=\"row\">\n
+				<label for=\"fileToUpload\">Kép kiválasztása</label><br />\n
+				<input type=\"file\" accept=\".jpeg,.jpg\" name=\"fileToUpload\" id=\"fileToUpload\" onchange=\"fileSelected('".$folder."', '".$schema."', '".$table."', '".$column."', '".$id_name."', '".$id."', '".$convertToWidth."', '".$convertToHeight."');\"/>\n
+			</div>\n
+		";
+//			</form>
+//		";
+/*
+				<div id=\"fileName\"></div>\n
+				<div id=\"fileSize\"></div>\n
+				<div id=\"fileType\"></div>\n
+				<div class=\"row\">\n
+						<input type=\"button\" onclick=\"uploadFile('".$schema."', '".$table."', '".$column."', '".$id_name."', '".$id."', '".$convertToWidth."', '".$convertToHeight."')\" value=\"Feltöltés\" />\n
+				</div>\n
+				<div id=\"progressNumber\"></div>\n
+			</form>
+		";
+ */
+	}
 ?>

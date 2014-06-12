@@ -341,7 +341,7 @@
 								$tdcontent .= $diveloke."<- ".$adat->bejegyzes->ora_nev;
 								// ha nagyobb vagy egyenlo, mint 70 perc, akkor megjelenitjuk az edzo rovid nevet is, mert egyebkent nem fer ki...
 								if (($adat->bejegyzes->ig - strtotime(date("Y", $weekdays[$day])."-".date("m", $weekdays[$day])."-".date("d", $weekdays[$day])." ".$hours.":00") / 60) >= $minheightforedzo)
-									$tdcontent .= "<br>".$adat->bejegyzes->edzo_rovid_nev;
+									$tdcontent .= "<br>".$adat->bejegyzes->terem_nev;
 								$tdcontent .= "</div>";
 							}
 							// ha az utolso napon az utolso oraban vagyunk es az esemenynek kesobbi a zaro idopontja, akkor megjelenitjuk '->' szoveget. // nevre itt nincs szukseg, mert elotte szerepel
@@ -353,7 +353,7 @@
 								$tdcontent .= $diveloke.$adat->bejegyzes->ora_nev;
 								// ha nagyobb vagy egyenlo, mint 70 perc, akkor megjelenitjuk az edzo rovid nevet is, mert egyebkent nem fer ki...
 								if ((($adat->bejegyzes->ig - $adat->bejegyzes->tol) / 60) >= $minheightforedzo)
-									$tdcontent .= "<br>".$adat->bejegyzes->edzo_rovid_nev;
+									$tdcontent .= "<br>".$adat->bejegyzes->terem_nev;
 								$tdcontent .= "</div>";
 							}
 						}

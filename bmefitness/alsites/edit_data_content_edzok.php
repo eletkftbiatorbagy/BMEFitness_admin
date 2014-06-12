@@ -8,8 +8,7 @@
 
 	print "<div style=\"border-width: 2px; border-color: #333334; border-style: solid;\"><h1 style=\"color: #489d1e;\">Edzők</h1></div>";
 	print "<div id=\"leftcontent\">";
-	$query = "SELECT * FROM ".$table." ORDER BY sorszam;";
-	$result = db_query_object_array($query);
+	$result = db_select_data($table, "*", "", $tablename.".sorszam");
 
 	if (!is_null($result)) {
 		print "Korábban létrehozott adatok:<br>";
@@ -27,17 +26,17 @@
 				if (!is_null($jsonobject)) {
 					print "<div class=\"edit_data_available\" onclick='change_edit_data_site(\"".$tablename."\", ".$jsonobject.");'><b>".$result[$i]->vnev." ".$result[$i]->knev."</b>";
 					if ($i > 0) // csak akkor van velfele nyil, ha van is felette valami...
-						print "<div onclick='changeSorszam(\"".$table."\", \"".$result[$i]->id."\", \"".$upsorszam."\"); window.event.stopPropagation();' style=\"float: right;\"><img src=\"images/icon_accordion_arrow_up\"></div>";
+						print "<div onclick='changeSorszam(\"".$table."\", \"".$result[$i]->id."\", \"".$upsorszam."\"); window.event.stopPropagation();' style=\"float: right;\"><img src=\"images/icon_accordion_arrow_up.png\"></div>";
 					print "<br>";
 					print "<span style=\"font-size: smaller;\"><i>".$result[$i]->rovid_nev."</i></span>";
 					if ($i < count($result) - 1) // csak akkor jelenitjuk meg, ha van is alatta valami
-						print "<div onclick='changeSorszam(\"".$table."\", \"".$result[$i]->id."\", \"".$downsorszam."\"); window.event.stopPropagation();' style=\"float: right;\"><img src=\"images/icon_accordion_arrow_down\"></div>";
+						print "<div onclick='changeSorszam(\"".$table."\", \"".$result[$i]->id."\", \"".$downsorszam."\"); window.event.stopPropagation();' style=\"float: right;\"><img src=\"images/icon_accordion_arrow_down.png\"></div>";
 					print "</div>";
 				}
 			}
 		}
 		print "</div>";
-		print "<div onclick=\"begin_new_or_edit_data('".$tablename."'); neworeditClick();\"class=\"action_button\">Új adat hozzáadása</div>";
+		print "<div onclick=\"begin_new_or_edit_data('".$tablename."'); popupDiv('popupNewOrEdit');\" class=\"action_button\">Új adat hozzáadása</div>";
 	}
 	print "</div>";
 
@@ -51,7 +50,7 @@
 
 		// megjelenes kovetkezik...
 		print "<div id=\"rightcontent\">";
-			print "<div onclick='begin_new_or_edit_data(\"".$tablename."\", ".$ojson."); neworeditClick();'class=\"action_button\">Szerkesztés</div>";
+			print "<div onclick='begin_new_or_edit_data(\"".$tablename."\", ".$ojson."); popupDiv(\"popupNewOrEdit\");' class=\"action_button\">Szerkesztés</div>";
 			print "<p>";
 				print "<table>";
 					print "<tr><td><b>Vezetéknév:</b></td><td>".$object->vnev."</td></tr>";
@@ -60,9 +59,10 @@
 					print "<tr><td><b>Alcím:</b></td><td>".$object->alcim."</td></tr>";
 					print "<tr><td><b>Leírás:</b></td><td>".$object->leiras."</td></tr>";
 					print "<tr><td><b>Értékelés:</b></td><td>".$object->ertekeles."</td></tr>";
+					print "<tr><td><b>Kép:</b></td><td>".($object->foto == "" ? "" : "<img src=\"data_edzok/".$object->foto.".jpg\">")."</td></tr>";
 				print "</table>";
 			print "</p>";
-			print "<div onclick='begin_new_or_edit_data(\"".$tablename."\", ".$ojson."); neworeditClick();'class=\"action_button\">Szerkesztés</div>";
+			print "<div onclick='begin_new_or_edit_data(\"".$tablename."\", ".$ojson."); popupDiv(\"popupNewOrEdit\");' class=\"action_button\">Szerkesztés</div>";
 		print "</div>";
 	}
 	else {

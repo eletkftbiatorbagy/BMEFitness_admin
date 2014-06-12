@@ -17,8 +17,10 @@
 		<link rel="stylesheet" href="css/reset.css" />
 		<link rel="stylesheet" href="css/base.css" />
 		<link rel="stylesheet" href="css/bme.css" />
-		<script src="js/bme.js" type="text/javascript"></script>
+		<script type="text/javascript" src="js/bme.js"></script>
+		<script type="text/javascript" src="js/imageupload.js"></script>
 		<script type="text/javascript" src="jscolor/jscolor.js"></script>
+
 <?php
 
 // ddddddd
@@ -40,6 +42,7 @@
 
 	</head>
 	<body onload="hideddrivetip(); change_main_site('timetable');">
+
 		<div id="dhtmltooltip" class="tooltipandinfodivstyle"></div>
 
 		<script type="text/javascript">
@@ -122,11 +125,17 @@
 	<!-- felugro szerkeszto ablakok -->
 		<!-- hatter miatt kell -->
 		<div id="backgroundPopup"></div>
-		<div id="popupNewOrEdit" class="popupContact">
+		<div id="popupNewOrEdit" class="popupContact popupSajat">
 			<a class="popupContactClose">X</a>
 			<h1 class="editTitle"></h1>
 			<p class="contactArea" id="newOrEditArea"></p>
 			<a id="neworeditlink">létrehozás</a>
+		</div>
+		<div id="popupUploadFile" class="popupContact popupSajat popupSajatCenter">
+			<p class="contactArea" id="uploadArea"></p>
+			<img class="imageArea" id="uploadImage">
+			<br><br>
+			<a id="uploadlink" onclick="disablePopup();">OK</a>
 		</div>
 
 
