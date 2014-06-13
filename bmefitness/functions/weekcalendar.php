@@ -52,7 +52,7 @@
 	 *		- adat->min, azaz az adott oraban mennyi a minimum oraja. Ez 0-59 kozott van.
 	 *		- adat->max, azaz az adott oraban mennyi a maximuma oraja. Ez 0-59 kozott van.
 	 */
-	function orakAtHourOfDayInNaptarak($naptarak, $year, $month, $day, $hour) {
+	function bejegyzesAtHourOfDayInNaptarak($naptarak, $year, $month, $day, $hour) {
 		$eredmeny = array();
 		$adate = $year."-".$month."-".$day." ".$hour;
 
@@ -120,11 +120,44 @@
 		$select .= ", edzok.id AS edzo_id, edzok.rovid_nev AS edzo_rovid_nev, edzok.vnev AS edzo_vezetek_nev, edzok.knev AS edzo_kereszt_nev"; // edzo atalakitasok
 		$select .= ", termek.id AS terem_id, termek.nev AS terem_nev, termek.alcim AS terem_alcim"; // terem atalakitasok
 
-//		print "SELECT ".$select." FROM fitness.naptar, fitness.orak, fitness.edzok, fitness.termek WHERE ".$where."<br>";
-
 		$naptarak = db_select_data("fitness.naptar, fitness.orak, fitness.edzok, fitness.termek", $select, $where, "naptar.tol");
 
 		printTable($weekdays, $naptarak, "begin_new_or_edit_naptar");
+	}
+
+	/*!	Órák lefoglalásának időpontjai.
+	 */
+	function printFoglalasokTable($inaktiv_only, $weekplusz = 0) {
+		$thedate = dateForNextWeek($weekplusz);
+		$weekdays = weekdays($thedate);
+
+		// SELECT * FROM fitness.naptar WHERE tol > cast('2014-05-09' AS date) AND ig <= cast('2014-05-10' AS date);
+		// megkeressuk az elso es utols utani napot // H:i:s
+		$firstday = date("Y-m-d", $weekdays[0]);
+		$firstday .= " 00:00:00";
+		$lastday = date("Y-m-d", $weekdays[count($weekdays) - 1]);
+		$lastday .= " 23:59:59";
+
+		// forditva kell lekerdezni, tehat az ig, a befejezodesnek nagyobbnak kell lennie, mint az elso nap reggele, es a tol, azaz el kell kezdodnie a het utolso perce elott...
+		$where = "";
+		if ($inaktiv_only)
+			$where .= "NOT ";
+		$where .= "naptar.aktiv AND NOT naptar.torolve";
+		$where .= " AND felhasznalok.aktiv";
+		$where .= " AND naptar.ig > cast('".$firstday."' AS timestamp) AND naptar.tol < cast('".$lastday."' AS timestamp) AND naptar.terem = termek.id AND naptar.berlo = felhasznalok.id";
+
+		$select = "*"; // minden legyen benne
+		$select .= ", naptar.id AS naptar_id"; // naptar atalakitasok
+		$select .= ", felhasznalok.id AS berlo_id, felhasznalok.vnev AS berlo_vezetek_nev, felhasznalok.knev AS berlo_kereszt_nev"; // felhasznalo atalakitasok
+		$select .= ", termek.id AS terem_id, termek.nev AS terem_nev, termek.alcim AS terem_alcim"; // terem atalakitasok
+
+//		print "select: ".$select."<br>";
+//		print "where: ".$where."<br>";
+//		return;
+
+		$naptarak = db_select_data("fitness.naptar, fitness.termek, fitness.felhasznalok", $select, $where, "naptar.tol");
+
+		printTable($weekdays, $naptarak, "begin_new_or_edit_naptar"); // TODO: ezt ki kell cserelni az engedelyezesre, torlesre...
 	}
 
 	/*!	Tabla kirajzolasa a het napjai es naptarak alapjan
@@ -288,11 +321,30 @@
 						$tdstyle .= " background-color: ".$cellaszin.";";
 
 					// naptar kirajzolasa
-					foreach (orakAtHourOfDayInNaptarak($naptarak, date("Y", $weekdays[$day]), date("m", $weekdays[$day]), date("d", $weekdays[$day]), $hours) as $adat) {
+					foreach (bejegyzesAtHourOfDayInNaptarak($naptarak, date("Y", $weekdays[$day]), date("m", $weekdays[$day]), date("d", $weekdays[$day]), $hours) as $adat) {
+						$isOra = property_exists($adat->bejegyzes, "ora_nev");
+
 						// szin kiszedese
 						$bcolor = "#FFFFFF"; // feher lesz, ha nincs szine...
-						if ($adat->bejegyzes->color != "")
-							$bcolor = "#".$adat->bejegyzes->color;
+
+						// tehat orakat akarjuk kiiratni...
+						if ($isOra) {
+							if ($adat->bejegyzes->color != "")
+								$bcolor = "#".$adat->bejegyzes->color;
+						}
+						else {
+							// zold, ha el lett fogadva
+							// sarga, ha el lett fogadva, de utkozes van
+							// piros, ha nincs elfogadva es utkozes van
+							// ha nincs visszaigazolva es nincs utkozes sem, akkor feher, igy nem valtozik
+
+							if ($adat->bejegyzes->visszaigazolta && $adat->bejegyzes->maxatfedes > 1)
+								$bcolor = "yellow";
+							else if ($adat->bejegyzes->visszaigazolta)
+								$bcolor = "#99FF75"; // zold
+							else if ($adat->bejegyzes->maxatfedes > 1)
+								$bcolor = "red";
+						}
 
 						// atalakitjuk, hogy osszefuggo legyen az egesz...
 						$amax = $adat->max == 59 ? 60 : $adat->max; // hogy teljesen ki legyen toltve...
@@ -316,13 +368,27 @@
 
 						// hozzaadjuk a tooltipet, hogy ne kelljen kattingatni az informacio miatt...
 						// $adat->bejegyzes->ig, kijelzesnel hozza kell adni egyet...
-						$tooltip = "Óra:\n\t".$adat->bejegyzes->ora_nev."\n\t".date("Y. m. d. H:i", $adat->bejegyzes->tol)." - ".(date("Y. m. d. H:i", $adat->bejegyzes->ig + 1))."\n\tMax létszám: ".$adat->bejegyzes->max_letszam." fő";
-						$tooltip .= "\nEdző:\n\t".$adat->bejegyzes->edzo_vezetek_nev." ".$adat->bejegyzes->edzo_kereszt_nev." (".$adat->bejegyzes->edzo_rovid_nev.")";
+						$tooltip = "";
+						// tehat orat akarunk kiiratni
+						if ($isOra) {
+							$tooltip .= "Óra:\n\t".$adat->bejegyzes->ora_nev."\n\t".date("Y. m. d. H:i", $adat->bejegyzes->tol)." - ".(date("Y. m. d. H:i", $adat->bejegyzes->ig + 1))."\n\tMax létszám: ".$adat->bejegyzes->max_letszam." fő";
+							$tooltip .= "\nEdző:\n\t".$adat->bejegyzes->edzo_vezetek_nev." ".$adat->bejegyzes->edzo_kereszt_nev." (".$adat->bejegyzes->edzo_rovid_nev.")";
+						}
+						else {
+							$tooltip .= "Bejegyzés:\n\t".date("Y. m. d. H:i", $adat->bejegyzes->tol)." - ".(date("Y. m. d. H:i", $adat->bejegyzes->ig + 1))."\n\tRésztvevők száma: ".count(pg_array_parse($adat->bejegyzes->resztvevok))." fő";
+							$tooltip .= "\nBérlő:\n\t".$adat->bejegyzes->berlo_vezetek_nev." ".$adat->bejegyzes->berlo_kereszt_nev;
+							$tooltip .= "\n\tEmail: ".$adat->bejegyzes->tel;
+							$tooltip .= "\n\tTelefonszám: ".$adat->bejegyzes->email;
+							$tooltip .= "\n\tFoglalásai: ".$adat->bejegyzes->foglalas." alkalom";
+							$tooltip .= "\n\tVisszamondta: ".$adat->bejegyzes->visszamondas." alkalom";
+							$tooltip .= "\n\tNem jött el: ".$adat->bejegyzes->nemjott." alkalom";
+							// TODO: talan meg a Visszaigazolo ember adatai is kellenenek
+						}
 						$tooltip .= "\nTerem:\n\t".$adat->bejegyzes->terem_nev."\n\t".$adat->bejegyzes->terem_alcim;
 
 						$onclickfunction = "";
 						if (!is_null($editfunction) && $editfunction != "")
-							$onclickfunction =  " onclick=\"".$editfunction."(".$adat->bejegyzes->naptar_id.")\"";
+							$onclickfunction =  " onclick=\"".$editfunction."(".$adat->bejegyzes->naptar_id.")\""; // TODO: ezt meg kell nezni a fogallasok szempontjabol is, mert lehet, hogy mukodik (marmint masik funkcio nevvel termeszetesen)
 
 						// ez a szines div
 						$tdcontent .= "<div title=\"".$tooltip."\"".$onclickfunction." style=\"cursor: pointer; position: absolute;".$widthsz.$leftsz.$topsz.($amax >= 60 && $adat->min == 0 ? " height: 100%;" : " height: ".$maxm."px;")." background-color: ".$bcolor.";\"></div>";
@@ -338,7 +404,12 @@
 
 							// ha az elso napon az elso oraban vagyunk es az esemenynek korabbi a kezdo idopontja, akkor megjelenitjuk a neve elott egy '<-' szoveget is.
 							if ($hours == $minhour && $day == 0 && date("Y-m-d H:i", $adat->bejegyzes->tol) < date("Y-m-d H:i", strtotime($mindate))) {
-								$tdcontent .= $diveloke."<- ".$adat->bejegyzes->ora_nev;
+								if ($isOra) {
+									$tdcontent .= $diveloke."<- ".$adat->bejegyzes->ora_nev;
+								}
+								else {
+									$tdcontent .= $diveloke."<- ".$adat->bejegyzes->berlo_vezetek_nev." ".$adat->bejegyzes->berlo_kereszt_nev;
+								}
 								// ha nagyobb vagy egyenlo, mint 70 perc, akkor megjelenitjuk az edzo rovid nevet is, mert egyebkent nem fer ki...
 								if (($adat->bejegyzes->ig - strtotime(date("Y", $weekdays[$day])."-".date("m", $weekdays[$day])."-".date("d", $weekdays[$day])." ".$hours.":00") / 60) >= $minheightforedzo)
 									$tdcontent .= "<br>".$adat->bejegyzes->terem_nev;
@@ -350,7 +421,12 @@
 							}
 							// egyebkent csak akkor iratjuk ki az ora adatait, ha ez a kezdodatum
 							else if (date("Y-m-d H:i", $adat->bejegyzes->tol) == date("Y-m-d H:i", strtotime($mindate))) {
-								$tdcontent .= $diveloke.$adat->bejegyzes->ora_nev;
+								if ($isOra) {
+									$tdcontent .= $diveloke.$adat->bejegyzes->ora_nev;
+								}
+								else {
+									$tdcontent .= $diveloke.$adat->bejegyzes->berlo_vezetek_nev." ".$adat->bejegyzes->berlo_kereszt_nev;
+								}
 								// ha nagyobb vagy egyenlo, mint 70 perc, akkor megjelenitjuk az edzo rovid nevet is, mert egyebkent nem fer ki...
 								if ((($adat->bejegyzes->ig - $adat->bejegyzes->tol) / 60) >= $minheightforedzo)
 									$tdcontent .= "<br>".$adat->bejegyzes->terem_nev;

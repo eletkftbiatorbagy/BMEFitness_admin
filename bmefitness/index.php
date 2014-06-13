@@ -41,7 +41,7 @@
 ?>
 
 	</head>
-	<body onload="hideddrivetip(); change_main_site('timetable');">
+	<body onload="hideddrivetip(); change_main_site('distress');">
 
 		<div id="dhtmltooltip" class="tooltipandinfodivstyle"></div>
 
