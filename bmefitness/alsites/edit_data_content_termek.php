@@ -57,7 +57,7 @@
 					print "<tr><td><b>Név:</b></td><td>".$object->nev."</td></tr>";
 					print "<tr><td><b>Alcím:</b></td><td>".$object->alcim."</td></tr>";
 					print "<tr><td><b>Foglalható:</b></td><td>".($object->foglalhato == "t" ? "Igen" : "Nem")."</td></tr>";
-//					print "<tr><td><b>Kép:</b></td><td>".($object->foto == "" ? "" : "<img src=\"data_termek/".$object->foto.".jpg\">")."</td></tr>";
+					print "<tr><td><b>Kép:</b></td><td>".($object->foto == "" ? "" : "<img src=\"data_termek/".$object->foto.".jpg\">")."</td></tr>";
 				print "</table>";
 			print "</p>";
 			print "<div onclick='begin_new_or_edit_data(\"".$tablename."\", ".$ojson.");' class=\"action_button\">Szerkesztés</div>";
