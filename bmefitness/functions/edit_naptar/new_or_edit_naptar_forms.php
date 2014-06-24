@@ -46,24 +46,24 @@
 
 	// orak
 	print "<tr><td class=\"td_right\">Óra:</td><td class=\"td_left\"><select id=\"naptarora\">\n";
-	print "<option>Óra kiválasztása...</option>";
+	print "<option>Óra kiválasztása...</option>\n";
 	foreach ($orak as $ora)
-	print "<option".((!is_null($object) && $object->ora == $ora->id) ? " selected=\"selected\"" : "")." value=\"".$ora->id."\">".$ora->nev." (".$ora->id.")</option>";
-	print "</select>";
+	print "<option".((!is_null($object) && $object->ora == $ora->id) ? " selected=\"selected\"" : "")." value=\"".$ora->id."\">".$ora->nev." (".$ora->id.")</option>\n";
+	print "</select></td></tr>\n";
 
 	// edzok
 	print "<tr><td class=\"td_right\">Edző:</td><td class=\"td_left\"><select id=\"naptaredzo\">\n";
-	print "<option>Edző kiválasztása...</option>";
+	print "<option>Edző kiválasztása...</option>\n";
 	foreach ($edzok as $edzo)
-		print "<option".((!is_null($object) && $object->edzo == $edzo->id) ? " selected=\"selected\"" : "")." value=\"".$edzo->id."\">".$edzo->vnev." ".$edzo->knev." (".$edzo->id.")</option>";
-	print "</select>";
+		print "<option".((!is_null($object) && $object->edzo == $edzo->id) ? " selected=\"selected\"" : "")." value=\"".$edzo->id."\">".$edzo->vnev." ".$edzo->knev." (".$edzo->id.")</option>\n";
+	print "</select></td></tr>\n";
 
 	// termek
 	print "<tr><td class=\"td_right\">Terem:</td><td class=\"td_left\"><select id=\"naptarterem\">\n";
-	print "<option>Terem kiválasztása...</option>";
+	print "<option>Terem kiválasztása...</option>\n";
 	foreach ($termek as $terem)
-		print "<option".((!is_null($object) && $object->terem == $terem->id) ? " selected=\"selected\"" : "")." value=\"".$terem->id."\">".$terem->nev." (".$terem->id.")</option>";
-	print "</select>";
+		print "<option".((!is_null($object) && $object->terem == $terem->id) ? " selected=\"selected\"" : "")." value=\"".$terem->id."\">".$terem->nev." (".$terem->id.")</option>\n";
+	print "</select></td></tr>\n";
 
 
 //			<tr><td id=\"edit_info_openinghours\" class=\"td_right ".(is_null($object) || strlen($object->nyitvatartas) == 0 ? "redcolor" : "")."\">Nyitvatartás:</td><td class=\"td_left\"><textarea rows=\"10\" cols=\"69\" type=\"text\" id=\"infoopeninghours\" onchange=\"editedField('edit_info_openinghours', 'infoopeninghours', false, 0);\">".(is_null($object) ? "" : $object->nyitvatartas)."</textarea></td></tr>\n

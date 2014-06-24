@@ -137,6 +137,14 @@ a#neworeditlink {
 	text-align: center;
 }
 
+#allowDistressButton {
+	color: #409915;
+}
+
+#disallowDistressButton {
+	color: red;
+}
+
 /* tooltiphez es info divhez */
 .tooltipandinfodivstyle {
 	position: absolute;

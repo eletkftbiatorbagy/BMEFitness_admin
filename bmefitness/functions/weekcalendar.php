@@ -157,7 +157,7 @@
 
 		$naptarak = db_select_data("fitness.naptar, fitness.termek, fitness.felhasznalok", $select, $where, "naptar.tol");
 
-		printTable($weekdays, $naptarak, "begin_new_or_edit_naptar"); // TODO: ezt ki kell cserelni az engedelyezesre, torlesre...
+		printTable($weekdays, $naptarak, "begin_allow_distress");
 	}
 
 	/*!	Tabla kirajzolasa a het napjai es naptarak alapjan
@@ -382,13 +382,13 @@
 							$tooltip .= "\n\tFoglalásai: ".$adat->bejegyzes->foglalas." alkalom";
 							$tooltip .= "\n\tVisszamondta: ".$adat->bejegyzes->visszamondas." alkalom";
 							$tooltip .= "\n\tNem jött el: ".$adat->bejegyzes->nemjott." alkalom";
-							// TODO: talan meg a Visszaigazolo ember adatai is kellenenek
+							// TODO: talan meg a Visszaigazolo ember adatai is kellenenek, ha kell a visszaigazolo ember adatai, es o is felhasznalo, akkor kulon sql lekerdezes kell!!!
 						}
 						$tooltip .= "\nTerem:\n\t".$adat->bejegyzes->terem_nev."\n\t".$adat->bejegyzes->terem_alcim;
 
 						$onclickfunction = "";
 						if (!is_null($editfunction) && $editfunction != "")
-							$onclickfunction =  " onclick=\"".$editfunction."(".$adat->bejegyzes->naptar_id.")\""; // TODO: ezt meg kell nezni a fogallasok szempontjabol is, mert lehet, hogy mukodik (marmint masik funkcio nevvel termeszetesen)
+							$onclickfunction =  " onclick=\"".$editfunction."(".$adat->bejegyzes->naptar_id.")\"";
 
 						// ez a szines div
 						$tdcontent .= "<div title=\"".$tooltip."\"".$onclickfunction." style=\"cursor: pointer; position: absolute;".$widthsz.$leftsz.$topsz.($amax >= 60 && $adat->min == 0 ? " height: 100%;" : " height: ".$maxm."px;")." background-color: ".$bcolor.";\"></div>";

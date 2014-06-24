@@ -137,6 +137,13 @@
 			<br><br>
 			<a id="uploadlink" onclick="disablePopup();">OK</a>
 		</div>
+		<div id="popupAllowDistress" class="popupContact popupSajat popupSajatCenter">
+			<a class="popupContactClose">X</a>
+			<h1 class="editTitle">Foglalás engedélyezése</h1>
+			<p class="contactArea" id="allowDistressArea"></p>
+			<br><br>
+			<a id="allowDistressButton">Elfogad</a>&nbsp;&nbsp;&nbsp;&nbsp;<a id="disallowDistressButton">Elutasít</a>
+		</div>
 
 
 	<!-- oldal teruletei -->

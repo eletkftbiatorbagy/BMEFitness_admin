@@ -574,3 +574,55 @@ function end_new_or_edit_naptar(naptar_id) {
 
 	disablePopup();
 }
+
+
+
+/*!
+ * \param naptar_id	kötelező paraméter, melyik foglalást akarjuk engedélyezni, tiltani
+ */
+function begin_allow_distress(naptar_id) {
+	// megprobaljuk atkonvertalni json-ra, ha nem sikerul, akkor ujat viszunk fel, nem a legjobb, de nem rossz...
+
+	$.post("functions/edit_distress/edit_distress.php", {selectedObject: naptar_id, random: Math.random()}, function(result) {
+		if (result) {
+			if (result.length >= 6 && result.substring(0, 6) == "error:") {
+				window.alert(result.substring(6, result.length));
+				return;
+			}
+			else {
+				$('#allowDistressArea').html(result);
+				// elore beallitjuk a linket az ujnak, mert ugyebar egybol ujat lehet hozzaadni, es nem szerkeszteni a regit...
+				$('#allowDistressButton').attr("onclick", "end_allow_distress(true, " + naptar_id + ");");
+				$('#disallowDistressButton').attr("onclick", "end_allow_distress(false, " + naptar_id + ");");
+				popupDiv('popupAllowDistress');
+			}
+		}
+	});
+}
+
+/*!
+ * \param allow				elfogadták-e a bejegyzést vagy sem
+ * \param naptar_id			kötelező paraméter
+ */
+function end_allow_distress(allow, naptar_id) {
+	disablePopup();
+	var aid = "-1";
+	var elvalaszto = ",";
+	var allelvalaszto = "<!±!>";
+
+	if (naptar_id) {
+		aid = naptar_id;
+		elvalaszto = allelvalaszto;
+	}
+
+	var allowed = "true";
+	if (!allow)
+		allowed = "false";
+
+	$.post("functions/update_distress.php", {data_id: naptar_id, allow: allowed, random: Math.random()}, function(result) {
+//		window.alert("elvileg kesz, eredmeny: " + (result ? "OK" : "XAR") + " result: " + result);
+		if (result) {
+		   change_main_site("distress");
+		}
+	});
+}
