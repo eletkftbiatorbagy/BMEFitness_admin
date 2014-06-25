@@ -579,9 +579,11 @@ function end_new_or_edit_naptar(naptar_id) {
 
 /*!
  * \param naptar_id	kötelező paraméter, melyik foglalást akarjuk engedélyezni, tiltani
+ * \param utkozesek	string, kötelező, ami "<!±!>" sorozattal elválasztott naptar_id-ket tartalmaz, amiket el kell utasítani, ha a sima naptar_id-t elfogadtuk
  */
-function begin_allow_distress(naptar_id) {
+function begin_allow_distress(naptar_id, utkozesek) {
 	// megprobaljuk atkonvertalni json-ra, ha nem sikerul, akkor ujat viszunk fel, nem a legjobb, de nem rossz...
+//	alert("utkozesek: " + utkozesek + ", naptar: " + naptar_id);
 
 	$.post("functions/edit_distress/edit_distress.php", {selectedObject: naptar_id, random: Math.random()}, function(result) {
 		if (result) {
@@ -592,8 +594,8 @@ function begin_allow_distress(naptar_id) {
 			else {
 				$('#allowDistressArea').html(result);
 				// elore beallitjuk a linket az ujnak, mert ugyebar egybol ujat lehet hozzaadni, es nem szerkeszteni a regit...
-				$('#allowDistressButton').attr("onclick", "end_allow_distress(true, " + naptar_id + ");");
-				$('#disallowDistressButton').attr("onclick", "end_allow_distress(false, " + naptar_id + ");");
+				$('#allowDistressButton').attr("onclick", "end_allow_distress(true, " + naptar_id + ", '" + utkozesek + "');");
+				$('#disallowDistressButton').attr("onclick", "end_allow_distress(false, " + naptar_id + ", '" + utkozesek + "');");
 				popupDiv('popupAllowDistress');
 			}
 		}
@@ -604,7 +606,7 @@ function begin_allow_distress(naptar_id) {
  * \param allow				elfogadták-e a bejegyzést vagy sem
  * \param naptar_id			kötelező paraméter
  */
-function end_allow_distress(allow, naptar_id) {
+function end_allow_distress(allow, naptar_id, utkozesek) {
 	disablePopup();
 	var aid = "-1";
 	var elvalaszto = ",";
@@ -619,7 +621,7 @@ function end_allow_distress(allow, naptar_id) {
 	if (!allow)
 		allowed = "false";
 
-	$.post("functions/update_distress.php", {data_id: naptar_id, allow: allowed, random: Math.random()}, function(result) {
+	$.post("functions/update_distress.php", {data_id: naptar_id, allow: allowed, utkozesek: utkozesek, random: Math.random()}, function(result) {
 //		window.alert("elvileg kesz, eredmeny: " + (result ? "OK" : "XAR") + " result: " + result);
 		if (result) {
 		   change_main_site("distress");

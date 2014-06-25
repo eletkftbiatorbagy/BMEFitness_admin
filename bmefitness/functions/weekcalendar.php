@@ -322,6 +322,7 @@
 
 					// naptar kirajzolasa
 					foreach (bejegyzesAtHourOfDayInNaptarak($naptarak, date("Y", $weekdays[$day]), date("m", $weekdays[$day]), date("d", $weekdays[$day]), $hours) as $adat) {
+//						print "adat ".date("Y. m. d. H:i", $adat->bejegyzes->tol)." - ".date("Y. m. d. H:i", $adat->bejegyzes->ig + 1)."<br>";
 						$isOra = property_exists($adat->bejegyzes, "ora_nev");
 
 						// szin kiszedese
@@ -387,8 +388,21 @@
 						$tooltip .= "\nTerem:\n\t".$adat->bejegyzes->terem_nev."\n\t".$adat->bejegyzes->terem_alcim;
 
 						$onclickfunction = "";
-						if (!is_null($editfunction) && $editfunction != "")
-							$onclickfunction =  " onclick=\"".$editfunction."(".$adat->bejegyzes->naptar_id.")\"";
+						if (!is_null($editfunction) && $editfunction != "") {
+							$onclickfunction =  " onclick=\"".$editfunction."(".$adat->bejegyzes->naptar_id;
+							// hozzaasdjuk a fogalast atfedo azonositokat, hogy el tudjuk kuldeni
+							if (!$isOra) {
+								$elvalaszto = "<!±!>";
+								$onclickfunction .= ",'";
+								for ($uid = 0; $uid < count($adat->bejegyzes->sajatatfedesek); $uid++) {
+									$onclickfunction .= $naptarak[$adat->bejegyzes->sajatatfedesek[$uid]]->naptar_id;
+									if ($uid + 1 < count($adat->bejegyzes->sajatatfedesek))
+										$onclickfunction .= $elvalaszto;
+								}
+								$onclickfunction .= "'";
+							}
+							$onclickfunction .= ")\"";
+						}
 
 						// ez a szines div
 						$tdcontent .= "<div title=\"".$tooltip."\"".$onclickfunction." style=\"cursor: pointer; position: absolute;".$widthsz.$leftsz.$topsz.($amax >= 60 && $adat->min == 0 ? " height: 100%;" : " height: ".$maxm."px;")." background-color: ".$bcolor.";\"></div>";

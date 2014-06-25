@@ -12,21 +12,22 @@
 	// visszaalakitjuk, hogy tudjuk hasznalni...
 	$edited_naptar_id = $_POST["selectedObject"];
 	$where = "naptar.id = ".$edited_naptar_id;
-	$where += " AND naptar.berlo = felhasznalok.id";
-	$where += " AND naptar.terem = termek.id";
+	$where .= " AND naptar.berlo = felhasznalok.id";
+	$where .= " AND naptar.terem = termek.id";
+
 	$select = "*";
 	$select .= ", naptar.id AS naptar_id"; // naptar atalakitasok
 	$select .= ", felhasznalok.id AS berlo_id, felhasznalok.vnev AS berlo_vezetek_nev, felhasznalok.knev AS berlo_kereszt_nev"; // felhasznalo atalakitasok
 	$select .= ", termek.id AS terem_id, termek.nev AS terem_nev, termek.alcim AS terem_alcim"; // terem atalakitasok
 	$selected_naptar_data = db_select_data("fitness.naptar, fitness.termek, fitness.felhasznalok", $select, $where, "");
-	
+
+
 	if (count($selected_naptar_data) > 0)
 		$object = $selected_naptar_data[0];
 	else {
 		print "error:Nem található az adatbázisban a kiválasztott foglalás!";
 		exit;
 	}
-
 
 	// foglalas
 	print "<table class=\"edit_data_table\">\n";

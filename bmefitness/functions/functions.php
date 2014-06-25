@@ -57,4 +57,12 @@
 		";
  */
 	}
+
+	// Csak akkor jo ez, ha a value nem stdclass, azaz nem object!
+	// Tehat cask array-ra jo!
+	function printArray($aArray, $sorveg, $keyName = "key", $valueName = "value") {
+		foreach ($aArray as $key => $value) {
+			echo $aKeyName.": ".$key.", ".$aValueName.": ".$value.$sorveg;
+		}
+	}
 ?>
