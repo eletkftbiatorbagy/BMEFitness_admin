@@ -336,7 +336,7 @@ function end_new_or_edit_data(data_type, jsondata) {
 		if ($('#edzoaltitle').val() && $('#edzoaltitle').val().length > 30)
 			error_message += (error_message ? "\nAz edző alcíme maximum 30 karakter lehet!" : "Az edző alcíme maximum 30 karakter lehet!");
 
-		if (!jsondata || (jsondata.foto === "" && !fileselected))
+		if ((!jsondata && !fileselected) || (jsondata && (jsondata.foto === "" || !fileselected)))
 			error_message +=  (error_message ? "\nKötelező megadni az edző fényképét!" : "Kötelező megadni az edző fényképét!");
 
 		schema = "edzok";
@@ -372,9 +372,9 @@ function end_new_or_edit_data(data_type, jsondata) {
 		if ($('#oracolor').val() && $('#oracolor').val().length != 6)
 			error_message += (error_message ? "\nAz óra színe csak 6 karakter lehet!\npéldául fekete: 000000, fehér: FFFFFF" : "Az óra színe csak 6 karakter lehet!\npéldául fekete: 000000, fehér: FFFFFF");
 
-		if (!jsondata || (jsondata.foto === "" && !fileselected))
+		if ((!jsondata && !fileselected) || (jsondata && (jsondata.foto === "" || !fileselected)))
 			error_message +=  (error_message ? "\nKötelező megadni az óra fényképét!" : "Kötelező megadni az óra fényképét!");
-		if (!jsondata || (jsondata.logo === "" && !logoselected))
+		if ((!jsondata && !logoselected) || (jsondata && (jsondata.foto === "" || !logoselected)))
 			error_message +=  (error_message ? "\nKötelező megadni az óra logóját!" : "Kötelező megadni az óra logóját!");
 
 		schema = "orak";
@@ -397,7 +397,7 @@ function end_new_or_edit_data(data_type, jsondata) {
 		if ($('#teremaltitle').val() && $('#teremaltitle').val().length > 20)
 			error_message += (error_message ? "\nA terem alcíme maximum 20 karakter lehet!" : "A terem alcíme maximum 20 karakter lehet!");
 
-		if (!jsondata || (jsondata.foto === "" && !fileselected))
+		if ((!jsondata && !fileselected) || (jsondata && (jsondata.foto === "" || !fileselected)))
 			error_message +=  (error_message ? "\nKötelező megadni a terem fényképét!" : "Kötelező megadni a terem fényképét!");
 
 		schema = "termek";
