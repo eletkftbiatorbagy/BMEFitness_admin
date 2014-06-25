@@ -1,5 +1,11 @@
 <?php
 
+	/*	FIGYELEM!!!
+	 *
+	 *	Tilos print vagy echo függvényt használni, mert akkor hiábs lehet a meghívott jsondata parse máshol!
+	 *	Bár lehet ha a php dob hibát, akkor szintén ugyanaz lesz a helyzet...
+	 *
+	 */
 
 // EDZO
 	/*	Mielőtt hozzáadunk egy új edzőt az adatbázishoz
