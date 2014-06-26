@@ -379,7 +379,9 @@
 							$tooltip .= "\nEdző:\n\t".$adat->bejegyzes->edzo_vezetek_nev." ".$adat->bejegyzes->edzo_kereszt_nev." (".$adat->bejegyzes->edzo_rovid_nev.")";
 						}
 						else {
-							$tooltip .= "Bejegyzés:\n\t".date("Y. m. d. H:i", $adat->bejegyzes->tol)." - ".(date("Y. m. d. H:i", $adat->bejegyzes->ig + 1))."\n\tRésztvevők száma: ".count(pg_array_parse($adat->bejegyzes->resztvevok))." fő";
+							$tooltip .= "Bejegyzés:\n\t".date("Y. m. d. H:i", $adat->bejegyzes->tol)." - ".(date("Y. m. d. H:i", $adat->bejegyzes->ig + 1));
+							$tooltip .= "\n\tMeghívottak száma: ".count(pg_array_parse($adat->bejegyzes->meghivottak))." fő";
+							$tooltip .= "\n\tRésztvevők száma: ".count(pg_array_parse($adat->bejegyzes->resztvevok))." fő";
 							$tooltip .= "\nBérlő:\n\t".$adat->bejegyzes->berlo_vezetek_nev." ".$adat->bejegyzes->berlo_kereszt_nev;
 							$tooltip .= "\n\tEmail: ".$adat->bejegyzes->tel;
 							$tooltip .= "\n\tTelefonszám: ".$adat->bejegyzes->email;
