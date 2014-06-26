@@ -127,7 +127,7 @@
 
 	/*!	Órák lefoglalásának időpontjai.
 	 */
-	function printFoglalasokTable($inaktiv_only, $weekplusz = 0) {
+	function printFoglalasokTable($inaktiv_only, $only_torolt_bejegyzes, $weekplusz = 0) {
 		$thedate = dateForNextWeek($weekplusz);
 		$weekdays = weekdays($thedate);
 
@@ -142,7 +142,10 @@
 		$where = "";
 		if ($inaktiv_only)
 			$where .= "NOT ";
-		$where .= "naptar.aktiv AND NOT naptar.torolve";
+		$where .= "naptar.aktiv AND ";
+		if (!$only_torolt_bejegyzes)
+			$where .= "NOT ";
+		$where .= "naptar.torolve";
 		$where .= " AND felhasznalok.aktiv";
 		$where .= " AND naptar.ig > cast('".$firstday."' AS timestamp) AND naptar.tol < cast('".$lastday."' AS timestamp) AND naptar.terem = termek.id AND naptar.berlo = felhasznalok.id";
 

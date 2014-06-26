@@ -628,3 +628,27 @@ function end_allow_distress(allow, naptar_id, utkozesek) {
 		}
 	});
 }
+
+
+
+function change_distress_torolt(change) {
+	var torolt = change ? "true" : "false";
+	$('#change_distress_torolt_button').html(change ? "Foglalások engedélyezése" : "Törölt foglalások");
+	$('#change_distress_torolt_button').attr("onclick", "change_distress_torolt(" + (change ? "false" : "true") + ")");
+	if (edit_data_object) {
+		$.post("alsites/distress_content.php", {torolt: torolt, het: edit_data_object, random: Math.random()}, function(result) {
+			if (result) {
+				$('#content').html(result);
+//			   change_main_site("distress");
+			}
+		});
+   }
+   else {
+	   $.post("alsites/distress_content.php", {torolt: torolt, het: edit_data_object, random: Math.random()}, function(result) {
+			if (result) {
+				$('#content').html(result);
+//				change_main_site("distress");
+			}
+		});
+   }
+}
