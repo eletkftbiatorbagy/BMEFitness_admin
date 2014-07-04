@@ -1,6 +1,6 @@
 <?php
 	session_start();
-	require_once("functions/database.php");
+	require_once("code/functions/database.php");
 ?>
 
 <!DOCTYPE HTML>
@@ -11,15 +11,15 @@
 		<meta lang="hu">
 		<title>BME Fitness admin</title>
 
-		<script src="js/jquery.js" type="text/javascript"></script>
-		<link rel="stylesheet" href="css/popup.css" />
-		<script src="js/popup.js" type="text/javascript"></script>
-		<link rel="stylesheet" href="css/reset.css" />
-		<link rel="stylesheet" href="css/base.css" />
-		<link rel="stylesheet" href="css/bme.css" />
-		<script type="text/javascript" src="js/bme.js"></script>
-		<script type="text/javascript" src="js/imageupload.js"></script>
-		<script type="text/javascript" src="jscolor/jscolor.js"></script>
+		<script src="code/js/jquery.js" type="text/javascript"></script>
+		<link rel="stylesheet" href="code/css/popup.css" />
+		<script src="code/js/popup.js" type="text/javascript"></script>
+		<link rel="stylesheet" href="code/css/reset.css" />
+		<link rel="stylesheet" href="code/css/base.css" />
+		<link rel="stylesheet" href="code/css/bme.css" />
+		<script type="text/javascript" src="code/js/bme.js"></script>
+		<script type="text/javascript" src="code/js/imageupload.js"></script>
+		<script type="text/javascript" src="code/jscolor/jscolor.js"></script>
 
 <?php
 

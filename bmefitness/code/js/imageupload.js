@@ -151,7 +151,7 @@ function uploadFile(aJson_decoded, aData_type) {
 		xhr1.addEventListener("load", uploadComplete, false);
 		xhr1.addEventListener("error", uploadFailed, false);
 		xhr1.addEventListener("abort", uploadCanceled, false);
-		xhr1.open("POST", "functions/uploadfile.php");
+		xhr1.open("POST", "code/functions/uploadfile.php");
 		xhr1.send(fd1);
 	}
 
@@ -176,7 +176,7 @@ function uploadFile(aJson_decoded, aData_type) {
 		xhr2.addEventListener("load", uploadComplete, false);
 		xhr2.addEventListener("error", uploadFailed, false);
 		xhr2.addEventListener("abort", uploadCanceled, false);
-		xhr2.open("POST", "functions/uploadfile.php");
+		xhr2.open("POST", "code/functions/uploadfile.php");
 		xhr2.send(fd2);
 	}
 }
@@ -293,16 +293,16 @@ function endUploadFile(message, log_level) {
 	var imgFile = null;
 	switch (log_level) {
 		case 0:
-			imgFile = "images/Alarm-Tick-icon.png";
+			imgFile = "code/images/Alarm-Tick-icon.png";
 			break;
 		case 1:
-			imgFile = "images/Alarm-Warning-icon.png";
+			imgFile = "code/images/Alarm-Warning-icon.png";
 			break;
 		case 2:
-			imgFile = "images/Alarm-Error-icon.png";
+			imgFile = "code/images/Alarm-Error-icon.png";
 			break;
 		default:
-			imgFile = "images/Alarm-Tick-icon.png";
+			imgFile = "code/images/Alarm-Tick-icon.png";
 			break;
 	}
 

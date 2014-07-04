@@ -1,16 +1,8 @@
 <?php
 	// static mezok
 	require_once("database.php");
-	$MINHOUR = 0;
-	$MAXHOUR = 23;
-	$TDWIDTH = 120;
-	$TDHEIGHT = 30;
-	$MINHEIGHTFOREDZO = 70;
-	$SHOWNAPTARINFO = true;
-	$FEJLECSZIN = "#FEFEFE";
-	$MAINAPFEJLECSZIN = "#99FF75";
-	$CELLASZIN = "#EDEDED";
-	$MAINAPCELLASZIN = "#F3FFE7";
+	require_once(__DIR__."/../../settings/settings.php");
+	
 
 	/*! Egy 7 tagú tömb lesz a végeredmény, így könnyen fogjuk tudni az adott nap adatait (például hétfő az a 0. elem)
 	 */

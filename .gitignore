@@ -8,4 +8,6 @@ webcheck*
 
 permissionchange.sh
 webvalidator*
-bmefitness/data_*
+bmefitness/data/*
+bmefitness/settings/*
+feladatok*

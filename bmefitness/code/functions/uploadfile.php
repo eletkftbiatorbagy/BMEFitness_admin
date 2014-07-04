@@ -67,8 +67,8 @@
 
 	echo $_POST['type']; // kiiratjik, hogy milyen tipusu volt, file vagy logo lehet
 
-	$temp_path = "../data_tmp/";
-	$target_path = "../".$_POST['folder']."/";
+	$temp_path = __DIR__."/../../data/data_tmp/";
+	$target_path = __DIR__."/../../data/".$_POST['folder']."/";
 	$oldfilename = $_FILES['uploadedfile']['tmp_name'];
 	$filename = basename($_FILES['uploadedfile']['name']);
 	$move_path = $temp_path.$filename;

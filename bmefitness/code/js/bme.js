@@ -7,39 +7,40 @@ function change_main_site(site) {
 
 	var contentSite = null;
 	var settingsSite = null;
+	var alsitesFolder = "code/alsites/";
 
 	if (site == "edit_data") {
 		if (!edit_data_content)
 			edit_data_content = "edzok";
 
 		if (edit_data_content == "info") {
-			contentSite = "alsites/edit_data_content_info.php";
+			contentSite = alsitesFolder + "edit_data_content_info.php";
 		}
 		else if (edit_data_content == "edzok") {
-			contentSite = "alsites/edit_data_content_edzok.php";
+			contentSite = alsitesFolder + "edit_data_content_edzok.php";
 		}
 		else if (edit_data_content == "felhasznalok") {
-			contentSite = "alsites/edit_data_content_felhasznalok.php";
+			contentSite = alsitesFolder + "edit_data_content_felhasznalok.php";
 		}
 		else if (edit_data_content == "termek") {
-			contentSite = "alsites/edit_data_content_termek.php";
+			contentSite = alsitesFolder + "edit_data_content_termek.php";
 		}
 		else if (edit_data_content == "orak") {
-			contentSite = "alsites/edit_data_content_orak.php";
+			contentSite = alsitesFolder + "edit_data_content_orak.php";
 		}
 		else if (edit_data_content == "beallitasok") {
-			contentSite = "alsites/edit_data_content_beallitasok.php";
+			contentSite = alsitesFolder + "edit_data_content_beallitasok.php";
 		}
 
-		settingsSite = "alsites/edit_data_settings.php";
+		settingsSite = alsitesFolder + "edit_data_settings.php";
 	}
 	else if (site == "timetable") {
-		contentSite = "alsites/timetable_content.php";
-		settingsSite = "alsites/timetable_settings.php";
+		contentSite = alsitesFolder + "timetable_content.php";
+		settingsSite = alsitesFolder + "timetable_settings.php";
 	}
 	else if (site == "distress") {
-		contentSite = "alsites/distress_content.php";
-		settingsSite = "alsites/distress_settings.php";
+		contentSite = alsitesFolder + "distress_content.php";
+		settingsSite = alsitesFolder + "distress_settings.php";
 	}
 
 	if (settingsSite && contentSite) {
@@ -250,7 +251,7 @@ function begin_new_or_edit_data(data_type, edit_data_object) {
 
 	if (jsondata) {
 		$('#neworeditlink').html("Módosítás");
-		$.post("functions/edit_data/new_or_edit_data_forms.php", {type: data_type, selectedObject: jsondata, random: Math.random()}, function(result) {
+		$.post("code/functions/edit_data/new_or_edit_data_forms.php", {type: data_type, selectedObject: jsondata, random: Math.random()}, function(result) {
 		   $('#newOrEditArea').html(result);
 		   // elore beallitjuk a linket az ujnak, mert ugyebar egybol ujat lehet hozzaadni, es nem szerkeszteni a regit...
 		   $('#neworeditlink').attr("onclick", "end_new_or_edit_data('" + data_type + "', " + jsondata + ");");
@@ -261,7 +262,7 @@ function begin_new_or_edit_data(data_type, edit_data_object) {
 	}
 	else {
 		$('#neworeditlink').html("Létrehozás");
-		$.post("functions/edit_data/new_or_edit_data_forms.php", {type: data_type, random: Math.random()}, function(result) {
+		$.post("code/functions/edit_data/new_or_edit_data_forms.php", {type: data_type, random: Math.random()}, function(result) {
 		   $('#newOrEditArea').html(result);
 		   // elore beallitjuk a linket az ujnak, mert ugyebar egybol ujat lehet hozzaadni, es nem szerkeszteni a regit...
 		   $('#neworeditlink').attr("onclick", "end_new_or_edit_data('" + data_type + "');");
@@ -417,7 +418,7 @@ function end_new_or_edit_data(data_type, jsondata) {
 	}
 
 	if (schema && avalueIDs && avalues) {
-		$.post("functions/insert_or_update_data.php", {data_id: aid, table_name: "fitness", schema: schema, value_ids: avalueIDs, values: avalues, returning: returningValues, random: Math.random()}, function(result) {
+		$.post("code/functions/insert_or_update_data.php", {data_id: aid, table_name: "fitness", schema: schema, value_ids: avalueIDs, values: avalues, returning: returningValues, random: Math.random()}, function(result) {
 //			window.alert("elvileg kesz, eredmeny: " + (result ? "OK" : "XAR") + " result: " + result);
 				if (result) {
 				// at kell alakitani json objektte
@@ -439,7 +440,7 @@ function fileUploadCompleted(json_decoded, data_type) {
 
 function changeSorszam(table_name_with_schema, id, ujsorszam) {
 //	window.alert("change sorszam table: " + table + ", id: " + id + ", ujsorszam: " + ujsorszam);
-	$.post("functions/edit_data/change_sorszam.php", {table: table_name_with_schema, id: id, ujsorszam: ujsorszam, random: Math.random()}, function(result) {
+	$.post("code/functions/edit_data/change_sorszam.php", {table: table_name_with_schema, id: id, ujsorszam: ujsorszam, random: Math.random()}, function(result) {
 //		window.alert("elvileg kesz, eredmeny: " + result);
 		if (result && result == "true") {
 		   change_main_site("edit_data");
@@ -456,7 +457,7 @@ function begin_new_or_edit_naptar(naptar_id) {
 	// megprobaljuk atkonvertalni json-ra, ha nem sikerul, akkor ujat viszunk fel, nem a legjobb, de nem rossz...
 	if (naptar_id) {
 		$('#neworeditlink').html("Módosítás");
-		$.post("functions/edit_naptar/new_or_edit_naptar_forms.php", {selectedObject: naptar_id, random: Math.random()}, function(result) {
+		$.post("code/functions/edit_naptar/new_or_edit_naptar_forms.php", {selectedObject: naptar_id, random: Math.random()}, function(result) {
 			if (result) {
 			   if (result.substring(0, 5) == "Hiba.") {
 				   window.alert(result.substring(5, result.length));
@@ -473,7 +474,7 @@ function begin_new_or_edit_naptar(naptar_id) {
 	}
 	else {
 		$('#neworeditlink').html("Létrehozás");
-		$.post("functions/edit_naptar/new_or_edit_naptar_forms.php", {random: Math.random()}, function(result) {
+		$.post("code/functions/edit_naptar/new_or_edit_naptar_forms.php", {random: Math.random()}, function(result) {
 			if (result) {
 			   if (result.substring(0, 5) == "Hiba.") {
 				   window.alert(result.substring(5, result.length));
@@ -565,7 +566,7 @@ function end_new_or_edit_naptar(naptar_id) {
 	var avalues = "'" + tol.val() + "'" + elvalaszto + "'" + ig.val() + "'" + elvalaszto + "'" + ora.val() + "'" + elvalaszto + "'" + edzo.val() + "'" + elvalaszto + "'" + terem.val() + "'";
 	var returningValues = "id";
 
-	$.post("functions/insert_or_update_data.php", {data_id: aid, table_name: "fitness", schema: "naptar", value_ids: avalueIDs, values: avalues, returning: returningValues, random: Math.random()}, function(result) {
+	$.post("code/functions/insert_or_update_data.php", {data_id: aid, table_name: "fitness", schema: "naptar", value_ids: avalueIDs, values: avalues, returning: returningValues, random: Math.random()}, function(result) {
 //		window.alert("elvileg kesz, eredmeny: " + (result ? "OK" : "XAR") + " result: " + result);
 		if (result) {
 		   change_main_site("timetable");
@@ -585,7 +586,7 @@ function begin_allow_distress(naptar_id, utkozesek) {
 	// megprobaljuk atkonvertalni json-ra, ha nem sikerul, akkor ujat viszunk fel, nem a legjobb, de nem rossz...
 //	alert("utkozesek: " + utkozesek + ", naptar: " + naptar_id);
 
-	$.post("functions/edit_distress/edit_distress.php", {selectedObject: naptar_id, random: Math.random()}, function(result) {
+	$.post("code/functions/edit_distress/edit_distress.php", {selectedObject: naptar_id, random: Math.random()}, function(result) {
 		if (result) {
 			if (result.length >= 6 && result.substring(0, 6) == "error:") {
 				window.alert(result.substring(6, result.length));
@@ -621,7 +622,7 @@ function end_allow_distress(allow, naptar_id, utkozesek) {
 	if (!allow)
 		allowed = "false";
 
-	$.post("functions/update_distress.php", {data_id: naptar_id, allow: allowed, utkozesek: utkozesek, random: Math.random()}, function(result) {
+	$.post("code/functions/update_distress.php", {data_id: naptar_id, allow: allowed, utkozesek: utkozesek, random: Math.random()}, function(result) {
 //		window.alert("elvileg kesz, eredmeny: " + (result ? "OK" : "XAR") + " result: " + result);
 		if (result) {
 		   change_main_site("distress");
@@ -632,11 +633,12 @@ function end_allow_distress(allow, naptar_id, utkozesek) {
 
 
 function change_distress_torolt(change) {
+	var alsitesFolder = "code/alsites/";
 	var torolt = change ? "true" : "false";
 	$('#change_distress_torolt_button').html(change ? "Foglalások engedélyezése" : "Törölt foglalások");
 	$('#change_distress_torolt_button').attr("onclick", "change_distress_torolt(" + (change ? "false" : "true") + ")");
 	if (edit_data_object) {
-		$.post("alsites/distress_content.php", {torolt: torolt, het: edit_data_object, random: Math.random()}, function(result) {
+		$.post(alsitesFolder + "distress_content.php", {torolt: torolt, het: edit_data_object, random: Math.random()}, function(result) {
 			if (result) {
 				$('#content').html(result);
 //			   change_main_site("distress");
@@ -644,7 +646,7 @@ function change_distress_torolt(change) {
 		});
    }
    else {
-	   $.post("alsites/distress_content.php", {torolt: torolt, het: edit_data_object, random: Math.random()}, function(result) {
+	   $.post(alsitesFolder + "distress_content.php", {torolt: torolt, het: edit_data_object, random: Math.random()}, function(result) {
 			if (result) {
 				$('#content').html(result);
 //				change_main_site("distress");

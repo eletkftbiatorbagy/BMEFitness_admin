@@ -10,9 +10,9 @@
 // EDZO
 	/*	Mielőtt hozzáadunk egy új edzőt az adatbázishoz
 	 *
-	 *	\param data			tartalma: id, foto, vnev, knev, rovid_nev, alcim, leiras, ertekeles
+	 *	\param id			az edző azonosítója
 	 */
-	function UjEdzoHozzaadasaElott($data) {
+	function UjEdzoHozzaadasaElott($id) {
 //		print "uj edzo hozzaadasa elott: ".$data->vnev. " ".$data->knev."<br>";
 	}
 
@@ -27,9 +27,9 @@
 
 	/*	Mielőtt módosítunkg egy edzőt az adatbázisban
 	 *
-	 *	\param data			tartalma: id, foto, vnev, knev, rovid_nev, alcim, leiras, ertekeles
+	 *	\param id			az edző azonosítója
 	 */
-	function EdzoModositasaElott($data) {
+	function EdzoModositasaElott($id) {
 //		print "edzo modositasa elott: ".$data->vnev. " ".$data->knev."<br>";
 	}
 
@@ -48,9 +48,9 @@
 // ORA
 	/*	Mielőtt hozzáadunk egy új órát az adatbázishoz
 	 *
-	 *	\param data			tartalma: id, foto, logo, nev, rovid_nev, alcim, leiras, max_letszam, perc, belepodij, color
+	 *	\param id			az óra azonosítója
 	 */
-	function UjOraHozzaadasaElott($data) {
+	function UjOraHozzaadasaElott($id) {
 //		print "uj ora hozzaadasa elott: ".$data->nev."<br>";
 	}
 
@@ -65,9 +65,9 @@
 
 	/*	Mielőtt módosítunkg egy órát az adatbázisban
 	 *
-	 *	\param data			tartalma: id, foto, logo, nev, rovid_nev, alcim, leiras, max_letszam, perc, belepodij, color
+	 *	\param id			az óra azonosítója
 	 */
-	function OraModositasaElott($data) {
+	function OraModositasaElott($id) {
 //		print "ora modositasa elott: ".$data->nev."<br>";
 	}
 
@@ -86,9 +86,9 @@
 // TEREM
 	/*	Mielőtt hozzáadunk egy új termet az adatbázishoz
 	 *
-	 *	\param data			tartalma: id, foto, nev, alcim, foglalhato
+	 *	\param id			a terem azonosítója
 	 */
-	function UjTeremHozzaadasaElott($data) {
+	function UjTeremHozzaadasaElott($id) {
 //		print "uj terem hozzaadasa elott: ".$data->nev."<br>";
 	}
 
@@ -103,9 +103,9 @@
 
 	/*	Mielőtt módosítunkg egy termet az adatbázisban
 	 *
-	 *	\param data			tartalma: id, foto, nev, alcim, foglalhato
+	 *	\param id			a terem azonosítója
 	 */
-	function TeremModositasaElott($data) {
+	function TeremModositasaElott($id) {
 //		print "terem modositasa elott: ".$data->nev."<br>";
 	}
 
@@ -126,9 +126,9 @@
 // TODO: lehet, hogy nem csak az id-t kellene visszavárni a bme.js-ben
 	/*	Mielőtt hozzáadunk egy új naptárat az adatbázishoz
 	 *
-	 *	\param data			tartalma: id
+	 *	\param id			a naptár azonosítója
 	 */
-	function UjNaptarHozzaadasaElott($data) {
+	function UjNaptarHozzaadasaElott($id) {
 //		print "uj naptar hozzaadasa elott: ".$data->id."<br>";
 	}
 
@@ -143,9 +143,9 @@
 
 	/*	Mielőtt módosítunkg egy naptárat az adatbázisban
 	 *
-	 *	\param data			tartalma: id
+	 *	\param id			a naptár azonosítója
 	 */
-	function NaptarModositasaElott($data) {
+	function NaptarModositasaElott($id) {
 //		print "naptar modositasa elott: ".$data->id."<br>";
 	}
 

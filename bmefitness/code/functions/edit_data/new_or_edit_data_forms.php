@@ -3,12 +3,15 @@
 		$edit = $_POST["type"];
 		$object = NULL;
 
+		$oid = "-1";
+
 		require_once("../functions.php");
 
 		if (isset($_POST["selectedObject"])) {
 			// visszaalakitjuk, hogy tudjuk hasznalni...
 			$jsonobject = $_POST["selectedObject"];
 			$object = json_decode($jsonobject);
+			$oid = $object->id;
 		}
 		
 		if ($edit == "info") { // pontosabban egy uj edzo letrehozasa
@@ -21,7 +24,7 @@
 			";
 		}
 		else if ($edit == "edzok") { // pontosabban egy uj edzo letrehozasa
-			$imageForm = uploadImageForm("Fotó kiválasztása", "fileToUpload", "data_edzok", "fitness", "edzok", "foto", "id", $object->id, 400, 300);
+			$imageForm = uploadImageForm("Fotó kiválasztása", "fileToUpload", "data_edzok", "fitness", "edzok", "foto", "id", $oid, 400, 300);
 			print "
 				<table class=\"edit_data_table\">
 					<tr><td id=\"edit_edzo_vname\" class=\"td_right ".(is_null($object) || strlen($object->vnev) == 0 ? "redcolor" : "")."\">Vezetéknév:</td><td class=\"td_left\"><input maxlength=\"30\" size=\"31\" type=\"text\" id=\"edzovname\" ".(is_null($object) ? "" : "value=\"".$object->vnev."\" ")."onchange=\"editedField('edit_edzo_vname', 'edzovname', false, 30);\"></input></td></tr>\n
@@ -34,15 +37,15 @@
 						</td>
 						<td class=\"td_left\">"
 							.$imageForm."\n"
-							.((is_null($object) || $object->foto == "") ? "" : "<br><img src=\"data_edzok/".$object->foto.".jpg\"></img>")."
+							.((is_null($object) || $object->foto == "") ? "" : "<br><img src=\"data/data_edzok/".$object->foto.".jpg\"></img>")."
 						</td>
 					</tr>\n
 				</table>
 			";
 		}
 		else if ($edit == "orak") { // pontosabban egy uj edzo letrehozasa
-			$logoForm = uploadImageForm("Logó kiválasztása", "logoToUpload", "data_orak", "fitness", "orak", "logo", "id", $object->id, 400, 300);
-			$imageForm = uploadImageForm("Fotó kiválasztása", "fileToUpload", "data_orak", "fitness", "orak", "foto", "id", $object->id, 400, 300);
+			$logoForm = uploadImageForm("Logó kiválasztása", "logoToUpload", "data_orak", "fitness", "orak", "logo", "id", $oid, 400, 300);
+			$imageForm = uploadImageForm("Fotó kiválasztása", "fileToUpload", "data_orak", "fitness", "orak", "foto", "id", $oid, 400, 300);
 			print "
 				<table class=\"edit_data_table\">
 					<tr><td id=\"edit_ora_name\" class=\"td_right ".(is_null($object) || strlen($object->nev) == 0 ? "redcolor" : "")."\">Név:</td><td class=\"td_left\"><input maxlength=\"25\" size=\"31\" type=\"text\" id=\"oraname\" ".(is_null($object) ? "" : "value=\"".$object->nev."\" ")."onchange=\"editedField('edit_ora_name', 'oraname', false, 25);\"></input></td></tr>\n
@@ -58,7 +61,7 @@
 						</td>
 						<td class=\"td_left\">"
 							.$imageForm."\n"
-							.((is_null($object) || $object->foto == "") ? "" : "<br><img src=\"data_orak/".$object->foto.".jpg\"></img>")."
+							.((is_null($object) || $object->foto == "") ? "" : "<br><img src=\"data/data_orak/".$object->foto.".jpg\"></img>")."
 						</td>
 					</tr>\n
 					<tr>
@@ -66,14 +69,14 @@
 						</td>
 						<td class=\"td_left\">"
 							.$logoForm."\n"
-							.((is_null($object) || $object->foto == "") ? "" : "<br><img src=\"data_orak/".$object->logo.".jpg\"></img>")."
+							.((is_null($object) || $object->foto == "") ? "" : "<br><img src=\"data/data_orak/".$object->logo.".jpg\"></img>")."
 						</td>
 					</tr>\n
 				</table>
 			";
 		}
 		else if ($edit == "termek") { // pontosabban egy uj terem letrehozasa
-			$imageForm = uploadImageForm("Fotó kiválasztása", "fileToUpload", "data_termek", "fitness", "termek", "foto", "id", $object->id, 400, 300);
+			$imageForm = uploadImageForm("Fotó kiválasztása", "fileToUpload", "data_termek", "fitness", "termek", "foto", "id", $oid, 400, 300);
 			print "
 				<table class=\"edit_data_table\">
 					<tr><td id=\"edit_terem_name\" class=\"td_right ".(is_null($object) || strlen($object->nev) == 0 ? "redcolor" : "")."\">Név:</td><td class=\"td_left\"><input maxlength=\"20\" size=\"23\" type=\"text\" id=\"teremname\" ".(is_null($object) ? "" : "value=\"".$object->nev."\" ")."onchange=\"editedField('edit_terem_name', 'teremname', false, 20);\"></input></td></tr>\n
@@ -84,7 +87,7 @@
 						</td>
 						<td class=\"td_left\">"
 							.$imageForm."\n"
-							.((is_null($object) || $object->foto == "") ? "" : "<br><img src=\"data_termek/".$object->foto.".jpg\"></img>")."
+							.((is_null($object) || $object->foto == "") ? "" : "<br><img src=\"data/data_termek/".$object->foto.".jpg\"></img>")."
 						</td>
 					</tr>\n
 				</table>

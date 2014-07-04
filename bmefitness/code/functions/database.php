@@ -1,9 +1,5 @@
 <?php
-	$DatabaseIP = "localhost";
-	$DatabasePort = "5432";
-	$DatabaseName = "bmefitness";
-	$DatabaseUser = "bme";
-	$DatabasePassword = "fitness";
+	require_once(__DIR__."/../../settings/settings.php");
 
 	$DatabaseHandle = NULL;
 
@@ -181,7 +177,7 @@
 
 		preg_match_all('/(?<=^\{|,)(([^,"{]*)|\s*"((?:[^"\\\\]|\\\\(?:.|[0-9]+|x[0-9a-f]+))*)"\s*)(,|(?<!^\{)(?=\}$))/i', $literal, $matches, PREG_SET_ORDER);
 
-		$values = [];
+		$values = array();
 		foreach ($matches as $match) {
 			$values[] = $match[3] != '' ? stripcslashes($match[3]) : (strtolower($match[2]) == 'null' ? null : $match[2]);
 		}

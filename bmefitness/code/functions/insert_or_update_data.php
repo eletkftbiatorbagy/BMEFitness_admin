@@ -19,27 +19,27 @@
 		// felvitel elotti delegate...
 		if ($shema == "edzok") {
 			if ($uj)
-				UjEdzoHozzaadasaElott($objectum);
+				UjEdzoHozzaadasaElott($data_id);
 			else
-				EdzoModositasaElott($objectum);
+				EdzoModositasaElott($data_id);
 		}
 		else if ($shema == "orak") {
 			if ($uj)
-				UjOraHozzaadasaElott($objectum);
+				UjOraHozzaadasaElott($data_id);
 			else
-				OraModositasaElott($objectum);
+				OraModositasaElott($data_id);
 		}
 		else if ($shema == "termek") {
 			if ($uj)
-				UjTeremHozzaadasaElott($objectum);
+				UjTeremHozzaadasaElott($data_id);
 			else
-				TeremModositasaElott($objectum);
+				TeremModositasaElott($data_id);
 		}
 		else if ($shema == "naptar") {
 			if ($uj)
-				UjNaptarHozzaadasaElott($objectum);
+				UjNaptarHozzaadasaElott($data_id);
 			else
-				NaptarModositasaElott($objectum);
+				NaptarModositasaElott($data_id);
 		}
 
 
