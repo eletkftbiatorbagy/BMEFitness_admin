@@ -1,13 +1,4 @@
-
 BME Fitness.xcodeproj
 
-build.sh
-
-webcheck*
-
-
-permissionchange.sh
-webvalidator*
 bmefitness/data/*
 bmefitness/settings/*
-feladatok*
