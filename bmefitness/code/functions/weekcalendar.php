@@ -114,7 +114,7 @@
 
 		$naptarak = db_select_data("fitness.naptar, fitness.orak, fitness.edzok, fitness.termek", $select, $where, "naptar.tol");
 
-		printTable($weekdays, $naptarak, "begin_new_or_edit_naptar");
+		printTable($weekdays, $naptarak, "begin_new_or_edit_naptar", "begin_new_or_edit_naptar");
 	}
 
 	/*!	Órák lefoglalásának időpontjai.
@@ -152,12 +152,12 @@
 
 		$naptarak = db_select_data("fitness.naptar, fitness.termek, fitness.felhasznalok", $select, $where, "naptar.tol");
 
-		printTable($weekdays, $naptarak, "begin_allow_distress");
+		printTable($weekdays, $naptarak, "begin_allow_distress", "begin_new_distress");
 	}
 
 	/*!	Tabla kirajzolasa a het napjai es naptarak alapjan
 	 */
-	function printTable($weekdays, $naptarak, $editfunction) {
+	function printTable($weekdays, $naptarak, $editfunction, $emptyfunction) {
 		$percek = array();
 
 		// szerintem az osszes datum szoveget atkonvertalom rendes datumra
@@ -315,8 +315,10 @@
 					else
 						$tdstyle .= " background-color: ".$cellaszin.";";
 
+					$vanbejegyzes = false; // kicsit hackli, de utolag elkeszitve igy most egyszerubb
 					// naptar kirajzolasa
 					foreach (bejegyzesAtHourOfDayInNaptarak($naptarak, date("Y", $weekdays[$day]), date("m", $weekdays[$day]), date("d", $weekdays[$day]), $hours) as $adat) {
+						$vanbejegyzes = true;
 //						print "adat ".date("Y. m. d. H:i", $adat->bejegyzes->tol)." - ".date("Y. m. d. H:i", $adat->bejegyzes->ig + 1)."<br>";
 						$isOra = property_exists($adat->bejegyzes, "ora_nev");
 
@@ -398,7 +400,7 @@
 								}
 								$onclickfunction .= "'";
 							}
-							$onclickfunction .= ")\"";
+							$onclickfunction .= ");\"";
 						}
 
 						// ez a szines div
@@ -443,8 +445,18 @@
 									$tdcontent .= "<br>".$adat->bejegyzes->terem_nev;
 								$tdcontent .= "</div>";
 							}
+						} // end $shownaptarinfo
+					} // end foreach
+
+					if (!$vanbejegyzes) { // ha nincs bejegyzes, akkor uj objectum hozzaadasa...
+						$emptycellfunction = "";
+						if (!is_null($emptyfunction) && $emptyfunction != "") {
+							$emptycellfunction =  " onclick=\"".$emptyfunction."();\"";
+							// TODO: itt kellene egy masik javascript hivas is, miszerint az idot (es a termet) automatikusan kitolti a kattintas szerint
 						}
+						$tdcontent .= "<div title=\"Új bejegyzés\"".$emptycellfunction." style=\"cursor: pointer; position: absolute; left: 0px; top: 0px; width: 100%; height: 100%;\"></div>";
 					}
+
 					$tdcontent .= "</div>";
 				}
 

@@ -578,6 +578,24 @@ function end_new_or_edit_naptar(naptar_id) {
 
 
 
+
+/*!
+ *	Új foglalast vezet fel a telefonos aszisztensecskécske.
+ */
+function begin_new_distress() {
+	// TODO: be kell fejezni ezt a funkciot
+	alert("befejezetlen funkcio: begin_new_distress()");
+}
+
+/*!
+ *	Vége az új foglalas felvezetésének.
+ */
+function end_new_distress() {
+	// TODO: be kell fejezni ezt a funkciot
+	alert("befejezetlen funkcio: end_new_distress()");
+}
+
+
 /*!
  * \param naptar_id	kötelező paraméter, melyik foglalást akarjuk engedélyezni, tiltani
  * \param utkozesek	string, kötelező, ami "<!±!>" sorozattal elválasztott naptar_id-ket tartalmaz, amiket el kell utasítani, ha a sima naptar_id-t elfogadtuk
