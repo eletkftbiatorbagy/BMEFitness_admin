@@ -1,0 +1,77 @@
+/**************************************************************************************
+  htmlDatePicker CSS file
+  
+  Feel Free to change the fonts, sizes, borders, and colours of any of these elements
+***************************************************************************************/
+
+/* The containing DIV element for the Calendar */
+#tpTimePicker {
+  display: none;          /* Important, do not change */
+  position: absolute;        /* Important, do not change */
+  padding: 5px;
+  background-color: #eeeeee;
+  color: black;
+  font-size: xx-small;
+  font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+  width: 100px;
+  z-index: 3;
+  
+  
+	box-shadow: 3px 3px 10px #700;
+	-webkit-box-shadow: 3px 3px 10px #888;
+	-moz-box-shadow: 3px 3px 10px #334455;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+}
+
+/* The table of the Calendar */
+#tpTimePicker table {
+/*  border: 1px solid gray; */
+  background-color: #eeeeee;
+  color: black;
+  font-size: xx-small;
+  font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+  width: 100%;
+}
+
+/* The Next/Previous buttons */
+#tpTimePicker .cellButton {
+  color: black;
+  text-align: center;
+}
+
+#tpTimePicker .cellInput {
+  border: 0px;
+  text-align: center;
+  background-color: #eeeeee;
+}
+
+/* Any cell in a month that is unused (ie: Not a Day in that month) */
+#tpTimePicker .unused {
+  background-color: transparent;
+  color: black;
+}
+
+/* The cancel button */
+#tpTimePicker .cellCancel {
+  color: black;
+  text-align: center;
+}
+
+/* The ok button */
+#tpTimePicker .cellOk {
+  text-align: center;
+  background-color: transparent;
+}
+
+#tpTimePicker .cellOk a {
+  color: #409915;
+  text-decoration: none;
+}
+
+/* The clickable text inside the calendar */
+#tpTimePicker a {
+  text-decoration: none;
+  background-color: transparent;
+  color: blue;
+} 

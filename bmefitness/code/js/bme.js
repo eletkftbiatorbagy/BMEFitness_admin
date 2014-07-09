@@ -1,3 +1,6 @@
+// beallitas
+var minnaptarlength = 10;
+
 var edit_data_content = null;
 var edit_data_object = null;
 
@@ -451,9 +454,10 @@ function changeSorszam(table_name_with_schema, id, ujsorszam) {
 
 
 /*!
- * \param naptar_id	opcionális paraméter, csak akkor kell, ha valtoztatni akarom az adatatot es nem ujat letrehozni...
+ * \param naptar_id			opcionális paraméter, csak akkor kell, ha valtoztatni akarom az adatatot es nem ujat letrehozni...
+ * \param aclickdateparams		opcionális paraméter, új naptár esetén kell megadni, hogy mennyi időnél kattintottunk
  */
-function begin_new_or_edit_naptar(naptar_id) {
+function begin_new_or_edit_naptar(naptar_id, aclickdateparams) {
 	// megprobaljuk atkonvertalni json-ra, ha nem sikerul, akkor ujat viszunk fel, nem a legjobb, de nem rossz...
 	if (naptar_id) {
 		$('#neworeditlink').html("Módosítás");
@@ -473,8 +477,12 @@ function begin_new_or_edit_naptar(naptar_id) {
 		});
 	}
 	else {
+		var clickdateparams = -1;
+		if (aclickdateparams)
+			clickdateparams = aclickdateparams;
+
 		$('#neworeditlink').html("Létrehozás");
-		$.post("code/functions/edit_naptar/new_or_edit_naptar_forms.php", {random: Math.random()}, function(result) {
+		$.post("code/functions/edit_naptar/new_or_edit_naptar_forms.php", {clickdateparams: clickdateparams, random: Math.random()}, function(result) {
 			if (result) {
 			   if (result.substring(0, 5) == "Hiba.") {
 				   window.alert(result.substring(5, result.length));
@@ -576,6 +584,139 @@ function end_new_or_edit_naptar(naptar_id) {
 	disablePopup();
 }
 
+function changeNaptarTartam() {
+	var naptarselect = document.getElementById("naptaroratartam");
+//	var selectedText = naptarselect.options[naptarselect.selectedIndex].text;
+	var selectedValue = naptarselect.value;
+//	alert("selected text: " + selectedText + "\n" + "selected value: " + selectedValue);
+
+	var egyenipercinput = document.getElementById("naptaregyeniperc");
+	var egyeniperctext = document.getElementById("naptarperctext");
+
+	if (selectedValue == "-1") {
+		egyenipercinput.style.visibility = "visible";
+		egyeniperctext.style.visibility = "visible";
+	}
+	else {
+		egyenipercinput.style.visibility = "hidden";
+		egyeniperctext.style.visibility = "hidden";
+	}
+
+}
+
+function checkIsMinute(field) {
+	var fval = Number(field.value);
+	if (!fval || fval < minnaptarlength)
+		field.value = String(minnaptarlength);
+}
+
+function calculateTartam() {
+	var nit = document.getElementById("naptaroratartam");
+
+	var std = document.getElementById("selected_to_date").value;
+	var stt = document.getElementById("selected_to_time").value;
+	var sfd = document.getElementById("selected_from_date").value;
+	var sft = document.getElementById("selected_from_time").value;
+
+	var vtParts = std.slice(0, -1).split(". ");
+	var atParts = stt.split(":");
+	var igdate = new Date(vtParts[0], vtParts[1], vtParts[2], atParts[0], atParts[1], 0, 0);
+
+	var vfParts = sfd.slice(0, -1).split(". ");
+	var afParts = sft.split(":");
+	var toldate = new Date(vfParts[0], vfParts[1], vfParts[2], afParts[0], afParts[1], 0, 0);
+
+	var percek = Math.floor((igdate - toldate) / 60000); // elvileg masodpercekkel es miliseconddal kell oszani
+
+	if (percek < minnaptarlength)
+		percek = minnaptarlength;
+
+	var van = false;
+	for (var i = 0; i < nit.options.length; i++) {
+		if (percek == nit.options[i].value) {
+			van = true;
+			nit.options[i].selected = true;
+		}
+		else {
+			nit.options[i].selected = false;
+		}
+	}
+
+	var egyenipercinput = document.getElementById("naptaregyeniperc");
+	var egyeniperctext = document.getElementById("naptarperctext");
+	egyenipercinput.style.visibility = "hidden";
+	egyeniperctext.style.visibility = "hidden";
+
+	if (!van) {
+		nit.options[0].selected = true;
+
+		egyenipercinput.style.visibility = "visible";
+		egyeniperctext.style.visibility = "visible";
+		egyenipercinput.value = percek;
+	}
+}
+
+function calculateMikortol() {
+	document.getElementById("naptartol").value = stringFromDateAndTimeInput("selected_from_date", "selected_from_time");
+}
+
+function calculateMeddig() {
+	// mikortol datum es time mezo
+	var datefield = document.getElementById("selected_from_date").value;
+	var timefield = document.getElementById("selected_from_time").value;
+
+	var vParts = datefield.slice(0, -1).split(". ");
+	m = Number(vParts[1]);
+	d = Number(vParts[2]);
+	y = Number(vParts[0]);
+
+	var aParts = timefield.split(":");
+	h = Number(aParts[0]);
+	mp = Number(aParts[1]);
+
+	var changeminutes = 0;
+
+	var naptarselect = document.getElementById("naptaroratartam");
+	var selectedValue = naptarselect.value;
+
+	if (selectedValue == "-1") {
+		var egyenipercinput = document.getElementById("naptaregyeniperc");
+		changeminutes = Number(egyenipercinput.value);
+	}
+	else
+		changeminutes = Number(selectedValue);
+
+	var toldate = new Date(y, m, d, h, mp, 0, 0);
+	var igdate = new Date(toldate.getTime() + (changeminutes * 60 * 1000)); // 60 masodperc, 1000 millisecond a vegen
+
+	y = igdate.getFullYear();
+	m = igdate.getMonth();
+	d = igdate.getDate();
+
+	h = igdate.getHours();
+	mp = igdate.getMinutes();
+
+	document.getElementById("naptarig").value = y + "-" + (m < 10 ? "0" + m : m) + "-" + (d < 10 ? "0" + d : d) + " " + (h < 10 ? "0" + h : h) + ":" + (mp < 10 ? "0" + mp : mp);
+	document.getElementById("selected_to_date").value = y + ". " + (m < 10 ? "0" + m : m) + ". " + (d < 10 ? "0" + d : d + ".");
+	document.getElementById("selected_to_time").value = (h < 10 ? "0" + h : h) + ":" + (mp < 10 ? "0" + mp : mp);
+}
+
+function stringFromDateAndTimeInput(adatefield, atimefield) {
+	var datefield = document.getElementById(adatefield).value;
+	var timefield = document.getElementById(atimefield).value;
+
+
+	var vParts = datefield.slice(0, -1).split(". ");
+	y = Number(vParts[0]);
+	m = Number(vParts[1]);
+	d = Number(vParts[2]);
+
+	var aParts = timefield.split(":");
+	h = Number(aParts[0]);
+	mp = Number(aParts[1]);
+
+	return y + "-" + (m < 10 ? "0" + m : m) + "-" + (d < 10 ? "0" + d : d) + " " + (h < 10 ? "0" + h : h) + ":" + (mp < 10 ? "0" + mp : mp);
+}
 
 
 

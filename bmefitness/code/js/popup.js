@@ -27,6 +27,8 @@ function disablePopup() {
 		$("#backgroundPopup").fadeOut("normal");
 		$(actualPopup).fadeOut("normal");
 		popupStatus = 0;
+		DestroyCalendar();
+		DestroyTimePicker();
 	}
 }
 

@@ -448,10 +448,12 @@
 						} // end $shownaptarinfo
 					} // end foreach
 
-					if (!$vanbejegyzes) { // ha nincs bejegyzes, akkor uj objectum hozzaadasa...
+					if (!$vanbejegyzes) { // ha nincs bejegyzes, akkor uj objektum hozzaadasa...
 						$emptycellfunction = "";
 						if (!is_null($emptyfunction) && $emptyfunction != "") {
-							$emptycellfunction =  " onclick=\"".$emptyfunction."();\"";
+							$clickdateparams = date("Y", $weekdays[$day]).",".date("m", $weekdays[$day]).",".date("d", $weekdays[$day]).",".$hours;
+//							print "clickparams: ".$clickdateparams."<br>";
+							$emptycellfunction =  " onclick=\"".$emptyfunction."(null, '".$clickdateparams."');\"";
 							// TODO: itt kellene egy masik javascript hivas is, miszerint az idot (es a termet) automatikusan kitolti a kattintas szerint
 						}
 						$tdcontent .= "<div title=\"Új bejegyzés\"".$emptycellfunction." style=\"cursor: pointer; position: absolute; left: 0px; top: 0px; width: 100%; height: 100%;\"></div>";

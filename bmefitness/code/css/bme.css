@@ -123,6 +123,11 @@ div.edit_data_available {
 	text-align: left;
 }
 
+table.edit_data_table {
+	margin-left: auto;
+	margin-right: auto;
+}
+
 table.edit_data_table td.td_right {
 	text-align: right;
 	padding: 5px;
