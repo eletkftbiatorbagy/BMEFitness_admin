@@ -46,7 +46,8 @@
 ?>
 
 	</head>
-	<body onload="hideddrivetip(); change_main_site('distress');">
+
+	<body onload="hideddrivetip(); getFirstTerem('distress');">
 
 		<div id="dhtmltooltip" class="tooltipandinfodivstyle"></div>
 

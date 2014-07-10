@@ -2,6 +2,7 @@
 
 	require_once("functions.php");
 	require_once("database.php");
+	$rootpath = realpath("../..");
 
 	function hiba($messsage, $clean_file) {
 		echo "error:".$messsage;
@@ -67,8 +68,8 @@
 
 	echo $_POST['type']; // kiiratjik, hogy milyen tipusu volt, file vagy logo lehet
 
-	$temp_path = __DIR__."/../../data/data_tmp/";
-	$target_path = __DIR__."/../../data/".$_POST['folder']."/";
+	$temp_path = $rootpath."/data/data_tmp/";
+	$target_path = $rootpath."/data/".$_POST['folder']."/";
 	$oldfilename = $_FILES['uploadedfile']['tmp_name'];
 	$filename = basename($_FILES['uploadedfile']['name']);
 	$move_path = $temp_path.$filename;

@@ -88,7 +88,7 @@
 
 	/*!	Órák lefoglalásának időpontjai.
 	 */
-	function printOrakTable($inaktiv_only, $weekplusz = 0) {
+	function printOrakTable($inaktiv_only, $terem_id, $weekplusz = 0) {
 		$thedate = dateForNextWeek($weekplusz);
 		$weekdays = weekdays($thedate);
 
@@ -105,6 +105,7 @@
 			$where .= "NOT ";
 		$where .= "naptar.aktiv AND NOT naptar.torolve";
 		$where .= " AND naptar.ig > cast('".$firstday."' AS timestamp) AND naptar.tol < cast('".$lastday."' AS timestamp) AND naptar.ora = orak.id AND naptar.edzo = edzok.id AND naptar.terem = termek.id";
+		$where .= " AND naptar.terem = ".$terem_id;
 
 		$select = "*"; // minden legyen benne
 		$select .= ", naptar.id AS naptar_id"; // naptar atalakitasok
@@ -119,7 +120,7 @@
 
 	/*!	Órák lefoglalásának időpontjai.
 	 */
-	function printFoglalasokTable($inaktiv_only, $only_torolt_bejegyzes, $weekplusz = 0) {
+	function printFoglalasokTable($inaktiv_only, $only_torolt_bejegyzes, $terem_id, $weekplusz = 0) {
 		$thedate = dateForNextWeek($weekplusz);
 		$weekdays = weekdays($thedate);
 
@@ -140,6 +141,7 @@
 		$where .= "naptar.torolve";
 		$where .= " AND felhasznalok.aktiv";
 		$where .= " AND naptar.ig > cast('".$firstday."' AS timestamp) AND naptar.tol < cast('".$lastday."' AS timestamp) AND naptar.terem = termek.id AND naptar.berlo = felhasznalok.id";
+		$where .= " AND naptar.terem = ".$terem_id;
 
 		$select = "*"; // minden legyen benne
 		$select .= ", naptar.id AS naptar_id"; // naptar atalakitasok

@@ -4,6 +4,11 @@ var minnaptarlength = 10;
 var edit_data_content = null;
 var edit_data_object = null;
 
+// timetable, distress settings
+var last_selected_het = 0;
+var last_selected_terem = 0;
+var last_selected_torolt_distress = false;
+
 function change_main_site(site) {
 	if (!site) // check: "", null, undefined, 0, false, NaN
 		return;
@@ -47,21 +52,33 @@ function change_main_site(site) {
 	}
 
 	if (settingsSite && contentSite) {
-		if (edit_data_object) {
-			if (site == "edit_data") {
-				$.get(contentSite, { selectedObject: edit_data_object, random: Math.random() }, function (result) {
-					if (result) {
-					  $('#content').html(result);
-					}
-				});
-			}
-			else if (site == "timetable") {
-				$.post(contentSite, { het: edit_data_object, random: Math.random() }, function (result) {
-					if (result) {
-					  $('#content').html(result);
-					}
-				});
-			}
+		if (site == "edit_data") {
+			$.get(contentSite, { selectedObject: edit_data_object, random: Math.random() }, function (result) {
+				if (result) {
+					$('#content').html(result);
+				}
+			});
+
+			$.post(settingsSite, { random: Math.random() }, function (result) {
+				if (result) {
+					$('#settings').html(result);
+				}
+			});
+		}
+		else if (site == "timetable" || site == "distress") {
+			var change = last_selected_torolt_distress ? "true" : "false";
+
+			$.post(contentSite, { het: last_selected_het, terem: last_selected_terem, torolt: change, random: Math.random() }, function (result) {
+				if (result) {
+					$('#content').html(result);
+				}
+			});
+
+			$.post(settingsSite, { terem: last_selected_terem, torolt: change, random: Math.random() }, function (result) {
+				if (result) {
+					$('#settings').html(result);
+				}
+			});
 		}
 		else {
 			$.get(contentSite, { random: Math.random() }, function (result) {
@@ -69,13 +86,13 @@ function change_main_site(site) {
 					$('#content').html(result);
 				}
 			});
-		}
 
-		$.get(settingsSite, { random: Math.random() }, function (result) {
-			if (result) {
-				$('#settings').html(result);
-			}
-		});
+			$.post(settingsSite, { random: Math.random() }, function (result) {
+				if (result) {
+				  $('#settings').html(result);
+				}
+			});
+		}
 
 		var menu1 = (site == "edit_data") ? "<div class=\"menu_button menu_button_kijelolt\">Adatok</div>" : "<div class=\"menu_button\" onclick=\"nullify_edit_data_object(); change_main_site('edit_data');\">Adatok</div>\n";
 		var menu2 = (site == "timetable") ? "<div class=\"menu_button menu_button_kijelolt\">Órarend</div>" : "<div class=\"menu_button\" onclick=\"nullify_edit_data_object(); change_main_site('timetable');\">Órarend</div>\n";
@@ -98,9 +115,14 @@ function change_edit_data_site(site, object) {
 	change_main_site("edit_data");
 }
 
-function change_timetable_het(het) {
-	edit_data_object = het;
-	change_main_site("timetable");
+function change_het(het, content) {
+	last_selected_het = het;
+	change_main_site(content);
+}
+
+function change_terem(terem_id, content) {
+	last_selected_terem = terem_id;
+	change_main_site(content);
 }
 
 /*!
@@ -217,14 +239,14 @@ function editedDateTimeFormatField(field, checkfield) {
  * \param data_type			kötelező paraméter, hogy tudjuk mit szerkesztünk.
  * \param edit_data_object		opcionális paraméter, csak akkor kell, ha valtoztatni akarom az adatatot es nem ujat letrehozni...
  */
-function begin_new_or_edit_data(data_type, edit_data_object) {
+function begin_new_or_edit_data(data_type, a_edit_data_object) {
 	if (!data_type)
 		return;
 
 	// megprobaljuk atkonvertalni json-ra, ha nem sikerul, akkor ujat viszunk fel, nem a legjobb, de nem rossz...
 	var jsondata = null;
 	if (edit_data_object)
-		jsondata = JSON.stringify(edit_data_object);
+		jsondata = JSON.stringify(a_edit_data_object);
 
 	var title = null;
 	if (data_type == "info") {
@@ -789,27 +811,19 @@ function end_allow_distress(allow, naptar_id, utkozesek) {
 	});
 }
 
-
-
 function change_distress_torolt(change) {
-	var alsitesFolder = "code/alsites/";
-	var torolt = change ? "true" : "false";
-	$('#change_distress_torolt_button').html(change ? "Foglalások engedélyezése" : "Törölt foglalások");
-	$('#change_distress_torolt_button').attr("onclick", "change_distress_torolt(" + (change ? "false" : "true") + ")");
-	if (edit_data_object) {
-		$.post(alsitesFolder + "distress_content.php", {torolt: torolt, het: edit_data_object, random: Math.random()}, function(result) {
-			if (result) {
-				$('#content').html(result);
-//			   change_main_site("distress");
-			}
-		});
-   }
-   else {
-	   $.post(alsitesFolder + "distress_content.php", {torolt: torolt, het: edit_data_object, random: Math.random()}, function(result) {
-			if (result) {
-				$('#content').html(result);
-//				change_main_site("distress");
-			}
-		});
-   }
+	last_selected_torolt_distress = change;// ? "true" : "false";
+	change_main_site("distress");
+}
+
+function getFirstTerem(site) {
+	$.post("code/functions/elsoterem.php", {random: Math.random()}, function(result) {
+//		window.alert("elvileg kesz, eredmeny: " + (result ? "OK" : "XAR") + " result: " + result);
+		if (result && result != "error") {
+			last_selected_terem = result;
+		}
+		   // ez ne legyen a result kozott, hogy mindenkeppen lefusson, meg ha hibat is dobott...
+		change_main_site(site);
+	});
+
 }

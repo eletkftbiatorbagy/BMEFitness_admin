@@ -112,6 +112,14 @@ div.scrollcontent {
 	max-height: 500px;
 }
 
+div.termekscrollcontent {
+/*	background-color: #ededed; */
+
+	overflow: hidden;
+	overflow-y: scroll;
+	max-height: 858px;
+}
+
 div.edit_data_available {
 	margin: 0px;
 	padding: 10px;
@@ -157,6 +165,24 @@ span.action_button {
 	border-style: dashed double;
 	color: white;
 	background-color: #409915; */
+}
+
+div.selected_terem {
+	border-width: 3px;
+	background-color: #333334;
+	border-color: #409915;
+}
+
+div.selected_button {
+	border-width: 3px;
+	background-color: #333334;
+	border-color: white;
+}
+
+div.separateline {
+	margin: 10px 10px 0px 10px;
+	padding: 2px;
+	background-color: #409915;
 }
 
 table.calendartable tr td {
