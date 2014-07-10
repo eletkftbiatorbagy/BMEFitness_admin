@@ -53,7 +53,11 @@ function change_main_site(site) {
 
 	if (settingsSite && contentSite) {
 		if (site == "edit_data") {
-			$.get(contentSite, { selectedObject: edit_data_object, random: Math.random() }, function (result) {
+			var aobject = edit_data_object;
+			if (!aobject)
+				aobject = "";
+
+			$.get(contentSite, { selectedObject: aobject, random: Math.random() }, function (result) {
 				if (result) {
 					$('#content').html(result);
 				}

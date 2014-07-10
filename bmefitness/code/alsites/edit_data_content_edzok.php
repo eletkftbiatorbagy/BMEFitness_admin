@@ -40,7 +40,7 @@
 	}
 	print "</div>";
 
-	if (isset($_GET["selectedObject"])) {
+	if (isset($_GET["selectedObject"]) && $_GET["selectedObject"] != "") {
 		// visszaalakitjuk, hogy tudjuk hasznalni...
 		$jsonobject = $_GET["selectedObject"];
 		$object = object_from_array($jsonobject);
