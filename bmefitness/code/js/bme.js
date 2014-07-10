@@ -504,7 +504,7 @@ function begin_new_or_edit_naptar(naptar_id, aclickdateparams) {
 			clickdateparams = aclickdateparams;
 
 		$('#neworeditlink').html("Létrehozás");
-		$.post("code/functions/edit_naptar/new_or_edit_naptar_forms.php", {clickdateparams: clickdateparams, random: Math.random()}, function(result) {
+		$.post("code/functions/edit_naptar/new_or_edit_naptar_forms.php", {clickdateparams: clickdateparams, terem: last_selected_terem, random: Math.random()}, function(result) {
 			if (result) {
 			   if (result.substring(0, 5) == "Hiba.") {
 				   window.alert(result.substring(5, result.length));

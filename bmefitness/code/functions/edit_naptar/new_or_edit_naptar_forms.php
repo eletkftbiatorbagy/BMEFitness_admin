@@ -38,6 +38,10 @@
 			$object = $selected_naptar_data[0];
 	}
 
+	$terem_id = NULL;
+	if (isset($_POST["terem"])) {
+		$terem_id = $_POST["terem"];
+	}
 
 	// azert van itt, mert a default idot at akarom irni, ha naptarat szerkesztek
 	$lehetsegesIdok = array("Egyéni perccel", "10 perc", "15 perc", "20 perc", "25 perc", "30 perc", "40 perc", "50 perc", "1 óra", "2 óra", "3 óra", "4 óra");
@@ -57,7 +61,6 @@
 
 	if (is_null($object)) {
 		$newdate = NULL;
-
 		if (isset($_POST["clickdateparams"])) {
 			$clickdateparams = $_POST["clickdateparams"];
 			$dateparams = explode(",", $clickdateparams);
@@ -149,7 +152,7 @@
 	print "<tr><td class=\"td_right\">Terem:</td><td class=\"td_left\"><select id=\"naptarterem\">\n";
 	print "<option>Terem kiválasztása...</option>\n";
 	foreach ($termek as $terem)
-		print "<option".((!is_null($object) && $object->terem == $terem->id) ? " selected=\"selected\"" : "")." value=\"".$terem->id."\">".$terem->nev." (".$terem->id.")</option>\n";
+		print "<option".(((!is_null($object) && $object->terem == $terem->id) || ($terem_id == $terem->id)) ? " selected=\"selected\"" : "")." value=\"".$terem->id."\">".$terem->nev." (".$terem->id.")</option>\n";
 	print "</select></td></tr>\n";
 
 	print "
