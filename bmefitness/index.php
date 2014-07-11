@@ -47,7 +47,7 @@
 
 	</head>
 
-	<body onload="hideddrivetip(); getFirstTerem('distress');">
+	<body onload="hideddrivetip(); change_selected_edit_data_button('edit_data_edzok_button'); getFirstTerem('distress');">
 
 		<div id="dhtmltooltip" class="tooltipandinfodivstyle"></div>
 

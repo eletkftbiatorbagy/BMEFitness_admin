@@ -6,7 +6,6 @@
 	$tablename = "termek"; // ezt kesobb is felhasznalom, azert van itt...
 	$table = "fitness.".$tablename;
 
-	print "<div style=\"border-width: 2px; border-color: #333334; border-style: solid;\"><h1 style=\"color: #489d1e;\">Termek</h1></div>";
 	print "<div id=\"leftcontent\">";
 	$result = db_select_data($table, "*", "", $tablename.".sorszam");
 

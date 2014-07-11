@@ -3,6 +3,7 @@ var minnaptarlength = 10;
 
 var edit_data_content = null;
 var edit_data_object = null;
+var last_selected_edit_data = "edit_data_edzok_button";
 
 // timetable, distress settings
 var last_selected_het = 0;
@@ -66,6 +67,14 @@ function change_main_site(site) {
 			$.post(settingsSite, { random: Math.random() }, function (result) {
 				if (result) {
 					$('#settings').html(result);
+
+				   if ($('#edit_data_edzok_button')) $('#edit_data_edzok_button').removeClass("selected_terem");
+				   if ($('#edit_data_termek_button')) $('#edit_data_termek_button').removeClass("selected_terem");
+				   if ($('#edit_data_orak_button')) $('#edit_data_orak_button').removeClass("selected_terem");
+				   if ($('#edit_data_felhasznalok_button')) $('#edit_data_felhasznalok_button').removeClass("selected_terem");
+				   if ($('#edit_data_info_button')) $('#edit_data_info_button').removeClass("selected_terem");
+				   if ($('#edit_data_beallitasok_button')) $('#edit_data_beallitasok_button').removeClass("selected_terem");
+				   if ($('#' + last_selected_edit_data)) $('#' + last_selected_edit_data).addClass("selected_terem");
 				}
 			});
 		}
@@ -127,6 +136,13 @@ function change_het(het, content) {
 function change_terem(terem_id, content) {
 	last_selected_terem = terem_id;
 	change_main_site(content);
+}
+
+/*!	Itt nem szarozok, egyszeruen mindegyik adat kulon id-t kap sorrendben....
+ *
+ */
+function change_selected_edit_data_button(id) {
+	last_selected_edit_data = id;
 }
 
 /*!
