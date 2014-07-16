@@ -47,7 +47,7 @@
 						</td>
 						<td class=\"td_left\">"
 							.$imageForm."\n"
-							.((is_null($object) || $object->foto == "") ? "" : "<br><img src=\"data/data_edzok/".$object->foto.".jpg\"></img>")."
+							.((is_null($object) || $object->foto == "") ? "" : "<br><img style=\"max-height: 150px; max-width: 300px\" src=\"data/data_edzok/".$object->foto.".jpg\"></img>")."
 						</td>
 					</tr>\n
 				</table>
@@ -88,7 +88,7 @@
 						</td>
 						<td class=\"td_left\">"
 							.$imageForm."\n"
-							.((is_null($object) || $object->foto == "") ? "" : "<br><img src=\"data/data_orak/".$object->foto.".jpg\"></img>")."
+							.((is_null($object) || $object->foto == "") ? "" : "<br><img style=\"max-height: 150px; max-width: 300px\" src=\"data/data_orak/".$object->foto.".jpg\"></img>")."
 						</td>
 					</tr>\n
 					<tr>
@@ -96,7 +96,7 @@
 						</td>
 						<td class=\"td_left\">"
 							.$logoForm."\n"
-							.((is_null($object) || $object->foto == "") ? "" : "<br><img src=\"data/data_orak/".$object->logo.".jpg\"></img>")."
+							.((is_null($object) || $object->foto == "") ? "" : "<br><img style=\"max-height: 96px; max-width: 96px\" src=\"data/data_orak/".$object->logo.".jpg\"></img>")."
 						</td>
 					</tr>\n
 				</table>
@@ -123,7 +123,7 @@
 						</td>
 						<td class=\"td_left\">"
 							.$imageForm."\n"
-							.((is_null($object) || $object->foto == "") ? "" : "<br><img src=\"data/data_termek/".$object->foto.".jpg\"></img>")."
+							.((is_null($object) || $object->foto == "") ? "" : "<br><img style=\"max-height: 150px; max-width: 300px\" src=\"data/data_termek/".$object->foto.".jpg\"></img>")."
 						</td>
 					</tr>\n
 				</table>
