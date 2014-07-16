@@ -536,7 +536,7 @@ function ShowChangeRelationshipForm(button, table, edzo_or_ora_select_id) {
 	var elemheight = elemRect.top - elemRect.bottom;
 
 
-	$.post("code/functions/edit_data/change_relationship_form.php", {selectedObject: edzo_or_ora_select_id, table: table, random: Math.random()}, function(result) {
+	$.post("code/functions/edit_data/change_relationship_form.php", {last_relship: last_selected_relationship_values, selectedObject: edzo_or_ora_select_id, table: table, random: Math.random()}, function(result) {
 		if (result) {
 		   last_selected_relationship_values = "";
 		   $('#editEzokOrakContent').html(result);

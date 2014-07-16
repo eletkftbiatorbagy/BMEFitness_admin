@@ -11,6 +11,22 @@
 		return $bennevan;
 	}
 
+	// ha nincs ilyen bejegyzes, akkor -1, ha van, akkor pedig vagy 0 vagy 1, aszerint, hogy mit tartalmaz...
+	function last_enabled($id, $array) {
+		$returnvalue = -1;
+		if (count($array) == 0)
+			return $returnvalue;
+
+		foreach ($array as $key => $value) {
+			if ("key".$id == $key) {
+				$returnvalue = $value;
+				break;
+			}
+		}
+
+		return $returnvalue;
+	}
+
 	print "<div id=\"orakedzoktermekselects\" class=\"orakedzoktermekselectcontent\">";
 	if (isset($_POST["selectedObject"]) && isset($_POST["table"])) {
 		require_once("../database.php");
@@ -25,6 +41,20 @@
 		$owncolumn = ""; // a masik adatbazisban a sajt azonositonk neve
 		$othercolumn = "";  // a masik adatbazisban levo oszlop neve
 		$displayname = "";
+
+		$last_relship = "";
+		if (isset($_POST["last_relship"]))
+			$last_relship = $_POST["last_relship"];
+
+		$last_relarray = array();
+		if (!empty($last_relship)) {
+//			'1=1,2=0,3=1...' formatumu...
+			$sar = explode(",", $last_relship);
+			foreach ($sar as $arelship) {
+				$xar = explode("=", $arelship);
+				$last_relarray["key".$xar[0]] = $xar[1];
+			}
+		}
 
 		if ($table === "edzok") { // ebben az eseten az orak adatai kellenek...
 			$tablename = "fitness.orak";
@@ -56,8 +86,20 @@
 			}
 
 			foreach ($otherdata as $data) {
-//				for ($i = 0; $i < 15; $i++)
-				print "<input id=\"".($data->id)."\" ".(bennevane($data->id, $otherarray, $othercolumn) ? " checked=\"true\"" : "")." type=\"checkbox\"><span>".$data->$displayname."</span></input><br>";
+				$kell = false;
+				if (count($last_relarray) > 0) {
+					$le = last_enabled($data->id, $last_relarray);
+					if ($le == - 1) {
+						$kell = bennevane($data->id, $otherarray, $othercolumn);
+					}
+					else {
+						$kell = ($le === "1");
+					}
+				}
+				else if (bennevane($data->id, $otherarray, $othercolumn)) {
+					$kell = true;
+				}
+				print "<input id=\"".($data->id)."\" ".($kell ? " checked=\"true\"" : "")." type=\"checkbox\"><span>".$data->$displayname."</span></input><br>";
 			}
 		}
 	}
