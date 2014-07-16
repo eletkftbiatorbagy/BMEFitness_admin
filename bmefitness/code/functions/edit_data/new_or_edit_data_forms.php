@@ -6,6 +6,7 @@
 		$oid = "-1";
 
 		require_once("../functions.php");
+		require_once("../database.php");
 
 		if (isset($_POST["selectedObject"])) {
 			// visszaalakitjuk, hogy tudjuk hasznalni...
@@ -25,6 +26,14 @@
 		}
 		else if ($edit == "edzok") { // pontosabban egy uj edzo letrehozasa
 			$imageForm = uploadImageForm("Fotó kiválasztása", "fileToUpload", "data_edzok", "fitness", "edzok", "foto", "id", $oid, 400, 300);
+
+			// edzohoz rendelt orak szama
+			$query = "SELECT count(*) FROM fitness.foglalkozas WHERE edzo=".$oid.";";
+			$edzokoraicount = db_query_object_array($query);
+			$acount = 0;
+			if (is_array($edzokoraicount) && count($edzokoraicount) > 0)
+				$acount = $edzokoraicount[0]->count;
+
 			print "
 				<table class=\"edit_data_table\">
 					<tr><td id=\"edit_edzo_vname\" class=\"td_right ".(is_null($object) || strlen($object->vnev) == 0 ? "redcolor" : "")."\">Vezetéknév:</td><td class=\"td_left\"><input maxlength=\"30\" size=\"31\" type=\"text\" id=\"edzovname\" ".(is_null($object) ? "" : "value=\"".$object->vnev."\" ")."onchange=\"editedField('edit_edzo_vname', 'edzovname', false, 30);\"></input></td></tr>\n
@@ -32,7 +41,7 @@
 					<tr><td id=\"edit_edzo_rname\" class=\"td_right ".(is_null($object) || strlen($object->rovid_nev) == 0 ? "redcolor" : "")."\">Rövid név:</td><td class=\"td_left\"><input maxlength=\"10\" size=\"31\" type=\"text\" id=\"edzorname\" ".(is_null($object) ? "" : "value=\"".$object->rovid_nev."\" ")."onchange=\"editedField('edit_edzo_rname', 'edzorname', false, 10);\"></input></td></tr>\n
 					<tr><td id=\"edit_edzo_altitle\" class=\"td_right ".(is_null($object) || strlen($object->alcim) == 0 ? "redcolor" : "")."\">Alcím:</td><td class=\"td_left\"><input maxlength=\"30\" size=\"31\" type=\"text\" id=\"edzoaltitle\" ".(is_null($object) ? "" : "value=\"".$object->alcim."\" ")."onchange=\"editedField('edit_edzo_altitle', 'edzoaltitle', false, 30);\"></input></td></tr>\n
 					<tr><td id=\"edit_edzo_description\" class=\"td_right ".(is_null($object) || strlen($object->leiras) == 0 ? "redcolor" : "")."\">Leírás:</td><td class=\"td_left\"><textarea rows=\"5\" cols=\"29\" type=\"text\" id=\"edzodescription\" onchange=\"editedField('edit_edzo_description', 'edzodescription', false, 0);\">".(is_null($object) ? "" : $object->leiras)."</textarea></td></tr>\n
-					<tr><td class=\"td_right\">Órák:</td><td class=\"td_left\">valahany darab<span id=\"modositas_gomb\" onclick=\"showEditEdzoOrak(this, ".(is_null($object) ? "0" : $object->id).", 'edzok');\">módosítás</span></td></tr>\n
+					<tr><td class=\"td_right\">Órák:</td><td class=\"td_left\"><span id=\"querycount\">".$acount."</span> darab<span id=\"modositas_gomb\" onclick=\"ShowChangeRelationshipForm(this, 'edzok', ".(is_null($object) ? "0" : $object->id).");\">módosítás</span></td></tr>\n
 					<tr>
 						<td id=\"edit_edzo_foto\" class=\"td_right ".(is_null($object) || strlen($object->foto) == 0 ? "redcolor" : "")."\">Fotó:
 						</td>
@@ -47,6 +56,14 @@
 		else if ($edit == "orak") { // pontosabban egy uj edzo letrehozasa
 			$logoForm = uploadImageForm("Logó kiválasztása", "logoToUpload", "data_orak", "fitness", "orak", "logo", "id", $oid, 400, 300);
 			$imageForm = uploadImageForm("Fotó kiválasztása", "fileToUpload", "data_orak", "fitness", "orak", "foto", "id", $oid, 400, 300);
+
+			// orahoz rendelt edzok szama
+			$query = "SELECT count(*) FROM fitness.foglalkozas WHERE ora=".$oid.";";
+			$edzokoraicount = db_query_object_array($query);
+			$acount = 0;
+			if (is_array($edzokoraicount) && count($edzokoraicount) > 0)
+				$acount = $edzokoraicount[0]->count;
+
 			print "
 				<table class=\"edit_data_table\">
 					<tr><td id=\"edit_ora_name\" class=\"td_right ".(is_null($object) || strlen($object->nev) == 0 ? "redcolor" : "")."\">Név:</td><td class=\"td_left\"><input maxlength=\"25\" size=\"31\" type=\"text\" id=\"oraname\" ".(is_null($object) ? "" : "value=\"".$object->nev."\" ")."onchange=\"editedField('edit_ora_name', 'oraname', false, 25);\"></input></td></tr>\n
@@ -57,7 +74,7 @@
 					<tr><td id=\"edit_ora_description\" class=\"td_right ".(is_null($object) || strlen($object->leiras) == 0 ? "redcolor" : "")."\">Leírás:</td><td class=\"td_left\"><textarea rows=\"5\" cols=\"29\" type=\"text\" id=\"oradescription\" onchange=\"editedField('edit_ora_description', 'oradescription', false, 0);\">".(is_null($object) ? "" : $object->leiras)."</textarea></td></tr>\n
 					<tr><td class=\"td_right\">Belépődíj:</td><td class=\"td_left\"><input ".(is_null($object) || $object->belepodij == "t" ? "checked=\"true\" " : "")."type=\"checkbox\" size=\"23\" type=\"text\" id=\"orabelepodij\"></input></td></tr>\n
 					<tr><td id=\"edit_ora_color\" class=\"td_right\">Szín:</td><td class=\"td_left\"><input class=\"color\" maxlength=\"6\" size=\"31\" type=\"text\" id=\"oracolor\" ".(is_null($object) ? "" : "value=\"".(strval($object->color))."\" ")."></input></td></tr>\n
-					<tr><td class=\"td_right\">Edzők:</td><td class=\"td_left\">valahany darab<span onclick=\"showEditEdzoOrak(this, ".(is_null($object) ? "0" : $object->id).", 'orak');\" style=\"float: right; margin-right: 25px;\">módosítás</span></td></tr>\n
+					<tr><td class=\"td_right\">Edzők:</td><td class=\"td_left\"><span id=\"querycount\">".$acount."</span> darab<span id=\"modositas_gomb\" onclick=\"ShowChangeRelationshipForm(this, 'orak', ".(is_null($object) ? "0" : $object->id).");\">módosítás</span></td></tr>\n
 					<tr>
 						<td id=\"edit_ora_foto\" class=\"td_right ".(is_null($object) || strlen($object->foto) == 0 ? "redcolor" : "")."\">Fotó:
 						</td>

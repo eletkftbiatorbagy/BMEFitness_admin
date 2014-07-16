@@ -526,7 +526,7 @@ function changeSorszam(table_name_with_schema, id, ujsorszam) {
 	});
 }
 
-function showEditEdzoOrak(button, edzo_or_ora_select_id) {
+function ShowChangeRelationshipForm(button, table, edzo_or_ora_select_id) {
 	var ablak = document.getElementById('popupEditEdzokOrak');
 
 	var bodyRect = document.body.getBoundingClientRect();
@@ -536,7 +536,7 @@ function showEditEdzoOrak(button, edzo_or_ora_select_id) {
 	var elemheight = elemRect.top - elemRect.bottom;
 
 
-	$.post("code/functions/edit_data/change_selected_edzoorak_form.php", {selectedObject: edzo_or_ora_select_id, random: Math.random()}, function(result) {
+	$.post("code/functions/edit_data/change_relationship_form.php", {selectedObject: edzo_or_ora_select_id, table: table, random: Math.random()}, function(result) {
 		if (result) {
 		   last_selected_relationship_values = "";
 		   $('#editEzokOrakContent').html(result);
@@ -551,24 +551,33 @@ function showEditEdzoOrak(button, edzo_or_ora_select_id) {
 	});
 }
 
-function endEditEdzoOrak() {
+function EndRelationshipForm() {
 	last_selected_relationship_values = ""; // nincs tulhatarozva, mert elofordulhat, hogy ketszer szerkeszti at, es akkor tenyleg kell torolni elotte
 
 	var ar = document.getElementById('orakedzoktermekselects').getElementsByTagName('INPUT');
+	var darabszam = 0;
     for (var x = 0; x < ar.length; x++) {
 		last_selected_relationship_values += ar[x].id + "=";
 		if (ar[x].type.toUpperCase()=='CHECKBOX') {
-			last_selected_relationship_values += ar[x].checked ? "1" : "0";
+			if (ar[x].checked) {
+				darabszam++;
+				last_selected_relationship_values += "1";
+			}
+			else {
+				last_selected_relationship_values += "0";
+			}
 		}
 
 		if (x < ar.length - 1)
 			last_selected_relationship_values += ",";
     }
 
-	hideEditEdzoOrak();
+	document.getElementById('querycount').innerHTML = darabszam;
+
+	HideRelationshipForm();
 }
 
-function hideEditEdzoOrak() {
+function HideRelationshipForm() {
 	var ablak = document.getElementById('popupEditEdzokOrak');
 	ablak.style.display = "none";
 }
