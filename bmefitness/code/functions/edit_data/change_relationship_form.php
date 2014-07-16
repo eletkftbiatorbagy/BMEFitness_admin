@@ -33,6 +33,19 @@
 		$selectedValue = $_POST["selectedObject"];
 		$table = $_POST["table"];
 
+		$last_relship = "";
+		if (isset($_POST["last_relship"]))
+			$last_relship = $_POST["last_relship"];
+
+		$last_relarray = array();
+		if (!empty($last_relship)) {
+			$sar = explode(",", $last_relship);
+			foreach ($sar as $arelship) {
+				$xar = explode("=", $arelship);
+				$last_relarray["key".$xar[0]] = $xar[1];
+			}
+		}
+
 		$tablename = "";
 		$select = "";
 		$where = "";
@@ -41,20 +54,6 @@
 		$owncolumn = ""; // a masik adatbazisban a sajt azonositonk neve
 		$othercolumn = "";  // a masik adatbazisban levo oszlop neve
 		$displayname = "";
-
-		$last_relship = "";
-		if (isset($_POST["last_relship"]))
-			$last_relship = $_POST["last_relship"];
-
-		$last_relarray = array();
-		if (!empty($last_relship)) {
-//			'1=1,2=0,3=1...' formatumu...
-			$sar = explode(",", $last_relship);
-			foreach ($sar as $arelship) {
-				$xar = explode("=", $arelship);
-				$last_relarray["key".$xar[0]] = $xar[1];
-			}
-		}
 
 		if ($table === "edzok") { // ebben az eseten az orak adatai kellenek...
 			$tablename = "fitness.orak";
@@ -66,7 +65,7 @@
 			$othercolumn = "ora";
 			$displayname = "rovid_nev";
 		}
-		else if ($table === "orak") { // ebben az esetben az edzok adatai kellenek...
+		else if ($table === "orakedzok") { // ebben az esetben az edzok adatai kellenek...
 			$tablename = "fitness.edzok";
 			$select = "id,rovid_nev";
 			$where = "edzok.aktiv";
@@ -76,8 +75,28 @@
 			$othercolumn = "edzo";
 			$displayname = "rovid_nev";
 		}
+		else if ($table === "oraktermek") { // ebben az esetben az edzok adatai kellenek...
+			$tablename = "fitness.termek";
+			$select = "id,nev";
+			$where = "";
+			$order = "termek.sorszam";
+			$otherdatabase = "fitness.oraterme";
+			$owncolumn = "ora";
+			$othercolumn = "terem";
+			$displayname = "nev";
+		}
+		else if ($table === "termek") { // ebben az esetben az edzok adatai kellenek...
+			$tablename = "fitness.orak";
+			$select = "id,rovid_nev";
+			$where = "orak.aktiv";
+			$order = "orak.sorszam";
+			$otherdatabase = "fitness.oraterme";
+			$owncolumn = "terem";
+			$othercolumn = "ora";
+			$displayname = "rovid_nev";
+		}
 
-		if (!empty($otherdatabase) && !empty($selectedValue) && !empty($tablename) && !empty($select) && !empty($where) && !empty($order) && !empty($othercolumn)) {
+		if (!empty($otherdatabase) && !empty($selectedValue) && !empty($tablename) && !empty($select) && !empty($othercolumn)) {
 			$otherdata = db_select_data($tablename, $select, $where, $order);
 			$otherarray = array();
 

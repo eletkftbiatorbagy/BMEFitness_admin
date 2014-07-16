@@ -41,7 +41,7 @@
 					<tr><td id=\"edit_edzo_rname\" class=\"td_right ".(is_null($object) || strlen($object->rovid_nev) == 0 ? "redcolor" : "")."\">Rövid név:</td><td class=\"td_left\"><input maxlength=\"10\" size=\"31\" type=\"text\" id=\"edzorname\" ".(is_null($object) ? "" : "value=\"".$object->rovid_nev."\" ")."onchange=\"editedField('edit_edzo_rname', 'edzorname', false, 10);\"></input></td></tr>\n
 					<tr><td id=\"edit_edzo_altitle\" class=\"td_right ".(is_null($object) || strlen($object->alcim) == 0 ? "redcolor" : "")."\">Alcím:</td><td class=\"td_left\"><input maxlength=\"30\" size=\"31\" type=\"text\" id=\"edzoaltitle\" ".(is_null($object) ? "" : "value=\"".$object->alcim."\" ")."onchange=\"editedField('edit_edzo_altitle', 'edzoaltitle', false, 30);\"></input></td></tr>\n
 					<tr><td id=\"edit_edzo_description\" class=\"td_right ".(is_null($object) || strlen($object->leiras) == 0 ? "redcolor" : "")."\">Leírás:</td><td class=\"td_left\"><textarea rows=\"5\" cols=\"29\" type=\"text\" id=\"edzodescription\" onchange=\"editedField('edit_edzo_description', 'edzodescription', false, 0);\">".(is_null($object) ? "" : $object->leiras)."</textarea></td></tr>\n
-					<tr><td class=\"td_right\">Órák:</td><td class=\"td_left\"><span id=\"querycount\">".$acount."</span> darab<span id=\"modositas_gomb\" onclick=\"ShowChangeRelationshipForm(this, 'edzok', ".(is_null($object) ? "0" : $object->id).");\">módosítás</span></td></tr>\n
+					<tr><td class=\"td_right\">Órák:</td><td class=\"td_left\"><span id=\"querycount\">".$acount."</span> darab<span class=\"modositas_gomb\" onclick=\"ShowChangeRelationshipForm(this, 'edzok', ".(is_null($object) ? "0" : $object->id).");\">módosítás</span></td></tr>\n
 					<tr>
 						<td id=\"edit_edzo_foto\" class=\"td_right ".(is_null($object) || strlen($object->foto) == 0 ? "redcolor" : "")."\">Fotó:
 						</td>
@@ -64,6 +64,13 @@
 			if (is_array($edzokoraicount) && count($edzokoraicount) > 0)
 				$acount = $edzokoraicount[0]->count;
 
+			// orahoz rendelt termek szama
+			$query = "SELECT count(*) FROM fitness.oraterme WHERE ora=".$oid.";";
+			$teremoraicount = db_query_object_array($query);
+			$atcount = 0;
+			if (is_array($teremoraicount) && count($teremoraicount) > 0)
+				$atcount = $teremoraicount[0]->count;
+
 			print "
 				<table class=\"edit_data_table\">
 					<tr><td id=\"edit_ora_name\" class=\"td_right ".(is_null($object) || strlen($object->nev) == 0 ? "redcolor" : "")."\">Név:</td><td class=\"td_left\"><input maxlength=\"25\" size=\"31\" type=\"text\" id=\"oraname\" ".(is_null($object) ? "" : "value=\"".$object->nev."\" ")."onchange=\"editedField('edit_ora_name', 'oraname', false, 25);\"></input></td></tr>\n
@@ -74,7 +81,8 @@
 					<tr><td id=\"edit_ora_description\" class=\"td_right ".(is_null($object) || strlen($object->leiras) == 0 ? "redcolor" : "")."\">Leírás:</td><td class=\"td_left\"><textarea rows=\"5\" cols=\"29\" type=\"text\" id=\"oradescription\" onchange=\"editedField('edit_ora_description', 'oradescription', false, 0);\">".(is_null($object) ? "" : $object->leiras)."</textarea></td></tr>\n
 					<tr><td class=\"td_right\">Belépődíj:</td><td class=\"td_left\"><input ".(is_null($object) || $object->belepodij == "t" ? "checked=\"true\" " : "")."type=\"checkbox\" size=\"23\" type=\"text\" id=\"orabelepodij\"></input></td></tr>\n
 					<tr><td id=\"edit_ora_color\" class=\"td_right\">Szín:</td><td class=\"td_left\"><input class=\"color\" maxlength=\"6\" size=\"31\" type=\"text\" id=\"oracolor\" ".(is_null($object) ? "" : "value=\"".(strval($object->color))."\" ")."></input></td></tr>\n
-					<tr><td class=\"td_right\">Edzők:</td><td class=\"td_left\"><span id=\"querycount\">".$acount."</span> darab<span id=\"modositas_gomb\" onclick=\"ShowChangeRelationshipForm(this, 'orak', ".(is_null($object) ? "0" : $object->id).");\">módosítás</span></td></tr>\n
+					<tr><td class=\"td_right\">Edzők:</td><td class=\"td_left\"><span id=\"querycount\">".$acount."</span> darab<span class=\"modositas_gomb\" onclick=\"ShowChangeRelationshipForm(this, 'orakedzok', ".(is_null($object) ? "0" : $object->id).");\">módosítás</span></td></tr>\n
+					<tr><td class=\"td_right\">Termek:</td><td class=\"td_left\"><span id=\"querycount2\">".$atcount."</span> darab<span class=\"modositas_gomb\" onclick=\"ShowChangeRelationshipForm(this, 'oraktermek', ".(is_null($object) ? "0" : $object->id).", true);\">módosítás</span></td></tr>\n
 					<tr>
 						<td id=\"edit_ora_foto\" class=\"td_right ".(is_null($object) || strlen($object->foto) == 0 ? "redcolor" : "")."\">Fotó:
 						</td>
@@ -96,11 +104,20 @@
 		}
 		else if ($edit == "termek") { // pontosabban egy uj terem letrehozasa
 			$imageForm = uploadImageForm("Fotó kiválasztása", "fileToUpload", "data_termek", "fitness", "termek", "foto", "id", $oid, 400, 300);
+
+			// orahoz rendelt edzok szama
+			$query = "SELECT count(*) FROM fitness.oraterme WHERE terem=".$oid.";";
+			$teremoraicount = db_query_object_array($query);
+			$acount = 0;
+			if (is_array($teremoraicount) && count($teremoraicount) > 0)
+				$acount = $teremoraicount[0]->count;
+
 			print "
 				<table class=\"edit_data_table\">
 					<tr><td id=\"edit_terem_name\" class=\"td_right ".(is_null($object) || strlen($object->nev) == 0 ? "redcolor" : "")."\">Név:</td><td class=\"td_left\"><input maxlength=\"20\" size=\"23\" type=\"text\" id=\"teremname\" ".(is_null($object) ? "" : "value=\"".$object->nev."\" ")."onchange=\"editedField('edit_terem_name', 'teremname', false, 20);\"></input></td></tr>\n
 					<tr><td id=\"edit_terem_altitle\" class=\"td_right ".(is_null($object) || strlen($object->alcim) == 0 ? "redcolor" : "")."\">Alcím:</td><td class=\"td_left\"><input maxlength=\"20\" size=\"23\" type=\"text\" id=\"teremaltitle\" ".(is_null($object) ? "" : "value=\"".$object->alcim."\" ")."onchange=\"editedField('edit_terem_altitle', 'teremaltitle', false, 20);\"></input></td></tr>\n
 					<tr><td class=\"td_right\">Foglalható:</td><td class=\"td_left\"><input ".(is_null($object) || $object->foglalhato == "t" ? "checked=\"true\" " : "")."type=\"checkbox\" size=\"23\" type=\"text\" id=\"teremavailable\"></input></td></tr>\n
+					<tr><td class=\"td_right\">Órák:</td><td class=\"td_left\"><span id=\"querycount\">".$acount."</span> darab<span class=\"modositas_gomb\" onclick=\"ShowChangeRelationshipForm(this, 'termek', ".(is_null($object) ? "0" : $object->id).");\">módosítás</span></td></tr>\n
 					<tr>
 						<td id=\"edit_terem_foto\" class=\"td_right ".(is_null($object) || strlen($object->foto) == 0 ? "redcolor" : "")."\">Fotó:
 						</td>

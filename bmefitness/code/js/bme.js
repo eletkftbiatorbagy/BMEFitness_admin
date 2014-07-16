@@ -6,6 +6,7 @@ var edit_data_object = null;
 var last_selected_edit_data = "edit_data_edzok_button";
 var last_selected_relationship_values = "";
 var last_selected_relationship_values2 = "";
+var last_selected_relationship_2 = false;
 
 // timetable, distress settings
 var last_selected_het = 0;
@@ -267,6 +268,7 @@ function begin_new_or_edit_data(data_type, a_edit_data_object) {
 
 	last_selected_relationship_values = "";
 	last_selected_relationship_values2 = "";
+	last_selected_relationship_2 = false;
 
 	// megprobaljuk atkonvertalni json-ra, ha nem sikerul, akkor ujat viszunk fel, nem a legjobb, de nem rossz...
 	var jsondata = null;
@@ -344,6 +346,9 @@ function end_new_or_edit_data(data_type, jsondata) {
 	var reltable = "";
 	var reldefaultcolumnname = "";
 	var relothercolumnname = "";
+	var reltable2 = "";
+	var reldefaultcolumnname2 = "";
+	var relothercolumnname2 = "";
 
 
 	/*
@@ -450,6 +455,10 @@ function end_new_or_edit_data(data_type, jsondata) {
 		reldefaultcolumnname = "ora";
 		relothercolumnname = "edzo";
 
+		reltable2 = "oraterme";
+		reldefaultcolumnname2 = "ora";
+		relothercolumnname2 = "terem";
+
 		// TODO: az oraknal, ha termet is akarunk allitani, akkor hasznalni kell ezt masodikkent: last_selected_relationship_values2
 	}
 	else if (data_type == "termek") {
@@ -475,9 +484,9 @@ function end_new_or_edit_data(data_type, jsondata) {
 			avalues += elvalaszto + "fitness.zero_if_null((SELECT max(sorszam) FROM fitness.termek)) + 1";
 		}
 
-//		reltable = "";
-//		reldefaultcolumnname = "";
-//		relothercolumnname = "";
+		reltable = "oraterme";
+		reldefaultcolumnname = "terem";
+		relothercolumnname = "ora";
 	}
 
 	if (error_message) {
@@ -496,13 +505,15 @@ function end_new_or_edit_data(data_type, jsondata) {
 				if (!uploadFile(json_decoded, data_type))
 					change_edit_data_site(data_type, json_decoded);
 
-			   var relid = Number(json_decoded.id);
+				var relid = Number(json_decoded.id);
 
 				if (last_selected_relationship_values && reltable && reldefaultcolumnname && relothercolumnname) {
 					$.post("code/functions/edit_data/change_relationship.php", {table: reltable, defaultcolumnname: reldefaultcolumnname, id: relid, othercolumnname: relothercolumnname, values: last_selected_relationship_values, random: Math.random()}, function(result) {
-//						if (result) {
-//							alert("van result jeeee: " + result);
-//						}
+					});
+				}
+
+				if (last_selected_relationship_values2 && reltable2 && reldefaultcolumnname2 && relothercolumnname2) {
+					$.post("code/functions/edit_data/change_relationship.php", {table: reltable2, defaultcolumnname: reldefaultcolumnname2, id: relid, othercolumnname: relothercolumnname2, values: last_selected_relationship_values2, random: Math.random()}, function(result) {
 					});
 				}
 			}
@@ -526,7 +537,10 @@ function changeSorszam(table_name_with_schema, id, ujsorszam) {
 	});
 }
 
-function ShowChangeRelationshipForm(button, table, edzo_or_ora_select_id) {
+function ShowChangeRelationshipForm(button, table, edzo_or_ora_select_id, islast2) {
+	if (islast2)
+		last_selected_relationship_2 = true;
+
 	var ablak = document.getElementById('popupEditEdzokOrak');
 
 	var bodyRect = document.body.getBoundingClientRect();
@@ -552,27 +566,35 @@ function ShowChangeRelationshipForm(button, table, edzo_or_ora_select_id) {
 }
 
 function EndRelationshipForm() {
-	last_selected_relationship_values = ""; // nincs tulhatarozva, mert elofordulhat, hogy ketszer szerkeszti at, es akkor tenyleg kell torolni elotte
+	var retvalues = "";
 
 	var ar = document.getElementById('orakedzoktermekselects').getElementsByTagName('INPUT');
 	var darabszam = 0;
     for (var x = 0; x < ar.length; x++) {
-		last_selected_relationship_values += ar[x].id + "=";
+		retvalues += ar[x].id + "=";
 		if (ar[x].type.toUpperCase()=='CHECKBOX') {
 			if (ar[x].checked) {
 				darabszam++;
-				last_selected_relationship_values += "1";
+				retvalues += "1";
 			}
 			else {
-				last_selected_relationship_values += "0";
+				retvalues += "0";
 			}
 		}
 
 		if (x < ar.length - 1)
-			last_selected_relationship_values += ",";
+			retvalues += ",";
     }
 
-	document.getElementById('querycount').innerHTML = darabszam;
+	if (last_selected_relationship_2)
+		document.getElementById('querycount2').innerHTML = darabszam;
+	else
+		document.getElementById('querycount').innerHTML = darabszam;
+
+	if (last_selected_relationship_2)
+		last_selected_relationship_values2 = retvalues;
+	else
+		last_selected_relationship_values = retvalues;
 
 	HideRelationshipForm();
 }

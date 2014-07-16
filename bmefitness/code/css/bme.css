@@ -246,7 +246,7 @@ div#popupEditEdzokOrak {
 	-webkit-border-radius: 5px;
 }
 
-span#modositas_gomb {
+span.modositas_gomb {
 	float: right;
 	margin-right: 25px;
 	color: #409915;
