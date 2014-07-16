@@ -58,8 +58,7 @@
 					print "<tr><td><b>Alcím:</b></td><td>".$object->alcim."</td></tr>";
 					print "<tr><td><b>Leírás:</b></td><td>".$object->leiras."</td></tr>";
 					print "<tr><td><b>Értékelés:</b></td><td>".$object->ertekeles."</td></tr>";
-//					print "<tr><td><b>Kép:</b></td><td>".($object->foto == "" ? "" : "<img src=\"data/data_edzok/".$object->foto.".jpg\">")."</td></tr>";
-					print "<tr><td><b>Kép:</b></td><td>".($object->foto == "" ? "" : "<img src=\"data/data_edzok/".$object->foto.".jpg\">")."</td></tr>";
+					print "<tr><td><b>Kép:</b></td><td>".($object->foto == "" ? "" : "<img style=\"max-height: 150px; max-width: 300px\" src=\"data/data_edzok/".$object->foto.".jpg\">")."</td></tr>";
 				print "</table>";
 			print "</p>";
 			print "<div onclick='begin_new_or_edit_data(\"".$tablename."\", ".$ojson.");' class=\"action_button\">Szerkesztés</div>";
