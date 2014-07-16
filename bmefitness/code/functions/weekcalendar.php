@@ -115,7 +115,7 @@
 
 		$naptarak = db_select_data("fitness.naptar, fitness.orak, fitness.edzok, fitness.termek", $select, $where, "naptar.tol");
 
-		printTable($weekdays, $naptarak, "begin_new_or_edit_naptar", "begin_new_or_edit_naptar");
+		printTable($weekdays, $naptarak, "begin_new_or_edit_naptar", "begin_new_or_edit_naptar", $weekplusz, "timetable");
 	}
 
 	/*!	Órák lefoglalásának időpontjai.
@@ -154,12 +154,12 @@
 
 		$naptarak = db_select_data("fitness.naptar, fitness.termek, fitness.felhasznalok", $select, $where, "naptar.tol");
 
-		printTable($weekdays, $naptarak, "begin_allow_distress", "begin_new_distress");
+		printTable($weekdays, $naptarak, "begin_allow_distress", "begin_new_distress", $weekplusz, "distress");
 	}
 
 	/*!	Tabla kirajzolasa a het napjai es naptarak alapjan
 	 */
-	function printTable($weekdays, $naptarak, $editfunction, $emptyfunction) {
+	function printTable($weekdays, $naptarak, $editfunction, $emptyfunction, $het, $hetchange) {
 		$percek = array();
 
 		// szerintem az osszes datum szoveget atkonvertalom rendes datumra
@@ -275,6 +275,9 @@
 		$mainapcellaszin = $GLOBALS['MAINAPCELLASZIN'];
 
 		print "<table class=\"calendartable\">\n";
+
+//		print "<br><br>";
+		print "<tr><td style=\"border: 0px;\" colspan=\"3\"><div onclick=\"change_het(0, '".$hetchange."');\" class=\"action_button\" style=\"width: 80px; float: left; margin-bottom: 10px;\">ma</div></td><td style=\"border: 0px;\" colspan=\"3\"><span onclick=\"change_het(".($het - 1).", '".$hetchange."');\" class=\"action_button\"><</span><span style=\"font-size: 2em;\"> ".(date("W") + $het).". hét </span><span onclick=\"change_het(".($het + 1).", '".$hetchange."');\" class=\"action_button\">></span></td></tr>\n";
 		// azert minusz egy, mert az elso oszlop az orak kiiratasa
 		for ($hours = $minhour - 1; $hours <= $maxhour; $hours++) {
 			print "<tr style=\"height: ".$tdheight."px;\">\n";

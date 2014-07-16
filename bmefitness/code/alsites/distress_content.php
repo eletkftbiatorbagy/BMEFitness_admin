@@ -13,8 +13,6 @@
 	if (isset($_POST['terem']))
 		$terem = $_POST['terem'];
 
-	print "<div onclick=\"change_het(0, 'distress');\" class=\"action_button\" style=\"width: 80px; float: left;\">ma</div><br>";
-	print "<span onclick=\"change_het(".($het - 1).", 'distress');\" class=\"action_button\"><</span><span style=\"font-size: 2em;\"> ".(date("W") + $het).". hét </span><span onclick=\"change_het(".($het + 1).", 'distress');\" class=\"action_button\">></span><br><br>";
 	printFoglalasokTable(false, $only_torolt, $terem, $het);
 
 	print "<br><table style=\"margin-left: auto; margin-right: auto;\">";
