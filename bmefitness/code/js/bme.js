@@ -757,14 +757,49 @@ function changeNaptarTartam() {
 
 }
 
-function changeEdzo() {
+function ChangedEdzoSelect() {
+	var edzoid = document.getElementById("naptaredzo").value;
 	var oraid = document.getElementById("naptarora").value;
-	alert("oraid: " + oraid);
+	var teremid = document.getElementById("naptarterem").value;
+
+	$.post("code/functions/edit_naptar/change_select_options.php", {edzo_id: edzoid , ora_id: oraid, terem_id: teremid, table: "orak", random: Math.random()}, function(result) {
+//		window.alert("elvileg kesz az orak, eredmeny: " + (result ? "OK" : "XAR") + " result: " + result);
+		if (result) {
+			$('#oraselect').html(result);
+
+			// ujra le kell kerdezni, mert 1: megvaltozhatott, 2: nem erhetoek el belul a valtozok...
+			var edzoid = document.getElementById("naptaredzo").value;
+			var oraid = document.getElementById("naptarora").value;
+			var teremid = document.getElementById("naptarterem").value;
+
+			$.post("code/functions/edit_naptar/change_select_options.php", {edzo_id: edzoid , ora_id: oraid, terem_id: teremid, table: "termek", random: Math.random()}, function(result2) {
+//				window.alert("elvileg kesz a termek, eredmeny: " + (result2 ? "OK" : "XAR") + " result: " + result2);
+				if (result2) {
+					$('#teremselect').html(result2);
+				}
+			});
+		}
+	});
 }
 
-function changeOra() {
+function ChangedOraSelect() {
 	var edzoid = document.getElementById("naptaredzo").value;
-	alert("edzoid: " + edzoid);
+	var oraid = document.getElementById("naptarora").value;
+	var teremid = document.getElementById("naptarterem").value;
+
+	$.post("code/functions/edit_naptar/change_select_options.php", {edzo_id: edzoid , ora_id: oraid, terem_id: teremid, table: "edzok", random: Math.random()}, function(result) {
+//		window.alert("elvileg kesz az edzok, eredmeny: " + (result ? "OK" : "XAR") + " result: " + result);
+		if (result) {
+			$('#edzoselect').html(result);
+		}
+	});
+
+	$.post("code/functions/edit_naptar/change_select_options.php", {edzo_id: edzoid , ora_id: oraid, terem_id: teremid, table: "termek", random: Math.random()}, function(result2) {
+//		window.alert("elvileg kesz a termek, eredmeny: " + (result2 ? "OK" : "XAR") + " result: " + result2);
+		if (result2) {
+			$('#teremselect').html(result2);
+		}
+	});
 }
 
 function checkIsMinute(field) {

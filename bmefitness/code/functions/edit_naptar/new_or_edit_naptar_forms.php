@@ -134,22 +134,25 @@
 			<input size=\"5\" type=\"text\" value=\"".$totime."\" name=\"selected_to_time\" id=\"selected_to_time\" readonly onClick=\"DestroyCalendar(); GetTimePicker(this, true);\"></input></td></tr>\n
 	";
 
-	// orak
-	print "<tr><td class=\"td_right\">Óra:</td><td class=\"td_left\"><select id=\"naptarora\" onchange=\"changeEdzo();\">\n";
-	print "<option value=\"0\">Óra kiválasztása...</option>\n";
-	foreach ($orak as $ora)
-	print "<option".((!is_null($object) && $object->ora == $ora->id) ? " selected=\"selected\"" : "")." value=\"".$ora->id."\">".$ora->nev." (".$ora->id.")</option>\n";
-	print "</select></td></tr>\n";
+
+	// modositani kell a printeket change_select_options.php fajban is
 
 	// edzok
-	print "<tr><td class=\"td_right\">Edző:</td><td class=\"td_left\"><select id=\"naptaredzo\" onchange=\"changeOra();\">\n";
+	print "<tr><td class=\"td_right\">Edző:</td><td id=\"edzoselect\" class=\"td_left\"><select id=\"naptaredzo\" onchange=\"ChangedEdzoSelect();\">\n";
 	print "<option value=\"0\">Edző kiválasztása...</option>\n";
 	foreach ($edzok as $edzo)
 		print "<option".((!is_null($object) && $object->edzo == $edzo->id) ? " selected=\"selected\"" : "")." value=\"".$edzo->id."\">".$edzo->vnev." ".$edzo->knev." (".$edzo->id.")</option>\n";
 	print "</select></td></tr>\n";
 
+	// orak
+	print "<tr><td class=\"td_right\">Óra:</td><td id=\"oraselect\" class=\"td_left\"><select id=\"naptarora\" onchange=\"ChangedOraSelect();\">\n";
+	print "<option value=\"0\">Óra kiválasztása...</option>\n";
+	foreach ($orak as $ora)
+	print "<option".((!is_null($object) && $object->ora == $ora->id) ? " selected=\"selected\"" : "")." value=\"".$ora->id."\">".$ora->nev." (".$ora->id.")</option>\n";
+	print "</select></td></tr>\n";
+
 	// termek
-	print "<tr><td class=\"td_right\">Terem:</td><td class=\"td_left\"><select id=\"naptarterem\">\n";
+	print "<tr><td class=\"td_right\">Terem:</td><td id=\"teremselect\" class=\"td_left\"><select id=\"naptarterem\">\n";
 	print "<option>Terem kiválasztása...</option>\n";
 	foreach ($termek as $terem)
 		print "<option".(((!is_null($object) && $object->terem == $terem->id) || ($terem_id == $terem->id)) ? " selected=\"selected\"" : "")." value=\"".$terem->id."\">".$terem->nev." (".$terem->id.")</option>\n";
