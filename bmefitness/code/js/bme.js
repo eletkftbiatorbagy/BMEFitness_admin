@@ -4,6 +4,8 @@ var minnaptarlength = 10;
 var edit_data_content = null;
 var edit_data_object = null;
 var last_selected_edit_data = "edit_data_edzok_button";
+var last_selected_relationship_values = "";
+var last_selected_relationship_values2 = "";
 
 // timetable, distress settings
 var last_selected_het = 0;
@@ -263,6 +265,9 @@ function begin_new_or_edit_data(data_type, a_edit_data_object) {
 	if (!data_type)
 		return;
 
+	last_selected_relationship_values = "";
+	last_selected_relationship_values2 = "";
+
 	// megprobaljuk atkonvertalni json-ra, ha nem sikerul, akkor ujat viszunk fel, nem a legjobb, de nem rossz...
 	var jsondata = null;
 	if (edit_data_object)
@@ -336,6 +341,10 @@ function end_new_or_edit_data(data_type, jsondata) {
 	var elvalaszto = ",";
 	var allelvalaszto = "<!±!>";
 
+	var reltable = "";
+	var reldefaultcolumnname = "";
+	var relothercolumnname = "";
+
 
 	/*
 	 Figyelem, ha all, vagy updatelni szeretnénk, akkor az allelvalszot kell hasznalni a sima miatt.
@@ -394,6 +403,10 @@ function end_new_or_edit_data(data_type, jsondata) {
 			avalueIDs += elvalaszto + "sorszam";
 			avalues += elvalaszto + "fitness.zero_if_null((SELECT max(sorszam) FROM fitness.edzok)) + 1";
 		}
+
+		reltable = "foglalkozas";
+		reldefaultcolumnname = "edzo";
+		relothercolumnname = "ora";
 	}
 	else if (data_type == "orak") {
 		if (!$('#oraname').val())
@@ -432,6 +445,12 @@ function end_new_or_edit_data(data_type, jsondata) {
 			avalueIDs += elvalaszto + "sorszam";
 			avalues += elvalaszto + "fitness.zero_if_null((SELECT max(sorszam) FROM fitness.orak)) + 1";
 		}
+
+		reltable = "foglalkozas";
+		reldefaultcolumnname = "ora";
+		relothercolumnname = "edzo";
+
+		// TODO: az oraknal, ha termet is akarunk allitani, akkor hasznalni kell ezt masodikkent: last_selected_relationship_values2
 	}
 	else if (data_type == "termek") {
 		if (!$('#teremname').val())
@@ -455,6 +474,10 @@ function end_new_or_edit_data(data_type, jsondata) {
 			avalueIDs += elvalaszto + "sorszam";
 			avalues += elvalaszto + "fitness.zero_if_null((SELECT max(sorszam) FROM fitness.termek)) + 1";
 		}
+
+//		reltable = "";
+//		reldefaultcolumnname = "";
+//		relothercolumnname = "";
 	}
 
 	if (error_message) {
@@ -465,15 +488,25 @@ function end_new_or_edit_data(data_type, jsondata) {
 	if (schema && avalueIDs && avalues) {
 		$.post("code/functions/insert_or_update_data.php", {data_id: aid, table_name: "fitness", schema: schema, value_ids: avalueIDs, values: avalues, returning: returningValues, random: Math.random()}, function(result) {
 //			window.alert("elvileg kesz, eredmeny: " + (result ? "OK" : "XAR") + " result: " + result);
-				if (result) {
+			if (result) {
 				// at kell alakitani json objektte
 				var json_decoded = JSON.parse(result);
 
 				// talan ha ide teszem, akkor megvarja a feltoltest mielott frissit
 				if (!uploadFile(json_decoded, data_type))
 					change_edit_data_site(data_type, json_decoded);
+
+			   var relid = Number(json_decoded.id);
+
+				if (last_selected_relationship_values && reltable && reldefaultcolumnname && relothercolumnname) {
+					$.post("code/functions/edit_data/change_relationship.php", {table: reltable, defaultcolumnname: reldefaultcolumnname, id: relid, othercolumnname: relothercolumnname, values: last_selected_relationship_values, random: Math.random()}, function(result) {
+//						if (result) {
+//							alert("van result jeeee: " + result);
+//						}
+					});
+				}
 			}
-	   });
+		});
 	}
 
 	disablePopup();
@@ -491,6 +524,53 @@ function changeSorszam(table_name_with_schema, id, ujsorszam) {
 		   change_main_site("edit_data");
 		}
 	});
+}
+
+function showEditEdzoOrak(button, edzo_or_ora_select_id) {
+	var ablak = document.getElementById('popupEditEdzokOrak');
+
+	var bodyRect = document.body.getBoundingClientRect();
+    var elemRect = button.getBoundingClientRect();
+    var elemtop = elemRect.top - bodyRect.top;
+	var elemleft = elemRect.left - bodyRect.left;
+	var elemheight = elemRect.top - elemRect.bottom;
+
+
+	$.post("code/functions/edit_data/change_selected_edzoorak_form.php", {selectedObject: edzo_or_ora_select_id, random: Math.random()}, function(result) {
+		if (result) {
+		   last_selected_relationship_values = "";
+		   $('#editEzokOrakContent').html(result);
+		   var absa = document.getElementById('editEzokOrakContent').getBoundingClientRect();
+		   var calheight = absa.bottom - absa.top;
+		   var minuszheight = (elemheight / 2) - (calheight / 2);
+
+		   ablak.style.left = (elemRect.right + 10) + "px";
+		   ablak.style.top = (elemtop + minuszheight) + "px";
+		   ablak.style.display = "inline";
+		}
+	});
+}
+
+function endEditEdzoOrak() {
+	last_selected_relationship_values = ""; // nincs tulhatarozva, mert elofordulhat, hogy ketszer szerkeszti at, es akkor tenyleg kell torolni elotte
+
+	var ar = document.getElementById('orakedzoktermekselects').getElementsByTagName('INPUT');
+    for (var x = 0; x < ar.length; x++) {
+		last_selected_relationship_values += ar[x].id + "=";
+		if (ar[x].type.toUpperCase()=='CHECKBOX') {
+			last_selected_relationship_values += ar[x].checked ? "1" : "0";
+		}
+
+		if (x < ar.length - 1)
+			last_selected_relationship_values += ",";
+    }
+
+	hideEditEdzoOrak();
+}
+
+function hideEditEdzoOrak() {
+	var ablak = document.getElementById('popupEditEdzokOrak');
+	ablak.style.display = "none";
 }
 
 
@@ -644,6 +724,16 @@ function changeNaptarTartam() {
 		egyeniperctext.style.visibility = "hidden";
 	}
 
+}
+
+function changeEdzo() {
+	var oraid = document.getElementById("naptarora").value;
+	alert("oraid: " + oraid);
+}
+
+function changeOra() {
+	var edzoid = document.getElementById("naptaredzo").value;
+	alert("edzoid: " + edzoid);
 }
 
 function checkIsMinute(field) {

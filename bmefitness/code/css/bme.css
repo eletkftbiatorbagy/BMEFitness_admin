@@ -121,6 +121,12 @@ div.termekscrollcontent {
 	max-height: 858px;
 }
 
+div.orakedzoktermekselectcontent {
+	overflow: hidden;
+	overflow-y: scroll;
+	max-height: 180px;
+}
+
 div.edit_data_available {
 	margin: 0px;
 	padding: 10px;
@@ -222,17 +228,42 @@ div#lastmessagediv {
 	margin-left: auto;
 }
 
-table#eszkozok {
+div#popupEditEdzokOrak {
+	text-align: left;
+	display: none;
+	position: fixed;
+	_position: absolute; /* hack for internet explorer 6*/
+	max-height: 200px;
+	min-width: 100px;
+	max-width: 100px;
+	background: #FFFFFF;
+	border: 2px solid #cecece;
+	z-index: 3;
+	padding: 12px;
+	padding-bottom: 5px;
 	font-size: 13px;
-	font-family: "Times New Roman";
-	border-color: black;
-	border-style: solid;
-	border-width: 2px;
-	
-	box-shadow: 3px 3px 10px #700;
-	-webkit-box-shadow: 3px 3px 10px #888;
-	-moz-box-shadow: 3px 3px 10px #334455;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
 }
 
+span#modositas_gomb {
+	float: right;
+	margin-right: 25px;
+	color: #409915;
+	cursor: pointer;
+}
+
+span.relationship_ok {
+	color: #409915;
+	text-decoration: none;
+	margin-left: 5px;
+	cursor: pointer;
+}
+
+span.relationship_cancel {
+	color: black;
+	text-decoration: none;
+	float: right;
+	margin-right: 5px;
+	cursor: pointer;
+}

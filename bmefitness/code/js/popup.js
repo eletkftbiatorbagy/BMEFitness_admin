@@ -29,6 +29,7 @@ function disablePopup() {
 		popupStatus = 0;
 		DestroyCalendar();
 		DestroyTimePicker();
+		hideEditEdzoOrak();
 	}
 }
 

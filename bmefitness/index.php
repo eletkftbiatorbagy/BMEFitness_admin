@@ -152,6 +152,10 @@
 		</div>
 
 
+		<div id="popupEditEdzokOrak" class="">
+			<p class="contactArea" id="editEzokOrakContent" style="padding-bottom: 0px;"></p>
+		</div>
+
 	<!-- oldal teruletei -->
 		<div class="menu" id="menu"></div>
 		<div id="acontent">

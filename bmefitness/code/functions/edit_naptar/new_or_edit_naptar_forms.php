@@ -135,15 +135,15 @@
 	";
 
 	// orak
-	print "<tr><td class=\"td_right\">Óra:</td><td class=\"td_left\"><select id=\"naptarora\">\n";
-	print "<option>Óra kiválasztása...</option>\n";
+	print "<tr><td class=\"td_right\">Óra:</td><td class=\"td_left\"><select id=\"naptarora\" onchange=\"changeEdzo();\">\n";
+	print "<option value=\"0\">Óra kiválasztása...</option>\n";
 	foreach ($orak as $ora)
 	print "<option".((!is_null($object) && $object->ora == $ora->id) ? " selected=\"selected\"" : "")." value=\"".$ora->id."\">".$ora->nev." (".$ora->id.")</option>\n";
 	print "</select></td></tr>\n";
 
 	// edzok
-	print "<tr><td class=\"td_right\">Edző:</td><td class=\"td_left\"><select id=\"naptaredzo\">\n";
-	print "<option>Edző kiválasztása...</option>\n";
+	print "<tr><td class=\"td_right\">Edző:</td><td class=\"td_left\"><select id=\"naptaredzo\" onchange=\"changeOra();\">\n";
+	print "<option value=\"0\">Edző kiválasztása...</option>\n";
 	foreach ($edzok as $edzo)
 		print "<option".((!is_null($object) && $object->edzo == $edzo->id) ? " selected=\"selected\"" : "")." value=\"".$edzo->id."\">".$edzo->vnev." ".$edzo->knev." (".$edzo->id.")</option>\n";
 	print "</select></td></tr>\n";
