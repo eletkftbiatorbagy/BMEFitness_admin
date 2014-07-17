@@ -117,7 +117,7 @@ div.termekscrollcontent {
 /*	background-color: #ededed; */
 
 	overflow: hidden;
-	overflow-y: scroll;
+	overflow-y: auto;
 	max-height: 858px;
 }
 
