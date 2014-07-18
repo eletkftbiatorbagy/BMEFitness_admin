@@ -76,7 +76,7 @@
 					<tr><td id=\"edit_ora_name\" class=\"td_right ".(is_null($object) || strlen($object->nev) == 0 ? "redcolor" : "")."\">Név:</td><td class=\"td_left\"><input maxlength=\"25\" size=\"31\" type=\"text\" id=\"oraname\" ".(is_null($object) ? "" : "value=\"".$object->nev."\" ")."onchange=\"editedField('edit_ora_name', 'oraname', false, 25); editValueFiled('orak');\"></input></td></tr>\n
 					<tr><td id=\"edit_ora_rname\" class=\"td_right ".(is_null($object) || strlen($object->rovid_nev) == 0 ? "redcolor" : "")."\">Rövid név:</td><td class=\"td_left\"><input maxlength=\"10\" size=\"31\" type=\"text\" id=\"orarname\" ".(is_null($object) ? "" : "value=\"".$object->rovid_nev."\" ")."onchange=\"editedField('edit_ora_rname', 'orarname', false, 10); editedFieldValue('orarname');\"></input></td></tr>\n
 					<tr><td id=\"edit_ora_altitle\" class=\"td_right ".(is_null($object) || strlen($object->alcim) == 0 ? "redcolor" : "")."\">Alcím:</td><td class=\"td_left\"><input maxlength=\"30\" size=\"31\" type=\"text\" id=\"oraaltitle\" ".(is_null($object) ? "" : "value=\"".$object->alcim."\" ")."onchange=\"editedField('edit_ora_altitle', 'oraaltitle', false, 30); editedFieldValue('oraaltitle');\"></input></td></tr>\n
-					<tr><td id=\"edit_ora_perc\" class=\"td_right ".(is_null($object) || strlen($object->perc) == 0 ? "redcolor" : "")."\">Perc:</td><td class=\"td_left\"><input maxlength=\"3\" size=\"31\" type=\"text\" id=\"oraperc\" ".(is_null($object) ? "" : "value=\"".$object->perc."\" ")."onchange=\"editedField('edit_ora_perc', 'oraperc', false, 3);\"></input></td></tr>\n
+					<tr><td id=\"edit_ora_perc\" class=\"td_right\">Perc:</td><td class=\"td_left\"><input maxlength=\"3\" size=\"31\" type=\"text\" id=\"oraperc\" ".(is_null($object) ? "" : "value=\"".$object->perc."\" ")."></input></td></tr>\n
 					<tr><td id=\"edit_ora_maxletszam\" class=\"td_right ".(is_null($object) || strlen($object->max_letszam) == 0 ? "redcolor" : "")."\">Max létszám:</td><td class=\"td_left\"><input maxlength=\"3\" size=\"31\" type=\"text\" id=\"oramaxletszam\" ".(is_null($object) ? "" : "value=\"".$object->max_letszam."\" ")."onchange=\"editedField('edit_ora_maxletszam', 'oramaxletszam', false, 3);\"></input></td></tr>\n
 					<tr><td id=\"edit_ora_description\" class=\"td_right ".(is_null($object) || strlen($object->leiras) == 0 ? "redcolor" : "")."\">Leírás:</td><td class=\"td_left\"><textarea rows=\"5\" cols=\"29\" type=\"text\" id=\"oradescription\" onchange=\"editedField('edit_ora_description', 'oradescription', false, 0);\">".(is_null($object) ? "" : $object->leiras)."</textarea></td></tr>\n
 					<tr><td class=\"td_right\">Belépődíj:</td><td class=\"td_left\"><input ".(is_null($object) || $object->belepodij == "t" ? "checked=\"true\" " : "")."type=\"checkbox\" size=\"23\" type=\"text\" id=\"orabelepodij\"></input></td></tr>\n
@@ -92,7 +92,7 @@
 						</td>
 					</tr>\n
 					<tr>
-					<td id=\"edit_ora_logo\" class=\"td_right ".(is_null($object) || strlen($object->foto) == 0 ? "redcolor" : "")."\">Logó:
+					<td id=\"edit_ora_logo\" class=\"td_right\">Logó:
 						</td>
 						<td class=\"td_left\">"
 							.$logoForm."\n"

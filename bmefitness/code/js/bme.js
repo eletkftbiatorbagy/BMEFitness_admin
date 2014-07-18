@@ -465,8 +465,8 @@ function end_new_or_edit_data(data_type, jsondata) {
 			error_message += (error_message ? "\nAz óra rövid nevét meg kell adni!" : "Az óra rövid nevét meg kell adni!");
 		if (!$('#oraaltitle').val())
 			error_message += (error_message ? "\nAz óra alcímét meg kell adni!" : "Az óra alcímét meg kell adni!");
-		if (!$('#oraperc').val())
-			error_message += (error_message ? "\nA percet meg kell adni!" : "A percet meg kell adni!");
+//		if (!$('#oraperc').val())
+//			error_message += (error_message ? "\nA percet meg kell adni!" : "A percet meg kell adni!");
 		if (!$('#oramaxletszam').val())
 			error_message += (error_message ? "\nA maximum létszámot meg kell adni!" : "A maximum létszámot meg kell adni!");
 		if (!$('#oradescription').val())
@@ -483,8 +483,8 @@ function end_new_or_edit_data(data_type, jsondata) {
 
 		if ((!jsondata && !fileselected) || (jsondata && jsondata.foto === "" && !fileselected))
 			error_message +=  (error_message ? "\nKötelező megadni az óra fényképét!" : "Kötelező megadni az óra fényképét!");
-		if ((!jsondata && !logoselected) || (jsondata && jsondata.foto === "" && !logoselected))
-			error_message +=  (error_message ? "\nKötelező megadni az óra logóját!" : "Kötelező megadni az óra logóját!");
+//		if ((!jsondata && !logoselected) || (jsondata && jsondata.foto === "" && !logoselected))
+//			error_message +=  (error_message ? "\nKötelező megadni az óra logóját!" : "Kötelező megadni az óra logóját!");
 
 		schema = "orak";
 		avalueIDs = "nev" + elvalaszto + "rovid_nev" + elvalaszto + "alcim" + elvalaszto + "leiras" + elvalaszto + "max_letszam" + elvalaszto + "perc" + elvalaszto + "belepodij" + elvalaszto + "color";
@@ -572,7 +572,7 @@ function editedFieldValue(fieldname) {
 	if (edited_data_fields.indexOf(fieldname) == -1) {
 		edited_data_fields.push(fieldname);
 	}
-	
+
 	// ha benne van es ures a cucc, akkor meg kivesszuk...
 	var field = document.getElementById(fieldname);
 	if (field && !field.value) {
