@@ -9,6 +9,10 @@
 	print "<div id=\"leftcontent\">";
 	$result = db_select_data($table, "*", "", $tablename.".sorszam");
 
+	$lastSelectedData = 0; // mindig az elsot valassza ki, ha nincs...
+	if (isset($_POST["lastSelectedData"]))
+	$lastSelectedData = $_POST["lastSelectedData"];
+
 	if (!is_null($result)) {
 //		print "Korábban létrehozott adatok:<br>";
 		print "<div class=\"scrollcontent\">";
@@ -16,10 +20,6 @@
 			print "<div style=\"color: red;\">Nincs adat hozzáadva</div><br>";
 		}
 		else {
-			$lastSelectedData = 0; // mindig az elsot valassza ki, ha nincs...
-			if (isset($_POST["lastSelectedData"]))
-				$lastSelectedData = $_POST["lastSelectedData"];
-
 			for ($i = 0; $i < count($result); $i++) {
 				$jsonobject = json_from_object($result[$i]);
 				// a js mar egybol tudja, hogy ez egy object, szoval ott nem kell atalakitani...
@@ -48,7 +48,17 @@
 		// visszaalakitjuk, hogy tudjuk hasznalni...
 		$jsonobject = $_POST["selectedObject"];
 		$object = object_from_array($jsonobject);
+	}
+	else if (!is_null($result) && is_array($result) && count($result) > 0) {
+		foreach ($result as $data) {
+			if ($data->sorszam == ($lastSelectedData + 1)) {
+				$object = $data;
+				break;
+			}
+		}
+	}
 
+	if ($object) {
 		// megint at kell alakitani, hogy jo legyen a new_or_edit_data_forms.php-ban...
 		$ojson = json_from_object($object);
 
