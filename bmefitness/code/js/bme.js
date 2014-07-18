@@ -3,6 +3,7 @@ var minnaptarlength = 10;
 
 var edit_data_content = null;
 var edit_data_object = null;
+var edited_data_fields = [];
 var last_selected_edit_data = "edit_data_edzok_button";
 var last_selected_relationship_values = "";
 var last_selected_relationship_values2 = "";
@@ -266,6 +267,11 @@ function begin_new_or_edit_data(data_type, a_edit_data_object) {
 	if (!data_type)
 		return;
 
+	// toroljuk teljes egeszeben a letrehozott array-t
+	while (edited_data_fields.length > 0) {
+		edited_data_fields.pop();
+	}
+
 	last_selected_relationship_values = "";
 	last_selected_relationship_values2 = "";
 	last_selected_relationship_2 = false;
@@ -304,23 +310,62 @@ function begin_new_or_edit_data(data_type, a_edit_data_object) {
 	if (jsondata) {
 		$('#neworeditlink').html("Módosítás");
 		$.post("code/functions/edit_data/new_or_edit_data_forms.php", {type: data_type, selectedObject: jsondata, random: Math.random()}, function(result) {
-		   $('#newOrEditArea').html(result);
-		   // elore beallitjuk a linket az ujnak, mert ugyebar egybol ujat lehet hozzaadni, es nem szerkeszteni a regit...
-		   $('#neworeditlink').attr("onclick", "end_new_or_edit_data('" + data_type + "', " + jsondata + ");");
+			$('#newOrEditArea').html(result);
+			// elore beallitjuk a linket az ujnak, mert ugyebar egybol ujat lehet hozzaadni, es nem szerkeszteni a regit...
+			$('#neworeditlink').attr("onclick", "end_new_or_edit_data('" + data_type + "', " + jsondata + ");");
 			if (data_type == "orak")
-			   jscolor.init();
-		   popupDiv('popupNewOrEdit');
+				jscolor.init();
+			popupDiv('popupNewOrEdit');
+
+			// megnezzuk, hogy voltak-e mar szerkesztve a mezok, mert ha igen, akkor le kell titani a szerkesztesuket...
+			var field = document.getElementById('edzorname');
+			if (field && field.value)
+				editedFieldValue('edzorname');
+			field = document.getElementById('edzoaltitle');
+			if (field && field.value)
+				editedFieldValue('edzoaltitle');
+
+			field = document.getElementById('orarname');
+			if (field && field.value)
+				editedFieldValue('orarname');
+			field = document.getElementById('oraaltitle');
+			if (field && field.value)
+				editedFieldValue('oraaltitle');
+
+			field = document.getElementById('teremaltitle');
+			if (field && field.value)
+				editedFieldValue('teremaltitle');
 		});
 	}
 	else {
 		$('#neworeditlink').html("Létrehozás");
 		$.post("code/functions/edit_data/new_or_edit_data_forms.php", {type: data_type, random: Math.random()}, function(result) {
-		   $('#newOrEditArea').html(result);
-		   // elore beallitjuk a linket az ujnak, mert ugyebar egybol ujat lehet hozzaadni, es nem szerkeszteni a regit...
-		   $('#neworeditlink').attr("onclick", "end_new_or_edit_data('" + data_type + "');");
-		   if (data_type == "orak")
-			   jscolor.init();
-		   popupDiv('popupNewOrEdit');
+			$('#newOrEditArea').html(result);
+			// elore beallitjuk a linket az ujnak, mert ugyebar egybol ujat lehet hozzaadni, es nem szerkeszteni a regit...
+			$('#neworeditlink').attr("onclick", "end_new_or_edit_data('" + data_type + "');");
+			if (data_type == "orak")
+				jscolor.init();
+
+			popupDiv('popupNewOrEdit');
+
+			// megnezzuk, hogy voltak-e mar szerkesztve a mezok, mert ha igen, akkor le kell titani a szerkesztesuket...
+			var field = document.getElementById('edzorname');
+			if (field && field.value)
+				editedFieldValue('edzorname');
+			field = document.getElementById('edzoaltitle');
+			if (field && field.value)
+				editedFieldValue('edzoaltitle');
+
+			field = document.getElementById('orarname');
+			if (field && field.value)
+				editedFieldValue('orarname');
+			field = document.getElementById('oraaltitle');
+			if (field && field.value)
+				editedFieldValue('oraaltitle');
+
+			field = document.getElementById('teremaltitle');
+			if (field && field.value)
+				editedFieldValue('teremaltitle');
 		});
 	}
 }
@@ -521,6 +566,140 @@ function end_new_or_edit_data(data_type, jsondata) {
 	}
 
 	disablePopup();
+}
+
+function editedFieldValue(fieldname) {
+	if (edited_data_fields.indexOf(fieldname) == -1) {
+		edited_data_fields.push(fieldname);
+	}
+	
+	// ha benne van es ures a cucc, akkor meg kivesszuk...
+	var field = document.getElementById(fieldname);
+	if (field && !field.value) {
+		var index = edited_data_fields.indexOf(fieldname);
+		if (index > -1)
+			edited_data_fields.splice(index, 1);
+	}
+}
+
+// jo hulye nevet adtam neki :)
+function editValueFiled(adat) {
+	// ezekbol a mezokbol szamitodik ki
+	var data1 = null;
+	var data2 = null;
+
+	// ezekbe a mazokbe szamitodik ki
+	var value1 = null;
+	var value2 = null;
+
+	// value length
+	var lenght1 = 0;
+	var lenght2 = 0;
+
+	var display1 = null;
+	var display2 = null;
+
+	if (adat === "edzok") {
+		data1 = document.getElementById('edzovname');
+		data2 = document.getElementById('edzokname');
+
+		if (edited_data_fields.indexOf('edzorname') == -1) // ha meg nem volt szerkesztve, akkor hozzarendeljuk
+			value1 = document.getElementById('edzorname');
+		if (edited_data_fields.indexOf('edzoaltitle') == -1) // ha meg nem volt szerkesztve, akkor hozzarendeljuk
+			value2 = document.getElementById('edzoaltitle');
+
+		lenght1 = 10;
+		lenght2 = 30;
+
+		display1 = document.getElementById('edit_edzo_rname');
+		display2 = document.getElementById('edit_edzo_altitle');
+	}
+	else if (adat === "orak") {
+		data1 = document.getElementById('oraname');
+
+		if (edited_data_fields.indexOf('orarname') == -1) // ha meg nem volt szerkesztve, akkor hozzarendeljuk
+			value1 = document.getElementById('orarname');
+		if (edited_data_fields.indexOf('oraaltitle') == -1) // ha meg nem volt szerkesztve, akkor hozzarendeljuk
+			value2 = document.getElementById('oraaltitle');
+
+		lenght1 = 10;
+		lenght2 = 30;
+
+		display1 = document.getElementById('edit_ora_rname');
+		display2 = document.getElementById('edit_ora_altitle');
+	}
+	else if (adat === "termek") {
+		data1 = document.getElementById('teremname');
+
+		if (edited_data_fields.indexOf('teremaltitle') == -1) // ha meg nem volt szerkesztve, akkor hozzarendeljuk
+			value1 = document.getElementById('teremaltitle');
+
+		lenght1 = 20;
+
+		display1 = document.getElementById('edit_terem_altitle');
+	}
+
+	if (value1) {
+		if (data1 && data2) {
+			if (data1.value.length + data2.value.length > lenght1) {
+				var alenght = parseInt(lenght1 / 2);
+				value1.value = data1.value.substring(0, alenght) + data2.value.substring(0, alenght);
+			}
+			else {
+				value1.value = data1.value + data2.value;
+			}
+		}
+		else if (data1) {
+			if (data1.value.length > lenght1) {
+				value1.value = data1.value.substring(0, lenght1);
+			}
+			else {
+				value1.value = data1.value;
+			}
+		}
+		else if (data2) {
+			if (data2.value.length > lenght1) {
+				value1.value = data2.value.substring(0, lenght1);
+			}
+			else {
+				value1.value = data2.value;
+			}
+		}
+
+		if (value1.value && display1)
+			display1.className = display1.className.replace(/\bredcolor\b/,'');
+	}
+
+	if (value2) {
+		if (data1 && data2) {
+			if (data1.value.length + data2.value.length > lenght2) {
+				var alenght2 = parseInt(lenght2 / 2);
+				value2.value = data1.value.substring(0, alenght2) + data2.value.substring(0, alenght2);
+			}
+			else {
+				value2.value = data1.value + data2.value;
+			}
+		}
+		else if (data1) {
+			if (data1.value.length > lenght2) {
+				value2.value = data1.value.substring(0, lenght2);
+			}
+			else {
+				value2.value = data1.value;
+			}
+		}
+		else if (data2) {
+			if (data2.value.length > lenght2) {
+				value2.value = data2.value.substring(0, lenght2);
+			}
+			else {
+				value2.value = data2.value;
+			}
+		}
+
+		if (value2.value && display2)
+			display2.className = display2.className.replace(/\bredcolor\b/,'');
+	}
 }
 
 function fileUploadCompleted(json_decoded, data_type) {
