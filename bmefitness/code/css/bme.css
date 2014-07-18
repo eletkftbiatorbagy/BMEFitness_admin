@@ -91,7 +91,7 @@ div#leftcontent {
 }
 
 div#rightcontent {
-	padding: 10px;
+/*	padding: 10px; */
 	margin-left: 220px;
 }
 
@@ -133,7 +133,8 @@ div.edit_data_available {
 	background-color: #333334;
 	color: white;
 	position: relative;
-	border-bottom: 1px solid #409915;
+	border-bottom: 3px solid #ededed;
+	border-top: 3px solid #ededed;
 	cursor: pointer;
 	text-align: left;
 }
@@ -266,4 +267,11 @@ span.relationship_cancel {
 	float: right;
 	margin-right: 5px;
 	cursor: pointer;
+}
+
+div.selected_data {
+/*	border-style: dashed double; */
+	border-style: solid;
+	border-width: 3px;
+	border-color: red;
 }

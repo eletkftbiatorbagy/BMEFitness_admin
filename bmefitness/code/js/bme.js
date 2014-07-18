@@ -4,6 +4,7 @@ var minnaptarlength = 10;
 var edit_data_content = null;
 var edit_data_object = null;
 var edited_data_fields = [];
+var last_selected_data = 0; // az adatoknal a kivalszatott adat div-je
 var last_selected_edit_data = "edit_data_edzok_button";
 var last_selected_relationship_values = "";
 var last_selected_relationship_values2 = "";
@@ -62,13 +63,13 @@ function change_main_site(site) {
 			if (!aobject)
 				aobject = "";
 
-			$.get(contentSite, { selectedObject: aobject, random: Math.random() }, function (result) {
+			$.post(contentSite, { lastSelectedData: last_selected_data, selectedObject: aobject, random: Math.random() }, function (result) {
 				if (result) {
 					$('#content').html(result);
 				}
 			});
 
-			$.post(settingsSite, { random: Math.random() }, function (result) {
+			$.post(settingsSite, { lastSelectedData: last_selected_data, random: Math.random() }, function (result) {
 				if (result) {
 					$('#settings').html(result);
 
@@ -98,13 +99,13 @@ function change_main_site(site) {
 			});
 		}
 		else {
-			$.get(contentSite, { random: Math.random() }, function (result) {
+			$.get(contentSite, { lastSelectedData: last_selected_data, random: Math.random() }, function (result) {
 				if (result) {
 					$('#content').html(result);
 				}
 			});
 
-			$.post(settingsSite, { random: Math.random() }, function (result) {
+			$.post(settingsSite, { lastSelectedData: last_selected_data, random: Math.random() }, function (result) {
 				if (result) {
 				  $('#settings').html(result);
 				}
@@ -123,9 +124,12 @@ function nullify_edit_data_object() {
 	edit_data_object = null;
 }
 
-function change_edit_data_site(site, object) {
+function change_edit_data_site(lastSelectedData, site, object) {
 	if (!site) // check: "", null, undefined, 0, false, NaN
 		return;
+
+	if (lastSelectedData >= 0)
+		last_selected_data = lastSelectedData;
 
 	edit_data_content = site;
 	edit_data_object = object;
@@ -548,7 +552,7 @@ function end_new_or_edit_data(data_type, jsondata) {
 
 				// talan ha ide teszem, akkor megvarja a feltoltest mielott frissit
 				if (!uploadFile(json_decoded, data_type))
-					change_edit_data_site(data_type, json_decoded);
+					change_edit_data_site(-1, data_type, json_decoded);
 
 				var relid = Number(json_decoded.id);
 
@@ -703,10 +707,14 @@ function editValueFiled(adat) {
 }
 
 function fileUploadCompleted(json_decoded, data_type) {
-	change_edit_data_site(data_type, json_decoded);
+	change_edit_data_site(-1, data_type, json_decoded);
 }
 
-function changeSorszam(table_name_with_schema, id, ujsorszam) {
+function changeSorszam(changeSelectedDataValue, table_name_with_schema, id, ujsorszam) {
+	last_selected_data += changeSelectedDataValue;
+	if (last_selected_data < 0)
+		last_selected_data = 0;
+	
 //	window.alert("change sorszam table: " + table + ", id: " + id + ", ujsorszam: " + ujsorszam);
 	$.post("code/functions/edit_data/change_sorszam.php", {table: table_name_with_schema, id: id, ujsorszam: ujsorszam, random: Math.random()}, function(result) {
 //		window.alert("elvileg kesz, eredmeny: " + result);

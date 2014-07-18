@@ -10,12 +10,16 @@
 	$result = db_select_data($table, "*", "", $tablename.".sorszam");
 
 	if (!is_null($result)) {
-		print "Korábban létrehozott adatok:<br>";
+//		print "Korábban létrehozott adatok:<br>";
 		print "<div class=\"scrollcontent\">";
 		if (count($result) == 0) {
 			print "<div style=\"color: red;\">Nincs adat hozzáadva</div><br>";
 		}
 		else {
+			$lastSelectedData = 0; // mindig az elsot valassza ki, ha nincs...
+			if (isset($_POST["lastSelectedData"]))
+				$lastSelectedData = $_POST["lastSelectedData"];
+
 			for ($i = 0; $i < count($result); $i++) {
 				$jsonobject = json_from_object($result[$i]);
 				// a js mar egybol tudja, hogy ez egy object, szoval ott nem kell atalakitani...
@@ -23,13 +27,13 @@
 				$downsorszam = $result[$i]->sorszam + 1; // lefele mozgatjuk
 
 				if (!is_null($jsonobject)) {
-					print "<div class=\"edit_data_available\" onclick='change_edit_data_site(\"".$tablename."\", ".$jsonobject.");'><b>".$result[$i]->nev."</b>";
+					print "<div class=\"edit_data_available".($i == $lastSelectedData ? " selected_data" : "")."\" onclick='change_edit_data_site(".$i.", \"".$tablename."\", ".$jsonobject.");'><b>".$result[$i]->nev."</b>";
 					if ($i > 0) // csak akkor van velfele nyil, ha van is felette valami...
-						print "<div onclick='changeSorszam(\"".$table."\", \"".$result[$i]->id."\", \"".$upsorszam."\"); window.event.stopPropagation();' style=\"float: right;\"><img src=\"code/images/icon_accordion_arrow_up.png\"></div>";
+						print "<div onclick='changeSorszam(-1, \"".$table."\", \"".$result[$i]->id."\", \"".$upsorszam."\"); window.event.stopPropagation();' style=\"float: right;\"><img src=\"code/images/icon_accordion_arrow_up.png\"></div>";
 					print "<br>";
 					print "<span style=\"font-size: smaller;\"><i>".$result[$i]->alcim."</i></span>";
 					if ($i < count($result) - 1) // csak akkor jelenitjuk meg, ha van is alatta valami
-						print "<div onclick='changeSorszam(\"".$table."\", \"".$result[$i]->id."\", \"".$downsorszam."\"); window.event.stopPropagation();' style=\"float: right;\"><img src=\"code/images/icon_accordion_arrow_down.png\"></div>";
+						print "<div onclick='changeSorszam(1, \"".$table."\", \"".$result[$i]->id."\", \"".$downsorszam."\"); window.event.stopPropagation();' style=\"float: right;\"><img src=\"code/images/icon_accordion_arrow_down.png\"></div>";
 					print "</div>";
 				}
 			}
@@ -40,9 +44,9 @@
 	print "</div>";
 
 
-	if (isset($_GET["selectedObject"]) && $_GET["selectedObject"] != "") {
+	if (isset($_POST["selectedObject"]) && $_POST["selectedObject"] != "") {
 		// visszaalakitjuk, hogy tudjuk hasznalni...
-		$jsonobject = $_GET["selectedObject"];
+		$jsonobject = $_POST["selectedObject"];
 		$object = object_from_array($jsonobject);
 
 		// megint at kell alakitani, hogy jo legyen a new_or_edit_data_forms.php-ban...
