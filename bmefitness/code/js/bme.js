@@ -987,6 +987,42 @@ function ChangedOraSelect() {
 			$('#teremselect').html(result2);
 		}
 	});
+
+	$.post("code/functions/edit_naptar/get_selected_ora_perc.php", {ora_id: oraid, random: Math.random()}, function(result3) {
+		if (result3) {
+			var aperc = Number(result3);
+//			alert("result: " + result3 + "\naperc: " + aperc);
+			if (aperc > 0) {
+				var nit = document.getElementById("naptaroratartam");
+
+				var van = false;
+				for (var i = 0; i < nit.options.length; i++) {
+					if (aperc == nit.options[i].value) {
+						van = true;
+						nit.options[i].selected = true;
+					}
+					else {
+						nit.options[i].selected = false;
+					}
+				}
+
+				var egyenipercinput = document.getElementById("naptaregyeniperc");
+				var egyeniperctext = document.getElementById("naptarperctext");
+				egyenipercinput.style.visibility = "hidden";
+				egyeniperctext.style.visibility = "hidden";
+
+				if (!van) {
+					nit.options[0].selected = true;
+
+					egyenipercinput.style.visibility = "visible";
+					egyeniperctext.style.visibility = "visible";
+					egyenipercinput.value = aperc;
+				}
+
+				calculateMeddig();
+			}
+		}
+	});
 }
 
 function checkIsMinute(field) {
