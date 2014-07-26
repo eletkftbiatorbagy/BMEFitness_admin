@@ -65,7 +65,15 @@ function change_main_site(site) {
 
 			$.post(contentSite, { lastSelectedData: last_selected_data, selectedObject: aobject, random: Math.random() }, function (result) {
 				if (result) {
-					$('#content').html(result);
+					var ar = result.split("<±>");
+					if (ar) {
+						if (ar.length > 0) {
+							$('#content').html(ar[0]);
+						}
+						if (ar.length > 1) {
+							edit_data_object = ar[1];
+						}
+					}
 				}
 			});
 

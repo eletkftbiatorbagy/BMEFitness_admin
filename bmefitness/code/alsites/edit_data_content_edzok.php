@@ -77,7 +77,7 @@
 				print "</table>";
 			print "</p>";
 			print "<div onclick='begin_new_or_edit_data(\"".$tablename."\", ".$ojson.");' class=\"action_button\">Szerkesztés</div>";
-		print "</div>";
+		print "</div><±>".$ojson;
 	}
 	else {
 		print "<div id=\"rightcontent\"><br><div style=\"color: red; padding: 5px; border-color: black; border-width: 1px; border-style: solid;\">Nincs adat kiválasztva</div></div>";
