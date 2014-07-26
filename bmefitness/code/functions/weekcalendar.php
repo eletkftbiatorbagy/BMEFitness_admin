@@ -154,12 +154,12 @@
 
 		$naptarak = db_select_data("fitness.naptar, fitness.termek, fitness.felhasznalok", $select, $where, "naptar.tol");
 
-		printTable($weekdays, $naptarak, "begin_allow_distress", "begin_new_distress", $weekplusz, "distress");
+		printTable($weekdays, $naptarak, "begin_allow_distress", "begin_new_distress", $weekplusz, "distress", true);
 	}
 
 	/*!	Tabla kirajzolasa a het napjai es naptarak alapjan
 	 */
-	function printTable($weekdays, $naptarak, $editfunction, $emptyfunction, $het, $hetchange) {
+	function printTable($weekdays, $naptarak, $editfunction, $emptyfunction, $het, $hetchange, $jelmagyarazat = false) {
 		$percek = array();
 
 		// szerintem az osszes datum szoveget atkonvertalom rendes datumra
@@ -472,6 +472,16 @@
 			}
 			print "</tr>\n";
 		}
+
+		if ($jelmagyarazat) {
+			print "<tr style=\" margin-left: auto; margin-right: auto; text-align: center;\"><td style=\"border: 0px;\" colspan=\"8\"><table style=\"margin: auto;\">";
+			print "<tr><td style=\"border: 0px; text-align: center;\"><div style=\"padding: 5px; margin: 5px; background-color: #99FF75;\">El van fogadva a foglalás, és nem ütközik másik eseménnyel.</div></td>";
+			print "<td style=\"border: 0px; text-align: center;\"><div style=\"padding: 5px; margin: 5px; background-color: yellow;\">El van fogadva a foglalás, de ütközik egy másik eseménnyel.</div></td></tr>";
+			print "<tr><td style=\"border: 0px; text-align: center;\"><div style=\"padding: 5px; margin: 5px; background-color: red; color: white;\">Nincs elfogadva a foglalás, és ütközik egy másik eseménnyel.</div>";
+			print "<td style=\"border: 0px; text-align: center;\"><div style=\"padding: 5px; margin: 5px; background-color: white;\">Nincs elfogadva a foglalás, és nem ütközik másik eseménnyel.</div></tr>";
+			print "</table></td></tr>";
+		}
+
 		print "</table>\n";
 	}
 
