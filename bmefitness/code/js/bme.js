@@ -9,6 +9,10 @@ var last_selected_edit_data = "edit_data_edzok_button";
 var last_selected_relationship_values = "";
 var last_selected_relationship_values2 = "";
 var last_selected_relationship_2 = false;
+var last_updated_edit_data = 0;
+var last_updated_edit_data_type = "";
+var frissitesre_varok_szama = 0;
+var frissitettek_szama = 0;
 
 // timetable, distress settings
 var last_selected_het = 0;
@@ -396,7 +400,7 @@ function begin_new_or_edit_data(data_type, a_edit_data_object) {
  * \param vanfoto				opcionális paraméter, igaz, ha szerkesztjük az adatot, és van már létrehozva fotója
  * \param vanlogo				opcionális paraméter, igaz, ha szerkesztjük az adatot, és van már létrehozva logója
  */
-function end_new_or_edit_data(data_type, objectid, vanfoto) {
+function end_new_or_edit_data(data_type, objectid, vanfoto, vanlogo) {
 	if (!data_type)
 		return;
 
@@ -562,24 +566,43 @@ function end_new_or_edit_data(data_type, objectid, vanfoto) {
 	}
 
 	if (schema && avalueIDs && avalues) {
+		frissitesre_varok_szama = 0;
+		frissitettek_szama = 0;
+		last_updated_edit_data_type = data_type;
 		$.post("code/functions/insert_or_update_data.php", {data_id: aid, table_name: "fitness", schema: schema, value_ids: avalueIDs, values: avalues, returning: returningValues, random: Math.random()}, function(result) {
 //			window.alert("elvileg kesz, eredmeny: " + (result ? "OK" : "XAR") + " result: " + result);
 			if (result) {
 				// at kell alakitani json objektte
 				var json_decoded = JSON.parse(result);
-				var relid = json_decoded.id;
+				last_updated_edit_data = json_decoded.id;
 
-				// talan ha ide teszem, akkor megvarja a feltoltest mielott frissit
-				if (!uploadFile(json_decoded, data_type))
-					change_edit_data_site(data_type, relid); // azert van itt -1, hogy ne valtozzon az utoljara kivasztott ID, bar az meg hulyeseg, mivel ha ujat viszunk fel, akkor annak az id-je kell, ha meg regit valtoztatunk, akkor meg annak ugysem valtozik
+				if (fileselected)
+					frissitesre_varok_szama++;
+				if (logoselected)
+					frissitesre_varok_szama++;
+
+				// itt nem kell leellenorizni, hogy fel van-e mar toltve a kep, mert a funkcioban ellenorzom le
+				if (!uploadFile(json_decoded, data_type)) {
+					// ide nem kell semmi
+				}
 
 				if (last_selected_relationship_values && reltable && reldefaultcolumnname && relothercolumnname) {
-					$.post("code/functions/edit_data/change_relationship.php", {table: reltable, defaultcolumnname: reldefaultcolumnname, id: relid, othercolumnname: relothercolumnname, values: last_selected_relationship_values, random: Math.random()}, function(result) {
+					frissitesre_varok_szama++;
+					$.post("code/functions/edit_data/change_relationship.php", {table: reltable, defaultcolumnname: reldefaultcolumnname, id: last_updated_edit_data, othercolumnname: relothercolumnname, values: last_selected_relationship_values, random: Math.random()}, function(result) {
+						frissitettek_szama++;
+						if (frissitettek_szama == frissitesre_varok_szama) {
+							change_edit_data_site(last_updated_edit_data_type, last_updated_edit_data);
+						}
 					});
 				}
 
 				if (last_selected_relationship_values2 && reltable2 && reldefaultcolumnname2 && relothercolumnname2) {
-					$.post("code/functions/edit_data/change_relationship.php", {table: reltable2, defaultcolumnname: reldefaultcolumnname2, id: relid, othercolumnname: relothercolumnname2, values: last_selected_relationship_values2, random: Math.random()}, function(result) {
+					frissitesre_varok_szama++;
+					$.post("code/functions/edit_data/change_relationship.php", {table: reltable2, defaultcolumnname: reldefaultcolumnname2, id: last_updated_edit_data, othercolumnname: relothercolumnname2, values: last_selected_relationship_values2, random: Math.random()}, function(result) {
+						frissitettek_szama++;
+						if (frissitettek_szama == frissitesre_varok_szama) {
+							change_edit_data_site(last_updated_edit_data_type, last_updated_edit_data);
+						}
 					});
 				}
 			}
@@ -724,7 +747,11 @@ function editValueFiled(adat) {
 }
 
 function fileUploadCompleted(objectid, data_type) {
-	change_edit_data_site(data_type, objectid);
+	frissitettek_szama++;
+	if (frissitettek_szama == frissitesre_varok_szama) {
+		change_edit_data_site(last_updated_edit_data_type, last_updated_edit_data);
+	}
+	//change_edit_data_site(data_type, objectid);
 }
 
 function changeSorszam(changeSelectedDataValue, table_name_with_schema, id, ujsorszam) {
