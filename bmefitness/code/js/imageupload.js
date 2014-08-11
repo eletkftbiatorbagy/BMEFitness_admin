@@ -243,11 +243,12 @@ function uploadComplete(evt) {
 		}
 	}
 	// most mar mindig van response, nem kell else
-
+/*
 	if (typeIsLogo)
 		json_decoded.logo = afileid;
 	else
 		json_decoded.foto = afileid;
+ */
 
 	completeUploads--;
 	/* ezzel talan sorrendben lehetne oket feltolteni
@@ -309,6 +310,6 @@ function endUploadFile(message, log_level) {
 	document.getElementById('uploadImage').src = imgFile;
 
 	centerPopup(); // ujra kozepre kell helyeztetni, mert mar eleve latszik, es valtozik a tartalma...
-	fileUploadCompleted(json_decoded, data_type);
+	fileUploadCompleted(json_decoded.id, data_type);
 	clearAll();
 }

@@ -56,6 +56,8 @@
 		// kiertekeles...
 		$sikeres = false;
 		$objectum = NULL;
+		$ojson = -1;
+
 		// megint at kell alakitani, hogy jo legyen a new_or_edit_data_forms.php-ban..
 		if (is_array($result_object) && count($result_object) > 0) {
 			$ojson = json_from_object($result_object[0]);

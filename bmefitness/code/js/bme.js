@@ -2,9 +2,9 @@
 var minnaptarlength = 10;
 
 var edit_data_content = null;
-var edit_data_object = null;
+//var edit_data_object = null;
 var edited_data_fields = [];
-var last_selected_data = 0; // az adatoknal a kivalszatott adat div-je
+var last_selected_edit_data_ids = [];
 var last_selected_edit_data = "edit_data_edzok_button";
 var last_selected_relationship_values = "";
 var last_selected_relationship_values2 = "";
@@ -59,25 +59,18 @@ function change_main_site(site) {
 
 	if (settingsSite && contentSite) {
 		if (site == "edit_data") {
-			var aobject = edit_data_object;
+			var aobject = last_selected_edit_data_ids[edit_data_content];
 			if (!aobject)
 				aobject = "";
 
-			$.post(contentSite, { lastSelectedData: last_selected_data, selectedObject: aobject, random: Math.random() }, function (result) {
+			$.post(contentSite, { selectedObject: aobject, random: Math.random() }, function (result) {
 				if (result) {
-					var ar = result.split("<±>");
-					if (ar) {
-						if (ar.length > 0) {
-							$('#content').html(ar[0]);
-						}
-						if (ar.length > 1) {
-							edit_data_object = ar[1];
-						}
-					}
+					$('#content').html(result);
 				}
+
 			});
 
-			$.post(settingsSite, { lastSelectedData: last_selected_data, random: Math.random() }, function (result) {
+			$.post(settingsSite, { random: Math.random() }, function (result) {
 				if (result) {
 					$('#settings').html(result);
 
@@ -107,13 +100,13 @@ function change_main_site(site) {
 			});
 		}
 		else {
-			$.get(contentSite, { lastSelectedData: last_selected_data, random: Math.random() }, function (result) {
+			$.get(contentSite, { random: Math.random() }, function (result) {
 				if (result) {
 					$('#content').html(result);
 				}
 			});
 
-			$.post(settingsSite, { lastSelectedData: last_selected_data, random: Math.random() }, function (result) {
+			$.post(settingsSite, { random: Math.random() }, function (result) {
 				if (result) {
 				  $('#settings').html(result);
 				}
@@ -129,18 +122,23 @@ function change_main_site(site) {
 }
 
 function nullify_edit_data_object() {
-	edit_data_object = null;
+//	edit_data_object = null;
+
+	// toroljuk teljes egeszeben a letrehozott array-t
+	while (last_selected_edit_data_ids.length > 0) {
+		last_selected_edit_data_ids.pop();
+	}
 }
 
-function change_edit_data_site(lastSelectedData, site, object) {
+function change_edit_data_site(site, editedobjectid) {
 	if (!site) // check: "", null, undefined, 0, false, NaN
 		return;
 
-	if (lastSelectedData >= 0)
-		last_selected_data = lastSelectedData;
-
 	edit_data_content = site;
-	edit_data_object = object;
+	if (editedobjectid) {
+//		edit_data_object = editedobjectid;
+		last_selected_edit_data_ids[site] = editedobjectid;
+	}
 	change_main_site("edit_data");
 }
 
@@ -273,7 +271,7 @@ function editedDateTimeFormatField(field, checkfield) {
 
 /*!
  * \param data_type			kötelező paraméter, hogy tudjuk mit szerkesztünk.
- * \param edit_data_object		opcionális paraméter, csak akkor kell, ha valtoztatni akarom az adatatot es nem ujat letrehozni...
+ * \param a_edit_data_object	opcionális paraméter, csak akkor kell, ha valtoztatni akarom az adatatot es nem ujat letrehozni...
  */
 function begin_new_or_edit_data(data_type, a_edit_data_object) {
 	if (!data_type)
@@ -288,29 +286,24 @@ function begin_new_or_edit_data(data_type, a_edit_data_object) {
 	last_selected_relationship_values2 = "";
 	last_selected_relationship_2 = false;
 
-	// megprobaljuk atkonvertalni json-ra, ha nem sikerul, akkor ujat viszunk fel, nem a legjobb, de nem rossz...
-	var jsondata = null;
-	if (edit_data_object)
-		jsondata = JSON.stringify(a_edit_data_object);
-
 	var title = null;
 	if (data_type == "info") {
 		title = "Infó adatok szerkesztése";
 	}
 	else if (data_type == "edzok") {
-		if (jsondata)
+		if (a_edit_data_object)
 			title = "Edző szerkesztése";
 		else
 			title = "Új edző adatai";
 	}
 	else if (data_type == "orak") {
-		if (jsondata)
+		if (a_edit_data_object)
 			title = "Óra szerkesztése";
 		else
 			title = "Új óra adatai";
 	}
 	else if (data_type == "termek") {
-		if (jsondata)
+		if (a_edit_data_object)
 			title = "Terem szerkesztése";
 		else
 			title = "Új terem adatai";
@@ -319,12 +312,27 @@ function begin_new_or_edit_data(data_type, a_edit_data_object) {
 	if (title)
 		$('.editTitle').html(title);
 
-	if (jsondata) {
+	if (a_edit_data_object) {
 		$('#neworeditlink').html("Módosítás");
-		$.post("code/functions/edit_data/new_or_edit_data_forms.php", {type: data_type, selectedObject: jsondata, random: Math.random()}, function(result) {
-			$('#newOrEditArea').html(result);
+		$.post("code/functions/edit_data/new_or_edit_data_forms.php", {type: data_type, selectedObject: a_edit_data_object, random: Math.random()}, function(result) {
+			var vanfoto = false;
+			var vanlogo = false;
+
+			var ar = result.split("<!±!>");
+			if (ar) {
+				if (ar.length > 0) {
+					$('#newOrEditArea').html(ar[0]);
+				}
+				if (ar.length > 1) {
+					var fotos = ar[1];
+					var fotosdata = fotos.split(",");
+					vanfoto = (fotosdata.length > 0 && fotosdata[0] == "true");
+					vanlogo = (fotosdata.length > 1 && fotosdata[1] == "true");
+				}
+			}
+
 			// elore beallitjuk a linket az ujnak, mert ugyebar egybol ujat lehet hozzaadni, es nem szerkeszteni a regit...
-			$('#neworeditlink').attr("onclick", "end_new_or_edit_data('" + data_type + "', " + jsondata + ");");
+			$('#neworeditlink').attr("onclick", "end_new_or_edit_data('" + data_type + "', " + a_edit_data_object + ", " + vanfoto + ", " + vanlogo + ");");
 			if (data_type == "orak")
 				jscolor.init();
 			popupDiv('popupNewOrEdit');
@@ -384,9 +392,11 @@ function begin_new_or_edit_data(data_type, a_edit_data_object) {
 
 /*!
  * \param data_type			kötelező paraméter, hogy tudjuk mit szerkesztünk.
- * \param jsondata			opcionális paraméter, csak akkor kell, ha valtoztatni akarom az adatatot es nem ujat letrehozni...
+ * \param objectid			opcionális paraméter, csak akkor kell, ha valtoztatni akarom az adatatot es nem ujat letrehozni...
+ * \param vanfoto				opcionális paraméter, igaz, ha szerkesztjük az adatot, és van már létrehozva fotója
+ * \param vanlogo				opcionális paraméter, igaz, ha szerkesztjük az adatot, és van már létrehozva logója
  */
-function end_new_or_edit_data(data_type, jsondata) {
+function end_new_or_edit_data(data_type, objectid, vanfoto) {
 	if (!data_type)
 		return;
 
@@ -413,8 +423,8 @@ function end_new_or_edit_data(data_type, jsondata) {
 	 Mert az UPDATE az szétbontja részekre és csak utána saját maga teszi össze vesszővel elválasztva
 	*/
 
-	if (jsondata) {
-		aid = jsondata.id;
+	if (objectid) {
+		aid = objectid;
 		elvalaszto = allelvalaszto;
 	}
 
@@ -453,15 +463,15 @@ function end_new_or_edit_data(data_type, jsondata) {
 		if ($('#edzoaltitle').val() && $('#edzoaltitle').val().length > 30)
 			error_message += (error_message ? "\nAz edző alcíme maximum 30 karakter lehet!" : "Az edző alcíme maximum 30 karakter lehet!");
 
-		if ((!jsondata && !fileselected) || (jsondata && jsondata.foto === "" && !fileselected))
+		if ((!objectid && !fileselected) || (!vanfoto && !fileselected))
 			error_message +=  (error_message ? "\nKötelező megadni az edző fényképét!" : "Kötelező megadni az edző fényképét!");
 
 		schema = "edzok";
 		avalueIDs = "vnev" + elvalaszto + "knev" + elvalaszto + "rovid_nev" + elvalaszto + "alcim" + elvalaszto + "leiras";
 		avalues = "'" + $('#edzovname').val() + "'" + elvalaszto + "'" + $('#edzokname').val() + "'" + elvalaszto + "'" + $('#edzorname').val() + "'" + elvalaszto + "'" + $('#edzoaltitle').val() + "'" + elvalaszto + "'" + $('#edzodescription').val() + "'";
-		returningValues = "id" + elvalaszto + "foto" + elvalaszto + avalueIDs + elvalaszto + "ertekeles"; // az ertekeles nem modosithato, de meg kell jeleniteni, azert van itt....
+		returningValues = "id" + elvalaszto + "foto";
 		// hozzafuzzuk a sorszamot, ha ujat akarunk felvinni, mert amugy a sorszam nem valtozik
-		if (!jsondata) {
+		if (!objectid) {
 			avalueIDs += elvalaszto + "sorszam";
 			avalues += elvalaszto + "fitness.zero_if_null((SELECT max(sorszam) FROM fitness.edzok)) + 1";
 		}
@@ -493,17 +503,17 @@ function end_new_or_edit_data(data_type, jsondata) {
 		if ($('#oracolor').val() && $('#oracolor').val().length != 6)
 			error_message += (error_message ? "\nAz óra színe csak 6 karakter lehet!\npéldául fekete: 000000, fehér: FFFFFF" : "Az óra színe csak 6 karakter lehet!\npéldául fekete: 000000, fehér: FFFFFF");
 
-		if ((!jsondata && !fileselected) || (jsondata && jsondata.foto === "" && !fileselected))
+		if ((!objectid && !fileselected) || (!vanfoto && !fileselected))
 			error_message +=  (error_message ? "\nKötelező megadni az óra fényképét!" : "Kötelező megadni az óra fényképét!");
-//		if ((!jsondata && !logoselected) || (jsondata && jsondata.foto === "" && !logoselected))
+//		if ((!objectid && !logoselected) || (vanlogo && !logoselected))
 //			error_message +=  (error_message ? "\nKötelező megadni az óra logóját!" : "Kötelező megadni az óra logóját!");
 
 		schema = "orak";
 		avalueIDs = "nev" + elvalaszto + "rovid_nev" + elvalaszto + "alcim" + elvalaszto + "leiras" + elvalaszto + "max_letszam" + elvalaszto + "perc" + elvalaszto + "belepodij" + elvalaszto + "color";
 		avalues = "'" + $('#oraname').val() + "'" + elvalaszto + "'" + $('#orarname').val() + "'" + elvalaszto + "'" + $('#oraaltitle').val() + "'" + elvalaszto + "'" + $('#oradescription').val() + "'" + elvalaszto + "'" + $('#oramaxletszam').val() + "'" + elvalaszto + "'" + $('#oraperc').val() + "'" + elvalaszto + "'" + ($('#orabelepodij').prop("checked") ? "t" : "f") + "'" + elvalaszto + "'" + $('#oracolor').val() + "'";
-		returningValues = "id" + elvalaszto + "foto" + elvalaszto + "logo" + elvalaszto + avalueIDs;
+		returningValues = "id" + elvalaszto + "foto" + elvalaszto + "logo";
 		// hozzafuzzuk a sorszamot, ha ujat akarunk felvinni, mert amugy a sorszam nem valtozik
-		if (!jsondata) {
+		if (!objectid) {
 			avalueIDs += elvalaszto + "sorszam";
 			avalues += elvalaszto + "fitness.zero_if_null((SELECT max(sorszam) FROM fitness.orak)) + 1";
 		}
@@ -516,7 +526,7 @@ function end_new_or_edit_data(data_type, jsondata) {
 		reldefaultcolumnname2 = "ora";
 		relothercolumnname2 = "terem";
 
-		// TODO: az oraknal, ha termet is akarunk allitani, akkor hasznalni kell ezt masodikkent: last_selected_relationship_values2
+		// INFO: az oraknal, ha termet is akarunk allitani, akkor hasznalni kell ezt masodikkent: last_selected_relationship_values2
 	}
 	else if (data_type == "termek") {
 		if (!$('#teremname').val())
@@ -528,15 +538,15 @@ function end_new_or_edit_data(data_type, jsondata) {
 		if ($('#teremaltitle').val() && $('#teremaltitle').val().length > 20)
 			error_message += (error_message ? "\nA terem alcíme maximum 20 karakter lehet!" : "A terem alcíme maximum 20 karakter lehet!");
 
-		if ((!jsondata && !fileselected) || (jsondata && jsondata.foto === "" && !fileselected))
+		if ((!objectid && !fileselected) || (!vanfoto && !fileselected))
 			error_message +=  (error_message ? "\nKötelező megadni a terem fényképét!" : "Kötelező megadni a terem fényképét!");
 
 		schema = "termek";
 		avalueIDs = "nev" + elvalaszto + "alcim" + elvalaszto + "foglalhato";
 		avalues = "'" + $('#teremname').val() + "'" + elvalaszto + "'" + $('#teremaltitle').val() + "'" + elvalaszto + "'" + ($('#teremavailable').prop("checked") ? "t" : "f") + "'";
-		returningValues = "id" + elvalaszto + "foto" + elvalaszto + avalueIDs;
+		returningValues = "id" + elvalaszto + "foto";
 		// hozzafuzzuk a sorszamot, ha ujat akarunk felvinni, mert amugy a sorszam nem valtozik
-		if (!jsondata) {
+		if (!objectid) {
 			avalueIDs += elvalaszto + "sorszam";
 			avalues += elvalaszto + "fitness.zero_if_null((SELECT max(sorszam) FROM fitness.termek)) + 1";
 		}
@@ -557,12 +567,11 @@ function end_new_or_edit_data(data_type, jsondata) {
 			if (result) {
 				// at kell alakitani json objektte
 				var json_decoded = JSON.parse(result);
+				var relid = json_decoded.id;
 
 				// talan ha ide teszem, akkor megvarja a feltoltest mielott frissit
 				if (!uploadFile(json_decoded, data_type))
-					change_edit_data_site(-1, data_type, json_decoded);
-
-				var relid = Number(json_decoded.id);
+					change_edit_data_site(data_type, relid); // azert van itt -1, hogy ne valtozzon az utoljara kivasztott ID, bar az meg hulyeseg, mivel ha ujat viszunk fel, akkor annak az id-je kell, ha meg regit valtoztatunk, akkor meg annak ugysem valtozik
 
 				if (last_selected_relationship_values && reltable && reldefaultcolumnname && relothercolumnname) {
 					$.post("code/functions/edit_data/change_relationship.php", {table: reltable, defaultcolumnname: reldefaultcolumnname, id: relid, othercolumnname: relothercolumnname, values: last_selected_relationship_values, random: Math.random()}, function(result) {
@@ -714,15 +723,15 @@ function editValueFiled(adat) {
 	}
 }
 
-function fileUploadCompleted(json_decoded, data_type) {
-	change_edit_data_site(-1, data_type, json_decoded);
+function fileUploadCompleted(objectid, data_type) {
+	change_edit_data_site(data_type, objectid);
 }
 
 function changeSorszam(changeSelectedDataValue, table_name_with_schema, id, ujsorszam) {
-	last_selected_data += changeSelectedDataValue;
+/*	last_selected_data += changeSelectedDataValue;
 	if (last_selected_data < 0)
 		last_selected_data = 0;
-	
+*/
 //	window.alert("change sorszam table: " + table + ", id: " + id + ", ujsorszam: " + ujsorszam);
 	$.post("code/functions/edit_data/change_sorszam.php", {table: table_name_with_schema, id: id, ujsorszam: ujsorszam, random: Math.random()}, function(result) {
 //		window.alert("elvileg kesz, eredmeny: " + result);

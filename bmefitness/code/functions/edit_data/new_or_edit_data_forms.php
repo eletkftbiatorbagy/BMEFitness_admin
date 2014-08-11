@@ -7,14 +7,14 @@
 
 		require_once("../functions.php");
 		require_once("../database.php");
-
+/*
 		if (isset($_POST["selectedObject"])) {
 			// visszaalakitjuk, hogy tudjuk hasznalni...
 			$jsonobject = $_POST["selectedObject"];
 			$object = json_decode($jsonobject);
 			$oid = $object->id;
 		}
-		
+*/
 		if ($edit == "info") { // pontosabban egy uj edzo letrehozasa
 			print "
 				<table class=\"edit_data_table\">
@@ -25,14 +25,26 @@
 			";
 		}
 		else if ($edit == "edzok") { // pontosabban egy uj edzo letrehozasa
+			if (isset($_POST["selectedObject"])) {
+				$query = "SELECT * FROM fitness.edzok WHERE id=".$_POST["selectedObject"].";";
+				$dbarray = db_query_object_array($query);
+				if (count($dbarray) > 0) {
+					$object = $dbarray[0];
+					$oid = $object->id;
+				}
+			}
+
 			$imageForm = uploadImageForm("Fotó kiválasztása", "fileToUpload", "data_edzok", "fitness", "edzok", "foto", "id", $oid, 400, 300);
 
 			// edzohoz rendelt orak szama
 			$query = "SELECT count(*) FROM fitness.foglalkozas WHERE edzo=".$oid.";";
 			$edzokoraicount = db_query_object_array($query);
 			$acount = 0;
-			if (is_array($edzokoraicount) && count($edzokoraicount) > 0)
+			if (is_array($edzokoraicount) && count($edzokoraicount) > 0) {
 				$acount = $edzokoraicount[0]->count;
+			}
+
+			$vanfoto = (!is_null($object) && $object->foto != "");
 
 			print "
 				<table class=\"edit_data_table\">
@@ -43,17 +55,29 @@
 					<tr><td id=\"edit_edzo_description\" class=\"td_right ".(is_null($object) || strlen($object->leiras) == 0 ? "redcolor" : "")."\">Leírás:</td><td class=\"td_left\"><textarea rows=\"5\" cols=\"29\" type=\"text\" id=\"edzodescription\" onchange=\"editedField('edit_edzo_description', 'edzodescription', false, 0);\">".(is_null($object) ? "" : $object->leiras)."</textarea></td></tr>\n
 					<tr><td class=\"td_right\">Órák:</td><td class=\"td_left\"><span id=\"querycount\">".$acount."</span> darab<span class=\"modositas_gomb\" onclick=\"ShowChangeRelationshipForm(this, 'edzok', ".(is_null($object) ? "0" : $object->id).");\">módosítás</span></td></tr>\n
 					<tr>
-						<td id=\"edit_edzo_foto\" class=\"td_right ".(is_null($object) || strlen($object->foto) == 0 ? "redcolor" : "")."\">Fotó:
+						<td id=\"edit_edzo_foto\" class=\"td_right ".(!$vanfoto ? "redcolor" : "")."\">Fotó:
 						</td>
 						<td class=\"td_left\">"
 							.$imageForm."\n"
-							.((is_null($object) || $object->foto == "") ? "" : "<br><img style=\"max-height: 150px; max-width: 300px\" src=\"data/data_edzok/".$object->foto.".jpg\"></img>")."
+							.($vanfoto ? "<br><img style=\"max-height: 150px; max-width: 300px\" src=\"data/data_edzok/".$object->foto.".jpg\"></img>" : "")."
 						</td>
 					</tr>\n
 				</table>
 			";
+			if (!is_null($object)) {
+				print "<!±!>".($vanfoto ? "true" : "false");
+			}
 		}
-		else if ($edit == "orak") { // pontosabban egy uj edzo letrehozasa
+		else if ($edit == "orak") { // pontosabban egy uj ora letrehozasa
+			if (isset($_POST["selectedObject"])) {
+				$query = "SELECT * FROM fitness.orak WHERE id=".$_POST["selectedObject"].";";
+				$dbarray = db_query_object_array($query);
+				if (count($dbarray) > 0) {
+					$object = $dbarray[0];
+					$oid = $object->id;
+				}
+			}
+
 			$logoForm = uploadImageForm("Logó kiválasztása", "logoToUpload", "data_orak", "fitness", "orak", "logo", "id", $oid, 400, 300);
 			$imageForm = uploadImageForm("Fotó kiválasztása", "fileToUpload", "data_orak", "fitness", "orak", "foto", "id", $oid, 400, 300);
 
@@ -68,8 +92,12 @@
 			$query = "SELECT count(*) FROM fitness.oraterme WHERE ora=".$oid.";";
 			$teremoraicount = db_query_object_array($query);
 			$atcount = 0;
-			if (is_array($teremoraicount) && count($teremoraicount) > 0)
+			if (is_array($teremoraicount) && count($teremoraicount) > 0) {
 				$atcount = $teremoraicount[0]->count;
+			}
+
+			$vanfoto = (!is_null($object) && $object->foto != "");
+			$vanlogo = (!is_null($object) && $object->logo != "");
 
 			print "
 				<table class=\"edit_data_table\">
@@ -84,11 +112,11 @@
 					<tr><td class=\"td_right\">Edzők:</td><td class=\"td_left\"><span id=\"querycount\">".$acount."</span> darab<span class=\"modositas_gomb\" onclick=\"ShowChangeRelationshipForm(this, 'orakedzok', ".(is_null($object) ? "0" : $object->id).");\">módosítás</span></td></tr>\n
 					<tr><td class=\"td_right\">Termek:</td><td class=\"td_left\"><span id=\"querycount2\">".$atcount."</span> darab<span class=\"modositas_gomb\" onclick=\"ShowChangeRelationshipForm(this, 'oraktermek', ".(is_null($object) ? "0" : $object->id).", true);\">módosítás</span></td></tr>\n
 					<tr>
-						<td id=\"edit_ora_foto\" class=\"td_right ".(is_null($object) || strlen($object->foto) == 0 ? "redcolor" : "")."\">Fotó:
+						<td id=\"edit_ora_foto\" class=\"td_right ".(!$vanfoto ? "redcolor" : "")."\">Fotó:
 						</td>
 						<td class=\"td_left\">"
 							.$imageForm."\n"
-							.((is_null($object) || $object->foto == "") ? "" : "<br><img style=\"max-height: 150px; max-width: 300px\" src=\"data/data_orak/".$object->foto.".jpg\"></img>")."
+							.($vanfoto ? "<br><img style=\"max-height: 150px; max-width: 300px\" src=\"data/data_orak/".$object->foto.".jpg\"></img>" : "")."
 						</td>
 					</tr>\n
 					<tr>
@@ -96,21 +124,36 @@
 						</td>
 						<td class=\"td_left\">"
 							.$logoForm."\n"
-							.((is_null($object) || $object->foto == "") ? "" : "<br><img style=\"max-height: 96px; max-width: 96px\" src=\"data/data_orak/".$object->logo.".jpg\"></img>")."
+							.($vanlogo ? "<br><img style=\"max-height: 150px; max-width: 300px\" src=\"data/data_orak/".$object->logo.".jpg\"></img>" : "")."
 						</td>
 					</tr>\n
 				</table>
 			";
+			if (!is_null($object)) {
+				print "<!±!>".($vanfoto ? "true," : "false,").($vanlogo ? "true" : "false");
+			}
 		}
 		else if ($edit == "termek") { // pontosabban egy uj terem letrehozasa
+			if (isset($_POST["selectedObject"])) {
+				$query = "SELECT * FROM fitness.termek WHERE id=".$_POST["selectedObject"].";";
+				$dbarray = db_query_object_array($query);
+				if (count($dbarray) > 0) {
+					$object = $dbarray[0];
+					$oid = $object->id;
+				}
+			}
+
 			$imageForm = uploadImageForm("Fotó kiválasztása", "fileToUpload", "data_termek", "fitness", "termek", "foto", "id", $oid, 400, 300);
 
 			// orahoz rendelt edzok szama
 			$query = "SELECT count(*) FROM fitness.oraterme WHERE terem=".$oid.";";
 			$teremoraicount = db_query_object_array($query);
 			$acount = 0;
-			if (is_array($teremoraicount) && count($teremoraicount) > 0)
+			if (is_array($teremoraicount) && count($teremoraicount) > 0) {
 				$acount = $teremoraicount[0]->count;
+			}
+
+			$vanfoto = (!is_null($object) && $object->foto != "");
 
 			print "
 				<table class=\"edit_data_table\">
@@ -119,15 +162,18 @@
 					<tr><td class=\"td_right\">Foglalható:</td><td class=\"td_left\"><input ".(is_null($object) || $object->foglalhato == "t" ? "checked=\"true\" " : "")."type=\"checkbox\" size=\"23\" type=\"text\" id=\"teremavailable\"></input></td></tr>\n
 					<tr><td class=\"td_right\">Órák:</td><td class=\"td_left\"><span id=\"querycount\">".$acount."</span> darab<span class=\"modositas_gomb\" onclick=\"ShowChangeRelationshipForm(this, 'termek', ".(is_null($object) ? "0" : $object->id).");\">módosítás</span></td></tr>\n
 					<tr>
-						<td id=\"edit_terem_foto\" class=\"td_right ".(is_null($object) || strlen($object->foto) == 0 ? "redcolor" : "")."\">Fotó:
+						<td id=\"edit_terem_foto\" class=\"td_right ".(!$vanfoto ? "redcolor" : "")."\">Fotó:
 						</td>
 						<td class=\"td_left\">"
 							.$imageForm."\n"
-							.((is_null($object) || $object->foto == "") ? "" : "<br><img style=\"max-height: 150px; max-width: 300px\" src=\"data/data_termek/".$object->foto.".jpg\"></img>")."
+							.($vanfoto ? "<br><img style=\"max-height: 150px; max-width: 300px\" src=\"data/data_termek/".$object->foto.".jpg\"></img>" : "")."
 						</td>
 					</tr>\n
 				</table>
 			";
+			if (!is_null($object)) {
+				print "<!±!>".($vanfoto ? "true" : "false");
+			}
 		}
 	}
 ?>
