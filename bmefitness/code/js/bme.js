@@ -728,10 +728,6 @@ function fileUploadCompleted(objectid, data_type) {
 }
 
 function changeSorszam(changeSelectedDataValue, table_name_with_schema, id, ujsorszam) {
-/*	last_selected_data += changeSelectedDataValue;
-	if (last_selected_data < 0)
-		last_selected_data = 0;
-*/
 //	window.alert("change sorszam table: " + table + ", id: " + id + ", ujsorszam: " + ujsorszam);
 	$.post("code/functions/edit_data/change_sorszam.php", {table: table_name_with_schema, id: id, ujsorszam: ujsorszam, random: Math.random()}, function(result) {
 //		window.alert("elvileg kesz, eredmeny: " + result);
@@ -742,8 +738,11 @@ function changeSorszam(changeSelectedDataValue, table_name_with_schema, id, ujso
 }
 
 function ShowChangeRelationshipForm(button, table, edzo_or_ora_select_id, islast2) {
-	if (islast2)
+	var last_values = last_selected_relationship_values;
+	if (islast2) {
 		last_selected_relationship_2 = true;
+		last_values = last_selected_relationship_values2;
+	}
 
 	var ablak = document.getElementById('popupEditEdzokOrak');
 
@@ -754,9 +753,13 @@ function ShowChangeRelationshipForm(button, table, edzo_or_ora_select_id, islast
 	var elemheight = elemRect.top - elemRect.bottom;
 
 
-	$.post("code/functions/edit_data/change_relationship_form.php", {last_relship: last_selected_relationship_values, selectedObject: edzo_or_ora_select_id, table: table, random: Math.random()}, function(result) {
+	$.post("code/functions/edit_data/change_relationship_form.php", {last_relship: last_values, selectedObject: edzo_or_ora_select_id, table: table, random: Math.random()}, function(result) {
 		if (result) {
-		   last_selected_relationship_values = "";
+		   if (last_selected_relationship_2)
+			   last_selected_relationship_values2 = "";
+		   else
+			   last_selected_relationship_values = "";
+
 		   $('#editEzokOrakContent').html(result);
 		   var absa = document.getElementById('editEzokOrakContent').getBoundingClientRect();
 		   var calheight = absa.bottom - absa.top;

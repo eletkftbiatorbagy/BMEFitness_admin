@@ -50,6 +50,14 @@
 	print "</div>";
 
 	if ($object) {
+		// orahoz rendelt edzok szama
+		$query = "SELECT count(*) FROM fitness.oraterme WHERE terem=".$object->id.";";
+		$teremoraicount = db_query_object_array($query);
+		$acount = 0;
+		if (is_array($teremoraicount) && count($teremoraicount) > 0) {
+			$acount = $teremoraicount[0]->count;
+		}
+
 		// megjelenes kovetkezik...
 		print "<div id=\"rightcontent\">";
 			print "<div onclick='begin_new_or_edit_data(\"".$tablename."\", ".$object->id.");' class=\"action_button\">Szerkesztés</div>";
@@ -57,6 +65,7 @@
 				print "<table>";
 					print "<tr><td><b>Név:</b></td><td>".$object->nev."</td></tr>";
 					print "<tr><td><b>Alcím:</b></td><td>".$object->alcim."</td></tr>";
+					print "<tr><td><b>Órák:</b></td><td>".$acount." db</td></tr>";
 					print "<tr><td><b>Foglalható:</b></td><td>".($object->foglalhato == "t" ? "Igen" : "Nem")."</td></tr>";
 					print "<tr><td><b>Kép:</b></td><td>".($object->foto == "" ? "" : "<img style=\"max-height: 150px; max-width: 300px\" src=\"data/data_termek/".$object->foto.".jpg\">")."</td></tr>";
 				print "</table>";

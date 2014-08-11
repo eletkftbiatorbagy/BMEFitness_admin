@@ -50,6 +50,21 @@
 	print "</div>";
 
 	if ($object) {
+		// orahoz rendelt edzok szama
+		$query = "SELECT count(*) FROM fitness.foglalkozas WHERE ora=".$object->id.";";
+		$edzokoraicount = db_query_object_array($query);
+		$acount = 0;
+		if (is_array($edzokoraicount) && count($edzokoraicount) > 0)
+			$acount = $edzokoraicount[0]->count;
+
+		// orahoz rendelt termek szama
+		$query = "SELECT count(*) FROM fitness.oraterme WHERE ora=".$object->id.";";
+		$teremoraicount = db_query_object_array($query);
+		$atcount = 0;
+		if (is_array($teremoraicount) && count($teremoraicount) > 0) {
+			$atcount = $teremoraicount[0]->count;
+		}
+
 		// megjelenes kovetkezik...
 		print "<div id=\"rightcontent\">";
 			print "<div onclick='begin_new_or_edit_data(\"".$tablename."\", ".$object->id.");' class=\"action_button\">Szerkesztés</div>";
@@ -62,6 +77,8 @@
 					print "<tr><td><b>Perc:</b></td><td>".$object->perc."</td></tr>";
 					print "<tr><td><b>Belépődíj:</b></td><td>".($object->belepodij == "t" ? "Van" : "Nincs")."</td></tr>";
 					print "<tr><td><b>Max létszám:</b></td><td>".$object->max_letszam."</td></tr>";
+					print "<tr><td><b>Edzők:</b></td><td>".$acount." db</td></tr>";
+					print "<tr><td><b>Termek:</b></td><td>".$atcount." db</td></tr>";
 					print "<tr><td><b>Fotó:</b></td><td>".($object->foto == "" ? "" : "<img style=\"max-height: 150px; max-width: 300px\" src=\"data/data_orak/".$object->foto.".jpg\">")."</td></tr>";
 					print "<tr><td><b>Logó:</b></td><td>".($object->logo == "" ? "" : "<img style=\"max-height: 96px; max-width: 96px\" src=\"data/data_orak/".$object->logo.".jpg\">")."</td></tr>";
 				print "</table>";

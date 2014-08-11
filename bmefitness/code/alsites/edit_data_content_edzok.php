@@ -9,7 +9,7 @@
 	print "<div id=\"leftcontent\">";
 	$result = db_select_data($table, "*", "", $tablename.".sorszam");
 	$object = NULL;
-	
+
 	$selectedObject = NULL;
 	if (isset($_POST["selectedObject"])) {
 		$selectedObject = $_POST["selectedObject"];
@@ -50,6 +50,14 @@
 	print "</div>";
 
 	if ($object) {
+		// edzohoz rendelt orak szama
+		$query = "SELECT count(*) FROM fitness.foglalkozas WHERE edzo=".$object->id.";";
+		$edzokoraicount = db_query_object_array($query);
+		$acount = 0;
+		if (is_array($edzokoraicount) && count($edzokoraicount) > 0) {
+			$acount = $edzokoraicount[0]->count;
+		}
+
 		// megjelenes kovetkezik...
 		print "<div id=\"rightcontent\">";
 			print "<div onclick='begin_new_or_edit_data(\"".$tablename."\", ".$object->id.");' class=\"action_button\">Szerkesztés</div>";
@@ -61,6 +69,7 @@
 					print "<tr><td><b>Alcím:</b></td><td>".$object->alcim."</td></tr>";
 					print "<tr><td><b>Leírás:</b></td><td>".$object->leiras."</td></tr>";
 					print "<tr><td><b>Értékelés:</b></td><td>".$object->ertekeles."</td></tr>";
+					print "<tr><td><b>Órák:</b></td><td>".$acount." db</td></tr>";
 					print "<tr><td><b>Kép:</b></td><td>".($object->foto == "" ? "" : "<img style=\"max-height: 150px; max-width: 300px\" src=\"data/data_edzok/".$object->foto.".jpg\">")."</td></tr>";
 				print "</table>";
 			print "</p>";

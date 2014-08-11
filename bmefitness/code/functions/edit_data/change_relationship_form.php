@@ -96,11 +96,11 @@
 			$displayname = "rovid_nev";
 		}
 
-		if (!empty($otherdatabase) && !empty($selectedValue) && !empty($tablename) && !empty($select) && !empty($othercolumn)) {
+		if (!empty($otherdatabase) && !empty($tablename) && !empty($select) && !empty($othercolumn)) {
 			$otherdata = db_select_data($tablename, $select, $where, $order);
 			$otherarray = array();
 
-			if ($selectedValue > 0) {
+			if (!is_null($selectedValue) && $selectedValue > 0) {
 				$otherarray = db_select_data($otherdatabase, "*", $owncolumn."=".$selectedValue."", "");
 			}
 
