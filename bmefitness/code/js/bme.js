@@ -18,6 +18,7 @@ var frissitettek_szama = 0;
 var last_selected_het = 0;
 var last_selected_terem = 0;
 var last_selected_torolt_distress = false;
+var alredy_changed_meddig = false;
 
 function change_main_site(site) {
 	if (!site) // check: "", null, undefined, 0, false, NaN
@@ -605,6 +606,10 @@ function end_new_or_edit_data(data_type, objectid, vanfoto, vanlogo) {
 						}
 					});
 				}
+
+				if (frissitesre_varok_szama === 0) { // nem kep vagy hozzarendelt adat valtozik, akkor azonnal frissitunk
+					change_edit_data_site(last_updated_edit_data_type, last_updated_edit_data);
+				}
 			}
 		});
 	}
@@ -746,7 +751,7 @@ function editValueFiled(adat) {
 	}
 }
 
-function fileUploadCompleted(objectid, data_type) {
+function fileUploadCompleted() {
 	frissitettek_szama++;
 	if (frissitettek_szama == frissitesre_varok_szama) {
 		change_edit_data_site(last_updated_edit_data_type, last_updated_edit_data);
@@ -1039,7 +1044,7 @@ function ChangedOraSelect() {
 		if (result3) {
 			var aperc = Number(result3);
 //			alert("result: " + result3 + "\naperc: " + aperc);
-			if (aperc > 0) {
+			if (aperc > 0 && !alredy_changed_meddig) {
 				var nit = document.getElementById("naptaroratartam");
 
 				var van = false;
@@ -1128,7 +1133,12 @@ function calculateMikortol() {
 	document.getElementById("naptartol").value = stringFromDateAndTimeInput("selected_from_date", "selected_from_time");
 }
 
-function calculateMeddig() {
+/*
+ *
+ */
+function calculateMeddig(datumchanged) {
+	if (datumchanged)
+		alredy_changed_meddig = true;
 	// mikortol datum es time mezo
 	var datefield = document.getElementById("selected_from_date").value;
 	var timefield = document.getElementById("selected_from_time").value;

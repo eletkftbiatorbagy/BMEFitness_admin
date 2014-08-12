@@ -113,7 +113,7 @@
 		<tr><td class=\"td_right\">Mikortól:</td><td class=\"td_left\">
 		<input size=\"11\" type=\"text\" value=\"".$fromdate."\" name=\"selected_from_date\" id=\"selected_from_date\" readonly onClick=\"DestroyTimePicker(); GetDate(this, false);\"></input>
 		<input size=\"5\" type=\"text\" value=\"".$fromtime."\" name=\"selected_from_time\" id=\"selected_from_time\" readonly onClick=\"DestroyCalendar(); GetTimePicker(this, false);\"></input></td></tr>\n
-		<tr><td class=\"td_right\">Időtartam:</td><td><select id=\"naptaroratartam\" onchange=\"changeNaptarTartam();calculateMeddig();\">\n
+		<tr><td class=\"td_right\">Időtartam:</td><td><select id=\"naptaroratartam\" onchange=\"changeNaptarTartam();calculateMeddig(true);\">\n
 	";
 
 	// korabbrol kapja az adatokat
@@ -127,7 +127,7 @@
 	}
 
 	print "
-			</select><input style=\"visibility: ".$defaultvisibility.";\" id=\"naptaregyeniperc\" maxlength=\"6\" minlength=\"1\" size=\"6\" value=\"".$defaultidotext."\" onchange=\"checkIsMinute(this);calculateMeddig();\"></input><span id=\"naptarperctext\" style=\"visibility: ".$defaultvisibility.";\">perc</span></td></tr>\n
+			</select><input style=\"visibility: ".$defaultvisibility.";\" id=\"naptaregyeniperc\" maxlength=\"6\" minlength=\"1\" size=\"6\" value=\"".$defaultidotext."\" onchange=\"checkIsMinute(this);calculateMeddig(true);\"></input><span id=\"naptarperctext\" style=\"visibility: ".$defaultvisibility.";\">perc</span></td></tr>\n
 
 			<tr><td class=\"td_right\">Meddig:</td><td class=\"td_left\">
 			<input size=\"11\" type=\"text\" value=\"".$todate."\" name=\"selected_to_date\" id=\"selected_to_date\" readonly onClick=\"DestroyTimePicker(); GetDate(this, true);\"></input>

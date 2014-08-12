@@ -35,7 +35,7 @@ function clearAll() {
 	fileid = null;
 	fileconvertToWidth = null;
 	fileconvertToHeight = null;
-	json_decoded = null;
+//	json_decoded = null;
 	data_type = null;
 	isLogo = false;
 
@@ -117,7 +117,7 @@ function uploadFile(aJson_decoded, aData_type) {
 	if (aJson_decoded) { // kaphatja az ID-t a feltolto rutinbol is, de nem kotelezo
 		fileid = aJson_decoded.id;
 		logoid = aJson_decoded.id;
-		json_decoded = aJson_decoded;
+//		json_decoded = aJson_decoded;
 	}
 
 	if (aData_type)
@@ -310,6 +310,6 @@ function endUploadFile(message, log_level) {
 	document.getElementById('uploadImage').src = imgFile;
 
 	centerPopup(); // ujra kozepre kell helyeztetni, mert mar eleve latszik, es valtozik a tartalma...
-	fileUploadCompleted(json_decoded.id, data_type);
+	fileUploadCompleted();
 	clearAll();
 }

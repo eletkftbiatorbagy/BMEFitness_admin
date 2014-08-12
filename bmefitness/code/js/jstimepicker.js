@@ -95,7 +95,7 @@ function DrawTimePicker() {
     "<td style=\"text-align: center;\"><input id=\"timepickerminute\" class=\"cellInput\" onchange=\"InputChange(this, false)\" maxlength=\"2\" minlength=\"1\" size=\"3\" title=\"perc\" value=\"" + (m < 10 ? "0" + m : m) + "\"></input></td></tr>" +
 	"<tr><td class=\"cellButton\"><a href=\"javascript: PrevHour();\" title=\"Következő óra\"><img src=\"code/images/icon_accordion_arrow_down_black.png\"></a></td>" +
     "<td class=\"cellButton\"><a href=\"javascript: PrevMinute();\" title=\"következő perc\"><img src=\"code/images/icon_accordion_arrow_down_black.png\"></a></td></tr>" +
-	"<tr><td class=\"cellOk\"><a href=\"javascript: ReturnTime();calculateMikortol();calculateMeddig();\">OK</a></td><td class=\"cellCancel\"><a href=\"javascript: DestroyTimePicker();\">mégsem</a></td></tr></table>";
+	"<tr><td class=\"cellOk\"><a href=\"javascript: ReturnTime();calculateMikortol();calculateMeddig(true);\">OK</a></td><td class=\"cellCancel\"><a href=\"javascript: DestroyTimePicker();\">mégsem</a></td></tr></table>";
 
 	cal.innerHTML = sCal;
 	cal.style.display = "inline";
