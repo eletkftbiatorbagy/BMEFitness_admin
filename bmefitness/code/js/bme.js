@@ -1205,6 +1205,7 @@ function stringFromDateAndTimeInput(adatefield, atimefield) {
 function begin_new_distress() {
 	// TODO: be kell fejezni ezt a funkciot
 	alert("befejezetlen funkcio: begin_new_distress()");
+	alredy_changed_meddig = false;
 }
 
 /*!
