@@ -850,6 +850,7 @@ function HideRelationshipForm() {
  * \param aclickdateparams		opcionális paraméter, új naptár esetén kell megadni, hogy mennyi időnél kattintottunk
  */
 function begin_new_or_edit_naptar(naptar_id, aclickdateparams) {
+	alredy_changed_meddig = false;
 	// megprobaljuk atkonvertalni json-ra, ha nem sikerul, akkor ujat viszunk fel, nem a legjobb, de nem rossz...
 	if (naptar_id) {
 		$('#neworeditlink').html("Módosítás");
