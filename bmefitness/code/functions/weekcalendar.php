@@ -104,7 +104,8 @@
 		if ($inaktiv_only)
 			$where .= "NOT ";
 		$where .= "naptar.aktiv AND NOT naptar.torolve";
-		$where .= " AND naptar.ig > cast('".$firstday."' AS timestamp) AND naptar.tol < cast('".$lastday."' AS timestamp) AND naptar.ora = orak.id AND naptar.edzo = edzok.id AND naptar.terem = termek.id";
+		$where .= " AND naptar.ig > cast('".$firstday."' AS timestamp) AND naptar.tol < cast('".$lastday."' AS timestamp)";
+		$where .= " AND naptar.ora = orak.id AND naptar.edzo = edzok.id AND naptar.terem = termek.id";
 		$where .= " AND naptar.terem = ".$terem_id;
 
 		$select = "*"; // minden legyen benne

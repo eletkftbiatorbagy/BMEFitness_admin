@@ -135,6 +135,20 @@
 	";
 
 
+	// ismetlodes
+	print "<tr><td class=\"td_right\">Ismétlődés:</td><td id=\"ismetlodesselect\" class=\"td_left\"><select id=\"naptarismetlodes\" onchange=\"ChangedIsmetlodesSelect();\">\n";
+	print "<option".((!is_null($object) && $object->ismetlodes == "0") ? " selected=\"selected\"" : "")." value=\"0\">Egyszeri alkalom</option>\n";
+	print "<option".((!is_null($object) && $object->ismetlodes == "1") ? " selected=\"selected\"" : "")." value=\"1\">Hetente</option>\n";
+	print "<option".((!is_null($object) && $object->ismetlodes == "2") ? " selected=\"selected\"" : "")." value=\"2\">Kéthetente</option>\n";
+	print "<option".((!is_null($object) && $object->ismetlodes == "3") ? " selected=\"selected\"" : "")." value=\"3\">Három hetente</option>\n";
+	print "<option".((!is_null($object) && $object->ismetlodes == "4") ? " selected=\"selected\"" : "")." value=\"4\">Négy hetente</option>\n";
+	print "</select></td></tr>\n";
+	print "
+		<tr id=\"ismetlodes_to_data_tr\" style=\"display: none\"><td class=\"td_right\">Ismétlődés vége:</td><td class=\"td_left\">
+		<input size=\"11\" type=\"text\" value=\"".$fromdate."\" name=\"selected_ismetlodes_to_date\" id=\"selected_ismetlodes_to_date\" readonly onClick=\"DestroyTimePicker(); GetDate(this, true);\"></input>
+		<input size=\"5\" type=\"text\" value=\"".$fromtime."\" name=\"selected_ismetlodes_to_time\" id=\"selected_ismetlodes_to_time\" readonly onClick=\"DestroyCalendar(); GetTimePicker(this, true);\"></input></td></tr>\n
+	";
+
 	// modositani kell a printeket change_select_options.php fajban is
 
 	// edzok

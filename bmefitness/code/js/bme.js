@@ -962,9 +962,12 @@ function end_new_or_edit_naptar(naptar_id) {
 		elvalaszto = allelvalaszto;
 	}
 
+	// INFO: ha esetleg napokra valtoztatjuk, akkor itt is meg kell oldani
+	var ismetlodes = Number(document.getElementById("naptarismetlodes").value) * 7;
+
 //	var atableNameWithSchema = "fitness.naptar";
-	var avalueIDs = "tol" + elvalaszto + "ig" + elvalaszto + "ora" + elvalaszto + "edzo" + elvalaszto + "terem";
-	var avalues = "'" + tol.val() + "'" + elvalaszto + "'" + ig.val() + "'" + elvalaszto + "'" + ora.val() + "'" + elvalaszto + "'" + edzo.val() + "'" + elvalaszto + "'" + terem.val() + "'";
+	var avalueIDs = "tol" + elvalaszto + "ig" + elvalaszto + "ora" + elvalaszto + "ismetlodes" + elvalaszto + "edzo" + elvalaszto + "terem";
+	var avalues = "'" + tol.val() + "'" + elvalaszto + "'" + ig.val() + "'" + elvalaszto + "'" + ora.val() + "'" + elvalaszto + "'" + ismetlodes+ "'" + elvalaszto + "'" + edzo.val() + "'" + elvalaszto + "'" + terem.val() + "'";
 	var returningValues = "id";
 
 	$.post("code/functions/insert_or_update_data.php", {data_id: aid, table_name: "fitness", schema: "naptar", value_ids: avalueIDs, values: avalues, returning: returningValues, random: Math.random()}, function(result) {
@@ -1076,6 +1079,17 @@ function ChangedOraSelect() {
 			}
 		}
 	});
+}
+
+function ChangedIsmetlodesSelect() {
+	var ismetlodes = Number(document.getElementById("naptarismetlodes").value);
+	var ismetlodes_date = document.getElementById("ismetlodes_to_data_tr");
+	if (ismetlodes === 0) {
+		ismetlodes_date.style.display = "none";
+	}
+	else {
+		ismetlodes_date.style.display = "";
+	}
 }
 
 function checkIsMinute(field) {
